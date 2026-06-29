@@ -50,7 +50,7 @@ First, add `maplike` as a dependency to your Cargo.toml:
 
 ```toml
 [dependencies]
-maplike = { version = "0.11.0", features = ["derive"] }
+maplike = { version = "0.11.1", features = ["derive"] }
 ```
 
 The `derive` feature flag is only needed if you want to derive `Assign`

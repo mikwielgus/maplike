@@ -7,7 +7,7 @@ members = [".", "maplike_derive"]
 
 [package]
 name = "maplike"
-version = "0.11.0"
+version = "0.11.1"
 authors = ["Mikolaj Wielgus <wielgusmikolaj@gmail.com>"]
 description = "Derive macros for maplike."
 repository = "https://github.com/mikwielgus/maplike"
@@ -48,7 +48,7 @@ stable-vec = ["dep:stable-vec"]
 thunderdome = ["dep:thunderdome"]
 
 [dependencies]
-maplike_derive = { version = "0.9", optional = true, path = "maplike_derive" }
+maplike_derive = { version = "0.11", optional = true, path = "maplike_derive" }
 bidimap = { version = "0.7", optional = true }
 document-features = { version = "0.2", optional = true }
 rstar = { version = "0.12", optional = true }
