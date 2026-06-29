@@ -2,6 +2,9 @@
 #
 # SPDX-License-Identifier: MIT OR Apache-2.0
 
+[workspace]
+members = [".", "maplike_derive"]
+
 [package]
 name = "maplike"
 version = "0.11.0"
@@ -52,10 +55,20 @@ rstar = { version = "0.12", optional = true }
 stable-vec = { version = "0.4", optional = true }
 thunderdome = { version = "0.6", optional = true }
 
-    [dev-dependencies]
-    stable-vec = "0.4"
-    thunderdome = "0.6"
-    rstar = "0.12"
+[dev-dependencies]
+stable-vec = "0.4"
+thunderdome = "0.6"
+rstar = "0.12"
+
+# Version replacements apply only to this crate. We have to keep this here
+# and not in `release.toml` because the replacements are applied to each
+# workspace member crate separately, and since there is nothing to replace in
+# `undoredo_derive`, there will be an error due to no replacement. This solution
+# is recommended by `cargo-release`'s FAQ.
+[package.metadata.release]
+pre-release-replacements = [
+  { file = "README.md", search = 'maplike = \{ version = "[^"]+"([^}]*)\}', replace = '{{crate_name}} = { version = "{{version}}"$1}' },
+]
 
 [package.metadata.docs.rs]
 cargo-args = ["--all-features", "-Zunstable-options", "-Zrustdoc-scrape-examples"]

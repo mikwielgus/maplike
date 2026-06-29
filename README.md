@@ -42,7 +42,22 @@ For brevity and convenience, we also provide
 which represent complete abstract containers that join together traits of
 multiple operations.
 
-## Examples
+## Usage
+
+### Adding dependency
+
+First, add `maplike` as a dependency to your Cargo.toml:
+
+```toml
+[dependencies]
+maplike = { version = "0.11.0", features = ["derive"] }
+```
+
+The `derive` feature flag is only needed if you want to derive `Assign`
+or `Container` traits using derive macros: `#[derive(Assign)]` or
+`#[derive(Container)]`.
+
+### Usage examples
 
 `maplike`'s traits allow you to write functions that are generic over many
 different collection types. A single trait like
