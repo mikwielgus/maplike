@@ -72,7 +72,7 @@ arrayvec = { version = "0.7", optional = true }
 bidimap = { version = "0.7", optional = true }
 document-features = { version = "0.2", optional = true }
 indexmap = { version = "2.14", optional = true }
-rstar = { version = "0.12", optional = true }
+rstar = { version = ">= 0.12, < 0.14", optional = true }
 smallvec = { version = "1", optional = true }
 stable-vec = { version = "0.4", optional = true }
 thunderdome = { version = "0.6", optional = true }
@@ -83,7 +83,7 @@ serde = { version = "1.0", optional = true, default-features = false, features =
 indexmap = "2.14"
 stable-vec = "0.4"
 thunderdome = "0.6"
-rstar = "0.12"
+rstar = ">= 0.12, < 0.14"
 smallvec = "1"
 arrayvec = "0.7"
 tinyvec = { version = "1", features = ["alloc"] }
