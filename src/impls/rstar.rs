@@ -2,42 +2,42 @@
 //
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
-use rstar::{RTree, RTreeObject};
+use rstar::{RTree, RTreeObject, RTreeParams};
 
 use crate::containers::Container;
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
 use crate::ops::{Assign, Clear, Get, Insert, Len, Put, Remove, Set, WithOne};
 
-impl<K: RTreeObject> Container for RTree<K> {
+impl<K: RTreeObject, Params: RTreeParams> Container for RTree<K, Params> {
     type Key = K;
     type Value = ();
 }
 
-impl<K: RTreeObject> WithOne<K> for RTree<K> {
+impl<K: RTreeObject, Params: RTreeParams> WithOne<K> for RTree<K, Params> {
     #[inline(always)]
     fn with_one(element: K) -> Self {
-        let mut rtree = RTree::new();
+        let mut rtree = RTree::new_with_params();
         RTree::insert(&mut rtree, element);
 
         rtree
     }
 }
 
-impl<K: RTreeObject> Assign for RTree<K> {
+impl<K: RTreeObject, Params: RTreeParams> Assign for RTree<K, Params> {
     #[inline(always)]
     fn assign(&mut self, value: Self) {
         *self = value;
     }
 }
 
-impl<K: RTreeObject + PartialEq> Get<K> for RTree<K> {
+impl<K: RTreeObject + PartialEq, Params: RTreeParams> Get<K> for RTree<K, Params> {
     #[inline(always)]
     fn get(&self, key: &K) -> Option<&()> {
         RTree::contains(self, key).then_some(&())
     }
 }
 
-impl<K: RTreeObject + PartialEq> Set<K> for RTree<K> {
+impl<K: RTreeObject + PartialEq, Params: RTreeParams> Set<K> for RTree<K, Params> {
     type Output = ();
 
     #[inline(always)]
@@ -47,7 +47,7 @@ impl<K: RTreeObject + PartialEq> Set<K> for RTree<K> {
     }
 }
 
-impl<K: RTreeObject> Insert<K> for RTree<K> {
+impl<K: RTreeObject, Params: RTreeParams> Insert<K> for RTree<K, Params> {
     type Output = ();
 
     #[inline(always)]
@@ -56,7 +56,7 @@ impl<K: RTreeObject> Insert<K> for RTree<K> {
     }
 }
 
-impl<K: RTreeObject + PartialEq> Remove<K> for RTree<K> {
+impl<K: RTreeObject + PartialEq, Params: RTreeParams> Remove<K> for RTree<K, Params> {
     type Output = Option<()>;
 
     #[inline(always)]
@@ -65,7 +65,7 @@ impl<K: RTreeObject + PartialEq> Remove<K> for RTree<K> {
     }
 }
 
-impl<K: RTreeObject> Put<K> for RTree<K> {
+impl<K: RTreeObject, Params: RTreeParams> Put<K> for RTree<K, Params> {
     #[inline(always)]
     fn put(&mut self, key: K) -> Option<K> {
         RTree::insert(self, key);
@@ -74,7 +74,7 @@ impl<K: RTreeObject> Put<K> for RTree<K> {
     }
 }
 
-impl<K: RTreeObject + PartialEq> Clear for RTree<K> {
+impl<K: RTreeObject + PartialEq, Params: RTreeParams> Clear for RTree<K, Params> {
     #[inline(always)]
     fn clear(&mut self) {
         // TODO: Send a path upstream to implement `.clear()` efficiently,
@@ -90,7 +90,7 @@ impl<K: RTreeObject> Len for RTree<K> {
     }
 }
 
-impl<'a, K: RTreeObject + 'a> Values<'a> for RTree<K> {
+impl<'a, K: RTreeObject + 'a, Params: RTreeParams + 'a> Values<'a> for RTree<K, Params> {
     type Values = ValuesFromKeyValuePairs<MapIter<'a, K>>;
 
     #[inline(always)]
@@ -99,7 +99,7 @@ impl<'a, K: RTreeObject + 'a> Values<'a> for RTree<K> {
     }
 }
 
-impl<K: RTreeObject> IntoValues for RTree<K> {
+impl<K: RTreeObject, Params: RTreeParams> IntoValues for RTree<K, Params> {
     type IntoValues = ValuesFromKeyValuePairs<MapIntoIter<K>>;
 
     #[inline(always)]
@@ -119,7 +119,7 @@ impl<'a, K: RTreeObject> Iterator for MapIter<'a, K> {
     }
 }
 
-impl<'a, K: RTreeObject + 'a> Iter<'a, &'a K> for RTree<K> {
+impl<'a, K: RTreeObject + 'a, Params: RTreeParams + 'a> Iter<'a, &'a K> for RTree<K, Params> {
     type Iter = MapIter<'a, K>;
 
     #[inline(always)]
@@ -139,7 +139,7 @@ impl<K: RTreeObject> Iterator for MapIntoIter<K> {
     }
 }
 
-impl<K: RTreeObject> IntoIter<K> for RTree<K> {
+impl<K: RTreeObject, Params: RTreeParams> IntoIter<K> for RTree<K, Params> {
     type IntoIter = MapIntoIter<K>;
 
     #[inline(always)]
