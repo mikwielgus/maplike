@@ -32,7 +32,7 @@ impl<K> Assign for HashSet<K> {
     }
 }
 
-impl<K: Eq + Hash, Q: Eq + Hash + ?Sized> Get<K, Q> for HashSet<K>
+impl<K: Eq + Hash, Q: Eq + Hash + ?Sized> Get<Q> for HashSet<K>
 where
     K: Borrow<Q>,
 {
@@ -60,7 +60,7 @@ impl<K: Eq + Hash> Insert<K> for HashSet<K> {
     }
 }
 
-impl<K: Eq + Hash, Q: Eq + Hash + ?Sized> Remove<K, Q> for HashSet<K>
+impl<K: Eq + Hash, Q: Eq + Hash + ?Sized> Remove<Q> for HashSet<K>
 where
     K: Borrow<Q>,
 {

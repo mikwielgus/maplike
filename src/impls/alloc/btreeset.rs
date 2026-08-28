@@ -32,7 +32,7 @@ impl<K> Assign for BTreeSet<K> {
     }
 }
 
-impl<K: Ord, Q: Ord + ?Sized> Get<K, Q> for BTreeSet<K>
+impl<K: Ord, Q: Ord + ?Sized> Get<Q> for BTreeSet<K>
 where
     K: Borrow<Q>,
 {
@@ -60,7 +60,7 @@ impl<K: Ord> Insert<K> for BTreeSet<K> {
     }
 }
 
-impl<K: Ord, Q: Ord + ?Sized> Remove<K, Q> for BTreeSet<K>
+impl<K: Ord, Q: Ord + ?Sized> Remove<Q> for BTreeSet<K>
 where
     K: Borrow<Q>,
 {

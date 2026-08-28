@@ -25,7 +25,7 @@ impl<L, R> Assign for BiHashMap<L, R> {
     }
 }
 
-impl<L: Eq + Hash, R: Eq + Hash, Q: Eq + Hash + ?Sized> Get<L, Q> for BiHashMap<L, R>
+impl<L: Eq + Hash, R: Eq + Hash, Q: Eq + Hash + ?Sized> Get<Q> for BiHashMap<L, R>
 where
     L: Borrow<Q>,
 {
@@ -35,7 +35,7 @@ where
     }
 }
 
-impl<L: Eq + Hash, R: Eq + Hash, Q: Eq + Hash + ?Sized> GetByLeft<L, Q> for BiHashMap<L, R>
+impl<L: Eq + Hash, R: Eq + Hash, Q: Eq + Hash + ?Sized> GetByLeft<Q> for BiHashMap<L, R>
 where
     L: Borrow<Q>,
 {
@@ -73,7 +73,7 @@ impl<L: Eq + Hash, R: Eq + Hash> Insert<L> for BiHashMap<L, R> {
     }
 }
 
-impl<L: Eq + Hash, R: Eq + Hash, Q: Eq + Hash + ?Sized> RemoveByLeft<L, Q> for BiHashMap<L, R>
+impl<L: Eq + Hash, R: Eq + Hash, Q: Eq + Hash + ?Sized> RemoveByLeft<Q> for BiHashMap<L, R>
 where
     L: Borrow<Q>,
 {

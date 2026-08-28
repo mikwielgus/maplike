@@ -81,12 +81,9 @@ pub trait Assign<V = Self>: Container {
 ///     Some(&20),
 /// );
 /// ```
-pub trait Get<K, Q: ?Sized = K>: Container
-where
-    K: Borrow<Q>,
-{
+pub trait Get<K: ?Sized>: Container {
     /// Returns a reference to the value corresponding to the key.
-    fn get(&self, key: &Q) -> Option<&Self::Value>;
+    fn get(&self, key: &K) -> Option<&Self::Value>;
 }
 
 /// Returns a reference to the right value corresponding to the given left value
@@ -118,16 +115,13 @@ where
 ///     assert_eq!(hashmap.get_by_left("west"), Some(&2));
 /// }
 /// ```
-pub trait GetByLeft<K, Q: ?Sized = K>: Container
-where
-    K: Borrow<Q>,
-{
+pub trait GetByLeft<K: ?Sized>: Container {
     /// Returns a reference to the right value corresponding to the given left value.
     ///
     /// Should be only implemented only for bidirectional maps (not for
     /// unidirectional maps) along with [`GetByRight::get_by_right()`], and
     /// should behave identically to [`Get`].
-    fn get_by_left(&self, key: &Q) -> Option<&Self::Value>;
+    fn get_by_left(&self, key: &K) -> Option<&Self::Value>;
 }
 
 /// Returns a reference to the left value corresponding to the given right value
@@ -161,7 +155,7 @@ where
 ///     assert_eq!(hashmap.get_by_right(&1), Some(&"east".to_string()));
 /// }
 /// ```
-pub trait GetByRight<K, Q: ?Sized = <Self as Container>::Value>: Container
+pub trait GetByRight<K: ?Sized, Q: ?Sized = <Self as Container>::Value>: Container
 where
     Self::Value: Borrow<Q>,
 {
@@ -248,15 +242,12 @@ pub trait Set<K>: Container {
 /// btree_map.modify(&1, |value| *value *= 10.0);
 /// assert_eq!(btree_map.get(&1), Some(&20.0));
 /// ```
-pub trait Modify<K, Q: ?Sized = K>: Container
-where
-    K: Borrow<Q>,
-{
+pub trait Modify<K: ?Sized>: Container {
     /// Modify the value under key with a closure.
     ///
     /// This is useful if something always has to be done before or after the
     /// modification to maintain an invariant.
-    fn modify<F>(&mut self, key: &Q, f: F)
+    fn modify<F>(&mut self, key: &K, f: F)
     where
         F: FnMut(&mut Self::Value);
 }
@@ -323,10 +314,7 @@ pub trait Insert<K>: Container {
 /// assert_eq!(btreemap.remove(&1), Some(2.0));
 /// assert_eq!(btreemap.get(&1), None);
 /// ```
-pub trait Remove<K, Q: ?Sized = K>: Container
-where
-    K: Borrow<Q>,
-{
+pub trait Remove<K: ?Sized>: Container {
     /// Return type of [`remove`](Remove::remove).
     type Output;
 
@@ -345,7 +333,7 @@ where
     /// insertion, lookup, and removal, try
     /// [`stable_vec::StableVec`](https://docs.rs/stable-vec/latest/stable_vec/type.StableVec.html)
     /// or [`thunderdome::Arena`](https://docs.rs/thunderdome/latest/thunderdome/struct.Arena.html).
-    fn remove(&mut self, key: &Q) -> Self::Output;
+    fn remove(&mut self, key: &K) -> Self::Output;
 }
 
 /// Remove the left and right values from pair corresponding to the given left
@@ -379,17 +367,14 @@ where
 ///     assert_eq!(bihashmap.get_by_left("west"), None);
 /// }
 /// ```
-pub trait RemoveByLeft<K, Q: ?Sized = K>: Container
-where
-    K: Borrow<Q>,
-{
+pub trait RemoveByLeft<K: ?Sized>: Container {
     /// Remove the left and right values from pair corresponding to the given
     /// left value in a bidirectional map.
     ///
     /// Should be only implemented only for bidirectional maps (not for
     /// unidirectional maps) along with [`RemoveByRight::remove_by_right()`],
     /// and should behave identically to [`Remove`].
-    fn remove_by_left(&mut self, key: &Q) -> Option<Self::Value>;
+    fn remove_by_left(&mut self, key: &K) -> Option<Self::Value>;
 }
 
 /// Remove the left and right values from pair corresponding to the given right
