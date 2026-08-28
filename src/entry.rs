@@ -4,8 +4,6 @@
 
 //! Entry API traits for map-like containers.
 
-use crate::containers::Container;
-
 /// Gets the given key's corresponding entry in the container for in-place
 /// manipulation.
 ///
@@ -26,7 +24,7 @@ use crate::containers::Container;
 /// *btreemap.entry(1).or_insert(2) = 3;
 /// assert_eq!(btreemap.get(&1), Some(&3));
 /// ```
-pub trait Entry<K>: Container {
+pub trait Entry<K> {
     /// Entry type returned by [`entry`](Entry::entry).
     type Entry<'a>
     where
