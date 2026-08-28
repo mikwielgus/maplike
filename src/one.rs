@@ -61,9 +61,9 @@ impl<V> Set<usize> for One<V> {
 
 impl<V> Modify<usize> for One<V> {
     #[inline(always)]
-    fn modify<F>(&mut self, index: &usize, f: F)
+    fn modify<F>(&mut self, index: &usize, mut f: F)
     where
-        F: FnOnce(&mut V),
+        F: FnMut(&mut V),
     {
         assert_eq!(*index, 0);
         f(&mut self.value)

@@ -258,7 +258,7 @@ where
     /// modification to maintain an invariant.
     fn modify<F>(&mut self, key: &Q, f: F)
     where
-        F: FnOnce(&mut Self::Value);
+        F: FnMut(&mut Self::Value);
 }
 
 /// Insert a new key-value pair into the container at an arbitrary key.
