@@ -6,7 +6,7 @@
 
 use core::ops::Index;
 
-use crate::ops::{Assign, Clear, Get, Insert, Len, Pop, Push, Remove, Set};
+use crate::ops::{Clear, Get, Insert, Len, Pop, Push, Remove, Set};
 
 /// Base trait for keyed collections, without any operations defined yet.
 ///
@@ -45,8 +45,7 @@ pub trait Container {
 /// point.assign((10, 20));
 /// assert_eq!(point, (10, 20));
 /// ```
-pub trait Scalarlike<V = Self>: Assign<V> {}
-impl<V, T: Assign<V>> Scalarlike<V> for T {}
+pub use crate::ops::Assign as Scalarlike;
 
 /// A keyed collection with get, set, insert, remove, clear operations.
 ///
