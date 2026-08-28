@@ -26,7 +26,7 @@ impl<K, V> Assign for HashMap<K, V> {
     }
 }
 
-impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V> Get<K, Q> for HashMap<K, V>
+impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V> Get<Q> for HashMap<K, V>
 where
     K: Borrow<Q>,
 {
@@ -45,7 +45,7 @@ impl<K: Eq + Hash, V> Set<K> for HashMap<K, V> {
     }
 }
 
-impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V> Modify<K, Q> for HashMap<K, V>
+impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V> Modify<Q> for HashMap<K, V>
 where
     K: Borrow<Q>,
 {
@@ -67,7 +67,7 @@ impl<K: Eq + Hash, V> Insert<K> for HashMap<K, V> {
     }
 }
 
-impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V> Remove<K, Q> for HashMap<K, V>
+impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V> Remove<Q> for HashMap<K, V>
 where
     K: Borrow<Q>,
 {

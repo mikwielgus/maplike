@@ -24,7 +24,7 @@ impl<L, R> Assign for BiBTreeMap<L, R> {
     }
 }
 
-impl<L: Ord, R: Ord, Q: Ord + ?Sized> Get<L, Q> for BiBTreeMap<L, R>
+impl<L: Ord, R: Ord, Q: Ord + ?Sized> Get<Q> for BiBTreeMap<L, R>
 where
     L: Borrow<Q>,
 {
@@ -34,7 +34,7 @@ where
     }
 }
 
-impl<L: Ord, R: Ord, Q: Ord + ?Sized> GetByLeft<L, Q> for BiBTreeMap<L, R>
+impl<L: Ord, R: Ord, Q: Ord + ?Sized> GetByLeft<Q> for BiBTreeMap<L, R>
 where
     L: Borrow<Q>,
 {
@@ -72,7 +72,7 @@ impl<L: Ord, R: Ord> Insert<L> for BiBTreeMap<L, R> {
     }
 }
 
-impl<L: Ord, R: Ord, Q: Ord + ?Sized> RemoveByLeft<L, Q> for BiBTreeMap<L, R>
+impl<L: Ord, R: Ord, Q: Ord + ?Sized> RemoveByLeft<Q> for BiBTreeMap<L, R>
 where
     L: Borrow<Q>,
 {

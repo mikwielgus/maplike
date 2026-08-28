@@ -33,7 +33,7 @@ impl<K> Assign for IndexSet<K> {
     }
 }
 
-impl<K: Eq + Hash, Q: Eq + Hash + ?Sized> Get<K, Q> for IndexSet<K>
+impl<K: Eq + Hash, Q: Eq + Hash + ?Sized> Get<Q> for IndexSet<K>
 where
     K: Borrow<Q>,
 {
@@ -61,7 +61,7 @@ impl<K: Eq + Hash> Insert<K> for IndexSet<K> {
     }
 }
 
-impl<K: Eq + Hash, Q: Eq + Hash + ?Sized> Remove<K, Q> for IndexSet<K>
+impl<K: Eq + Hash, Q: Eq + Hash + ?Sized> Remove<Q> for IndexSet<K>
 where
     K: Borrow<Q>,
 {

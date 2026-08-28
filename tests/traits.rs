@@ -226,9 +226,9 @@ fn check_borrow_str<C>(mut c: C)
 where
     C: Container<Key = String, Value = i32>
         + Insert<String>
-        + Get<String, str>
-        + Modify<String, str>
-        + Remove<String, str, Output = Option<i32>>,
+        + Get<str>
+        + Modify<str>
+        + Remove<str, Output = Option<i32>>,
 {
     c.insert("one".to_string(), 1);
     c.insert("two".to_string(), 2);
@@ -1105,11 +1105,11 @@ mod bidimap_tests {
     where
         C: Container<Key = String, Value = i32>
             + Get<String>
-            + GetByLeft<String, str>
+            + GetByLeft<str>
             + GetByRight<String>
             + Set<String, Output = Overwritten<String, i32>>
             + Insert<String, Output = Overwritten<String, i32>>
-            + RemoveByLeft<String, str>
+            + RemoveByLeft<str>
             + RemoveByRight<String>
             + Clear
             + Len,

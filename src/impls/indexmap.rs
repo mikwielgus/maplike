@@ -28,7 +28,7 @@ impl<K, V> Assign for IndexMap<K, V> {
     }
 }
 
-impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V> Get<K, Q> for IndexMap<K, V>
+impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V> Get<Q> for IndexMap<K, V>
 where
     K: Borrow<Q>,
 {
@@ -47,7 +47,7 @@ impl<K: Eq + Hash, V> Set<K> for IndexMap<K, V> {
     }
 }
 
-impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V> Modify<K, Q> for IndexMap<K, V>
+impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V> Modify<Q> for IndexMap<K, V>
 where
     K: Borrow<Q>,
 {
@@ -69,7 +69,7 @@ impl<K: Eq + Hash, V> Insert<K> for IndexMap<K, V> {
     }
 }
 
-impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V> Remove<K, Q> for IndexMap<K, V>
+impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V> Remove<Q> for IndexMap<K, V>
 where
     K: Borrow<Q>,
 {

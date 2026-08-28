@@ -27,7 +27,7 @@ impl<K, V> Assign for BTreeMap<K, V> {
     }
 }
 
-impl<K: Ord, Q: Ord + ?Sized, V> Get<K, Q> for BTreeMap<K, V>
+impl<K: Ord, Q: Ord + ?Sized, V> Get<Q> for BTreeMap<K, V>
 where
     K: Borrow<Q>,
 {
@@ -46,7 +46,7 @@ impl<K: Ord, V> Set<K> for BTreeMap<K, V> {
     }
 }
 
-impl<K: Ord, Q: Ord + ?Sized, V> Modify<K, Q> for BTreeMap<K, V>
+impl<K: Ord, Q: Ord + ?Sized, V> Modify<Q> for BTreeMap<K, V>
 where
     K: Borrow<Q>,
 {
@@ -68,7 +68,7 @@ impl<K: Ord, V> Insert<K> for BTreeMap<K, V> {
     }
 }
 
-impl<K: Ord, Q: Ord + ?Sized, V> Remove<K, Q> for BTreeMap<K, V>
+impl<K: Ord, Q: Ord + ?Sized, V> Remove<Q> for BTreeMap<K, V>
 where
     K: Borrow<Q>,
 {
