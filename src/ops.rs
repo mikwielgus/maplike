@@ -9,7 +9,7 @@ use core::borrow::Borrow;
 use crate::containers::Container;
 
 /// Construct a container with exactly one element.
-pub trait WithOne<E>: Container {
+pub trait WithOne<E> {
     /// Construct a container containing only the given element.
     fn with_one(element: E) -> Self;
 }
@@ -45,7 +45,7 @@ pub trait WithOne<E>: Container {
 /// assert_eq!(map.get(&3), Some(&4.0));
 /// assert_eq!(map.get(&1), None);
 /// ```
-pub trait Assign<V = Self>: Container {
+pub trait Assign<V = Self> {
     /// Replace self with a new value.
     fn assign(&mut self, value: V);
 }
@@ -519,7 +519,7 @@ pub trait Pop: Container {
 /// assert_eq!(count.put(42), Some(1));
 /// assert_eq!(count, 42);
 /// ```
-pub trait Put<E>: Container {
+pub trait Put<E> {
     /// Put a new value in the container.
     ///
     /// This is basically [`push`](Push::push), but unlike it:
@@ -556,7 +556,7 @@ pub trait Put<E>: Container {
 /// btreemap.clear();
 /// assert_eq!(btreemap.get(&1), None);
 /// ```
-pub trait Clear: Container {
+pub trait Clear {
     /// Remove all elements from the collection.
     fn clear(&mut self);
 }
@@ -585,7 +585,7 @@ pub trait Clear: Container {
 /// let hashmap = HashMap::from([(1, 2.0), (2, 3.0)]);
 /// assert_eq!(hashmap.len(), 2);
 /// ```
-pub trait Len: Container {
+pub trait Len {
     /// Returns the number of elements in the collection.
     fn len(&self) -> usize;
 }
