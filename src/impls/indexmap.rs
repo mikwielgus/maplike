@@ -14,18 +14,11 @@ use indexmap::map::{
 use crate::containers::Container;
 use crate::entry::{CombinedEntry, Entry, OccupiedEntry, VacantEntry};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Assign, Clear, Get, Insert, Len, Modify, Remove, Set};
+use crate::ops::{Clear, Get, Insert, Len, Modify, Remove, Set};
 
 impl<K, V> Container for IndexMap<K, V> {
     type Key = K;
     type Value = V;
-}
-
-impl<K, V> Assign for IndexMap<K, V> {
-    #[inline(always)]
-    fn assign(&mut self, value: Self) {
-        *self = value;
-    }
 }
 
 impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V> Get<Q> for IndexMap<K, V>

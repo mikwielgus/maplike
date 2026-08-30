@@ -4,7 +4,7 @@
 
 use crate::containers::Container;
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Assign, Get, Len, Modify, Put, Set, WithOne};
+use crate::ops::{Get, Len, Modify, Put, Set, WithOne};
 
 macro_rules! impl_traits_for_scalar {
     ($($t:ty),*) => {
@@ -18,13 +18,6 @@ macro_rules! impl_traits_for_scalar {
                 #[inline(always)]
                 fn with_one(value: Self) -> Self {
                     value
-                }
-            }
-
-            impl Assign for $t {
-                #[inline(always)]
-                fn assign(&mut self, value: Self) {
-                    *self = value;
                 }
             }
 

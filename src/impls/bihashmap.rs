@@ -10,19 +10,12 @@ use std_::hash::Hash;
 use crate::containers::Container;
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
 use crate::ops::{
-    Assign, Clear, Get, GetByLeft, GetByRight, Insert, Len, RemoveByLeft, RemoveByRight, Set,
+    Clear, Get, GetByLeft, GetByRight, Insert, Len, RemoveByLeft, RemoveByRight, Set,
 };
 
 impl<L, R> Container for BiHashMap<L, R> {
     type Key = L;
     type Value = R;
-}
-
-impl<L, R> Assign for BiHashMap<L, R> {
-    #[inline(always)]
-    fn assign(&mut self, value: Self) {
-        *self = value;
-    }
 }
 
 impl<L: Eq + Hash, R: Eq + Hash, Q: Eq + Hash + ?Sized> Get<Q> for BiHashMap<L, R>

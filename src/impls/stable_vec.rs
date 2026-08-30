@@ -6,7 +6,7 @@ use stable_vec::StableVecFacade;
 
 use crate::containers::Container;
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{Assign, Clear, Get, Insert, Len, Modify, Push, Put, Remove, Set, WithOne};
+use crate::ops::{Clear, Get, Insert, Len, Modify, Push, Put, Remove, Set, WithOne};
 
 impl<V, C: stable_vec::core::Core<V>> Container for StableVecFacade<V, C> {
     type Key = usize;
@@ -20,13 +20,6 @@ impl<V, C: stable_vec::core::Core<V>> WithOne<V> for StableVecFacade<V, C> {
         StableVecFacade::push(&mut stable_vec, element);
 
         stable_vec
-    }
-}
-
-impl<V, C: stable_vec::core::Core<V>> Assign for StableVecFacade<V, C> {
-    #[inline(always)]
-    fn assign(&mut self, value: Self) {
-        *self = value;
     }
 }
 
