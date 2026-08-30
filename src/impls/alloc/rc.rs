@@ -6,7 +6,7 @@ use alloc_::rc::{Rc, Weak};
 
 use crate::containers::Container;
 use crate::iter::{Iter, Values};
-use crate::ops::{Assign, Clear, Get, Len, Modify, Put, Remove, Set, WithOne};
+use crate::ops::{Clear, Get, Len, Modify, Put, Remove, Set, WithOne};
 
 impl<V> Container for Rc<V> {
     type Key = usize;
@@ -17,13 +17,6 @@ impl<V> WithOne<V> for Rc<V> {
     #[inline(always)]
     fn with_one(value: V) -> Self {
         Rc::new(value)
-    }
-}
-
-impl<V> Assign for Rc<V> {
-    #[inline(always)]
-    fn assign(&mut self, value: Self) {
-        *self = value;
     }
 }
 
@@ -96,13 +89,6 @@ impl<'a, V: 'a> Iter<'a, usize> for Rc<V> {
 impl<V> Container for Weak<V> {
     type Key = usize;
     type Value = V;
-}
-
-impl<V> Assign for Weak<V> {
-    #[inline(always)]
-    fn assign(&mut self, value: Self) {
-        *self = value;
-    }
 }
 
 impl<V> Remove<usize> for Weak<V> {

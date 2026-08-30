@@ -6,7 +6,7 @@ use thunderdome::{Arena, Index};
 
 use crate::containers::Container;
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{Assign, Clear, Get, Insert, Len, Modify, Push, Put, Remove, Set, WithOne};
+use crate::ops::{Clear, Get, Insert, Len, Modify, Push, Put, Remove, Set, WithOne};
 
 impl<V> Container for Arena<V> {
     type Key = Index;
@@ -20,13 +20,6 @@ impl<V> WithOne<V> for Arena<V> {
         Arena::insert(&mut arena, element);
 
         arena
-    }
-}
-
-impl<V> Assign for Arena<V> {
-    #[inline(always)]
-    fn assign(&mut self, value: Self) {
-        *self = value;
     }
 }
 

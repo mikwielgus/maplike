@@ -6,7 +6,7 @@ use arrayvec::ArrayVec;
 
 use crate::containers::Container;
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Assign, Clear, Get, Len, Modify, Pop, Push, Put, Set, WithOne};
+use crate::ops::{Clear, Get, Len, Modify, Pop, Push, Put, Set, WithOne};
 
 impl<T, const CAP: usize> Container for ArrayVec<T, CAP> {
     type Key = usize;
@@ -20,13 +20,6 @@ impl<T, const CAP: usize> WithOne<T> for ArrayVec<T, CAP> {
         ArrayVec::push(&mut array_vec, element);
 
         array_vec
-    }
-}
-
-impl<T, const CAP: usize> Assign for ArrayVec<T, CAP> {
-    #[inline(always)]
-    fn assign(&mut self, value: Self) {
-        *self = value;
     }
 }
 

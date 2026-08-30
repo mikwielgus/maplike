@@ -6,7 +6,7 @@ use alloc_::vec::Vec;
 
 use crate::containers::Container;
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Assign, Clear, Get, Len, Modify, Pop, Push, Put, Resize, Set, WithOne};
+use crate::ops::{Clear, Get, Len, Modify, Pop, Push, Put, Resize, Set, WithOne};
 
 impl<V> Container for Vec<V> {
     type Key = usize;
@@ -20,13 +20,6 @@ impl<V> WithOne<V> for Vec<V> {
         Vec::push(&mut vec, element);
 
         vec
-    }
-}
-
-impl<V> Assign for Vec<V> {
-    #[inline(always)]
-    fn assign(&mut self, value: Self) {
-        *self = value;
     }
 }
 

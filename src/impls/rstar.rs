@@ -6,7 +6,7 @@ use rstar::{RTree, RTreeObject, RTreeParams};
 
 use crate::containers::Container;
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{Assign, Clear, Get, Insert, Len, Put, Remove, Set, WithOne};
+use crate::ops::{Clear, Get, Insert, Len, Put, Remove, Set, WithOne};
 
 impl<K: RTreeObject, Params: RTreeParams> Container for RTree<K, Params> {
     type Key = K;
@@ -20,13 +20,6 @@ impl<K: RTreeObject, Params: RTreeParams> WithOne<K> for RTree<K, Params> {
         RTree::insert(&mut rtree, element);
 
         rtree
-    }
-}
-
-impl<K: RTreeObject, Params: RTreeParams> Assign for RTree<K, Params> {
-    #[inline(always)]
-    fn assign(&mut self, value: Self) {
-        *self = value;
     }
 }
 

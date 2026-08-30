@@ -6,13 +6,13 @@
 
 use maplike::ops::Assign;
 
-#[derive(maplike::Container, maplike::Assign, Debug, PartialEq)]
+#[derive(maplike::Container, Debug, PartialEq)]
 struct TestStruct {
     integer: i64,
     string: String,
 }
 
-#[derive(maplike::Container, maplike::Assign, Debug, PartialEq)]
+#[derive(maplike::Container, Debug, PartialEq)]
 enum TestEnum {
     Usize(usize),
     Strings(String, String),

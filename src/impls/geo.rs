@@ -9,7 +9,7 @@ use geo_types::{
 
 use crate::containers::Container;
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Assign, Clear, Get, Len, Modify, Pop, Push, Put, Resize, Set, WithOne};
+use crate::ops::{Clear, Get, Len, Modify, Pop, Push, Put, Resize, Set, WithOne};
 
 macro_rules! impl_traits_for_geo_noncollection {
     ($($ty:ident),* $(,)?) => {
@@ -23,13 +23,6 @@ macro_rules! impl_traits_for_geo_noncollection {
                 #[inline(always)]
                 fn with_one(value: Self) -> Self {
                     value
-                }
-            }
-
-            impl<T: CoordNum> Assign for $ty<T> {
-                #[inline(always)]
-                fn assign(&mut self, value: Self) {
-                    *self = value;
                 }
             }
 
@@ -131,13 +124,6 @@ macro_rules! impl_traits_for_geo_veclike {
             #[inline(always)]
             fn with_one(element: $value) -> Self {
                 Self::$ctor(alloc_::vec![element])
-            }
-        }
-
-        impl<T: CoordNum> Assign for $wrapper<T> {
-            #[inline(always)]
-            fn assign(&mut self, value: Self) {
-                *self = value;
             }
         }
 

@@ -61,9 +61,7 @@ maplike = { version = "0.14.0", features = ["derive"] }
 ```
 
 The `derive` feature flag is only needed if you want to
-derive `Assign` or `Container` traits using derive macros:
-[`#[derive(Assign)]`](https://docs.rs/maplike/latest/maplike/derive.Assign.html)
-or
+derive the `Container` trait using derive macro
 [`#[derive(Container)]`](https://docs.rs/maplike/latest/maplike/derive.Container.html).
 
 ### Usage examples

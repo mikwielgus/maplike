@@ -50,6 +50,13 @@ pub trait Assign<V = Self> {
     fn assign(&mut self, value: V);
 }
 
+impl<V: Container> Assign for V {
+    #[inline(always)]
+    fn assign(&mut self, value: V) {
+        *self = value;
+    }
+}
+
 /// Returns a reference to the value corresponding to the key.
 ///
 /// # Examples

@@ -27,6 +27,6 @@ pub mod ops;
 
 #[cfg(feature = "derive")]
 #[cfg_attr(docsrs, doc(cfg(feature = "derive")))]
-pub use maplike_derive::{Assign, Container};
+pub use maplike_derive::Container;
 
 mod impls;

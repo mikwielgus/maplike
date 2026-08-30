@@ -6,7 +6,7 @@ use alloc_::boxed::Box;
 
 use crate::containers::Container;
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Assign, Get, Len, Modify, Put, Set, WithOne};
+use crate::ops::{Get, Len, Modify, Put, Set, WithOne};
 
 impl<V> Container for Box<V> {
     type Key = usize;
@@ -17,13 +17,6 @@ impl<V> WithOne<V> for Box<V> {
     #[inline(always)]
     fn with_one(value: V) -> Self {
         Box::new(value)
-    }
-}
-
-impl<V> Assign for Box<V> {
-    #[inline(always)]
-    fn assign(&mut self, value: Self) {
-        *self = value;
     }
 }
 

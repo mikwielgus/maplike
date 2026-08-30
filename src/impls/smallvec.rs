@@ -6,7 +6,7 @@ use smallvec::{Array, SmallVec};
 
 use crate::containers::Container;
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Assign, Clear, Get, Len, Modify, Pop, Push, Put, Resize, Set, WithOne};
+use crate::ops::{Clear, Get, Len, Modify, Pop, Push, Put, Resize, Set, WithOne};
 
 impl<A: Array> Container for SmallVec<A> {
     type Key = usize;
@@ -20,13 +20,6 @@ impl<A: Array> WithOne<A::Item> for SmallVec<A> {
         SmallVec::push(&mut small_vec, element);
 
         small_vec
-    }
-}
-
-impl<A: Array> Assign for SmallVec<A> {
-    #[inline(always)]
-    fn assign(&mut self, value: Self) {
-        *self = value;
     }
 }
 

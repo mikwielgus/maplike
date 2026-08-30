@@ -13,18 +13,11 @@ use alloc_::collections::btree_map::{
 use crate::containers::Container;
 use crate::entry::{CombinedEntry, Entry, OccupiedEntry, VacantEntry};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Assign, Clear, Get, Insert, Len, Modify, Remove, Set};
+use crate::ops::{Clear, Get, Insert, Len, Modify, Remove, Set};
 
 impl<K, V> Container for BTreeMap<K, V> {
     type Key = K;
     type Value = V;
-}
-
-impl<K, V> Assign for BTreeMap<K, V> {
-    #[inline(always)]
-    fn assign(&mut self, value: Self) {
-        *self = value;
-    }
 }
 
 impl<K: Ord, Q: Ord + ?Sized, V> Get<Q> for BTreeMap<K, V>

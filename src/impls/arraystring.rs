@@ -5,7 +5,7 @@
 use arrayvec::ArrayString;
 
 use crate::containers::Container;
-use crate::ops::{Assign, Clear, Len, Pop, Push, Put, WithOne};
+use crate::ops::{Clear, Len, Pop, Push, Put, WithOne};
 
 impl<const CAP: usize> Container for ArrayString<CAP> {
     type Key = usize;
@@ -19,13 +19,6 @@ impl<const CAP: usize> WithOne<char> for ArrayString<CAP> {
         ArrayString::push(&mut array_string, element);
 
         array_string
-    }
-}
-
-impl<const CAP: usize> Assign for ArrayString<CAP> {
-    #[inline(always)]
-    fn assign(&mut self, value: Self) {
-        *self = value;
     }
 }
 

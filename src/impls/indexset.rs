@@ -9,7 +9,7 @@ use indexmap::IndexSet;
 
 use crate::containers::Container;
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{Assign, Clear, Get, Insert, Len, Put, Remove, Set, WithOne};
+use crate::ops::{Clear, Get, Insert, Len, Put, Remove, Set, WithOne};
 
 impl<K> Container for IndexSet<K> {
     type Key = K;
@@ -23,13 +23,6 @@ impl<K: Eq + Hash> WithOne<K> for IndexSet<K> {
         IndexSet::insert(&mut indexset, element);
 
         indexset
-    }
-}
-
-impl<K> Assign for IndexSet<K> {
-    #[inline(always)]
-    fn assign(&mut self, value: Self) {
-        *self = value;
     }
 }
 
