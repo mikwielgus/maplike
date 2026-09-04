@@ -12,11 +12,9 @@
 #![no_std]
 
 #[cfg(feature = "std")]
-#[cfg_attr(docsrs, doc(cfg(feature = "std")))]
 extern crate std as std_;
 
 #[cfg(feature = "alloc")]
-#[cfg_attr(docsrs, doc(cfg(feature = "alloc")))]
 extern crate alloc as alloc_;
 
 pub mod containers;
@@ -26,7 +24,6 @@ pub mod one;
 pub mod ops;
 
 #[cfg(feature = "derive")]
-#[cfg_attr(docsrs, doc(cfg(feature = "derive")))]
 pub use maplike_derive::Container;
 
 mod impls;
