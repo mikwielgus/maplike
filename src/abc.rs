@@ -2,7 +2,10 @@
 //
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
-//! Abstract container traits that bundle multiple operations together.
+//! Abstract Base Containers: traits that bundle multiple operations together.
+//!
+//! The module's name, `abc`, is borrowed from Python's
+//! [`collections.abc`](https://docs.python.org/3/library/collections.abc.html).
 
 use core::ops::Index;
 
@@ -52,7 +55,7 @@ pub use crate::ops::Assign as Scalarlike;
 /// # Examples
 ///
 /// ```
-/// use maplike::containers::Maplike;
+/// use maplike::abc::Maplike;
 /// use maplike::ops::{Get, Insert, Set};
 /// use std::collections::{BTreeMap, HashMap};
 ///
@@ -101,7 +104,7 @@ impl<K, T: Maplike<K, Value = ()>> Setlike<K> for T {}
 /// # Examples
 ///
 /// ```
-/// use maplike::containers::Arraylike;
+/// use maplike::abc::Arraylike;
 /// use maplike::ops::{Get, Len, Set};
 ///
 /// // Generic over any `Arraylike` collection.
@@ -139,7 +142,7 @@ impl<K, T: Index<K> + Get<K> + Set<K> + Len> Arraylike<K> for T {}
 /// # Examples
 ///
 /// ```
-/// use maplike::containers::Veclike;
+/// use maplike::abc::Veclike;
 /// use maplike::ops::{Get, Len, Set};
 ///
 /// // Generic over any `Veclike` collection.

@@ -10,7 +10,7 @@
 
 use std::fmt::Debug;
 
-use maplike::containers::Container;
+use maplike::abc::Container;
 use maplike::entry::{CombinedEntry, Entry, OccupiedEntry, VacantEntry};
 use maplike::iter::IntoIter;
 use maplike::ops::{

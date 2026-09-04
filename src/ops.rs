@@ -6,7 +6,7 @@
 
 use core::borrow::Borrow;
 
-use crate::containers::Container;
+use crate::abc::Container;
 
 /// Construct a container with exactly one element.
 pub trait WithOne<E> {

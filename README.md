@@ -91,7 +91,7 @@ assert_eq!(get_second_element(&HashMap::from([(0, 10), (1, 20)])), Some(&20));
 
 An abstract container trait can bundle together several traits
 for container methods together in one short bound. For example,
-[`Veclike`](https://docs.rs/maplike/latest/maplike/containers/trait.Veclike.html) joins
+[`Veclike`](https://docs.rs/maplike/latest/maplike/abc/trait.Veclike.html) joins
 together
 ([`Get`](https://docs.rs/maplike/latest/maplike/ops/trait.Get.html),
 [`Set`](https://docs.rs/maplike/latest/maplike/ops/trait.Set.html),
@@ -108,7 +108,7 @@ for code that is generic over
 [`tinyvec::TinyVec`](https://docs.rs/tinyvec/latest/tinyvec/enum.TinyVec.html).
 
 ```rust
-use maplike::containers::{Container, Veclike};
+use maplike::abc::{Container, Veclike};
 use maplike::ops::{Clear, Push};
 
 // This function is generic over any `Veclike` collection. The `Veclike` bound
@@ -201,11 +201,11 @@ types that have an Entry API:
 ### Containers
 
 For brevity and convenience, we also provide
-[`Scalarlike`](https://docs.rs/maplike/latest/maplike/containers/trait.Scalarlike.html),
-[`Maplike`](https://docs.rs/maplike/latest/maplike/containers/trait.Maplike.html),
-[`Setlike`](https://docs.rs/maplike/latest/maplike/containers/trait.Setlike.html),
-[`Arraylike`](https://docs.rs/maplike/latest/maplike/containers/trait.Arraylike.html), and
-[`Veclike`](https://docs.rs/maplike/latest/maplike/containers/trait.Veclike.html) abstract
+[`Scalarlike`](https://docs.rs/maplike/latest/maplike/abc/trait.Scalarlike.html),
+[`Maplike`](https://docs.rs/maplike/latest/maplike/abc/trait.Maplike.html),
+[`Setlike`](https://docs.rs/maplike/latest/maplike/abc/trait.Setlike.html),
+[`Arraylike`](https://docs.rs/maplike/latest/maplike/abc/trait.Arraylike.html), and
+[`Veclike`](https://docs.rs/maplike/latest/maplike/abc/trait.Veclike.html) abstract
 container traits that join together traits of multiple operations.
 
 ## Supported containers

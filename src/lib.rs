@@ -17,7 +17,7 @@ extern crate std as std_;
 #[cfg(feature = "alloc")]
 extern crate alloc as alloc_;
 
-pub mod containers;
+pub mod abc;
 pub mod entry;
 pub mod iter;
 pub mod one;
