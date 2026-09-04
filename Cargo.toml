@@ -7,7 +7,7 @@ members = [".", "maplike_derive"]
 
 [package]
 name = "maplike"
-version = "0.14.0"
+version = "0.15.0"
 authors = ["Mikolaj Wielgus <wielgusmikolaj@gmail.com>"]
 description = "Rust traits for abstract containers and operations over them. Treats every container as map. You can have the same code work on Vec, HashMap, BTreeMap, Option, Box."
 repository = "https://github.com/mikwielgus/maplike"
@@ -76,7 +76,7 @@ tinyvec = ["dep:tinyvec"]
 serde = ["dep:serde"]
 
 [dependencies]
-maplike_derive = { version = "0.14", optional = true, path = "maplike_derive" }
+maplike_derive = { version = "0.15", optional = true, path = "maplike_derive" }
 arrayvec = { version = "0.7", optional = true }
 bidimap = { version = "0.7", optional = true }
 document-features = { version = "0.2", optional = true }
