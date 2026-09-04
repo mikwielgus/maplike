@@ -173,6 +173,7 @@ array-like, and vec-like data structures:
 [`.modify()`](https://docs.rs/maplike/latest/maplike/ops/trait.Modify.html#tymethod.modify),
 [`.insert()`](https://docs.rs/maplike/latest/maplike/ops/trait.Insert.html#tymethod.insert),
 [`.remove()`](https://docs.rs/maplike/latest/maplike/ops/trait.Remove.html#tymethod.remove),
+[`.swap_remove()`](https://docs.rs/maplike/latest/maplike/ops/trait.SwapRemove.html#tymethod.swap_remove),
 [`.push()`](https://docs.rs/maplike/latest/maplike/ops/trait.Push.html#tymethod.push),
 [`.pop()`](https://docs.rs/maplike/latest/maplike/ops/trait.Pop.html#tymethod.pop),
 [`.put()`](https://docs.rs/maplike/latest/maplike/ops/trait.Put.html#tymethod.put),

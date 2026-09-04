@@ -15,7 +15,7 @@ use maplike::entry::{CombinedEntry, Entry, OccupiedEntry, VacantEntry};
 use maplike::iter::IntoIter;
 use maplike::ops::{
     Assign, Clear, Get, GetByLeft, GetByRight, Insert, Len, Modify, Pop, Push, Put, Remove,
-    RemoveByLeft, RemoveByRight, Resize, Set, WithOne,
+    RemoveByLeft, RemoveByRight, Resize, Set, SwapRemove, WithOne,
 };
 
 trait FromUsize {
@@ -317,6 +317,29 @@ where
 
     c.clear();
     assert_eq!(Len::len(&c), 0);
+}
+
+fn check_swap_remove<V, C>(mut c: C)
+where
+    V: FromUsize + Clone + PartialEq + Debug,
+    C: Keyed<Key = usize, Value = V>
+        + Push<usize>
+        + Get<usize>
+        + SwapRemove<usize, Output = V>
+        + Len,
+{
+    c.push(V::from_usize(10));
+    c.push(V::from_usize(20));
+    c.push(V::from_usize(30));
+
+    assert_eq!(c.swap_remove(&1), V::from_usize(20));
+    assert_eq!(Len::len(&c), 2);
+    assert_eq!(c.get(&0), Some(&V::from_usize(10)));
+    assert_eq!(c.get(&1), Some(&V::from_usize(30)));
+
+    assert_eq!(c.swap_remove(&1), V::from_usize(30));
+    assert_eq!(Len::len(&c), 1);
+    assert_eq!(c.get(&0), Some(&V::from_usize(10)));
 }
 
 fn check_resize<V, C>(mut c: C)
@@ -744,6 +767,7 @@ mod alloc_tests {
         check_push_put::<usize, i32, Vec<i32>>(Vec::new());
         check_with_one::<i32, i32, Vec<i32>>(30, 30);
         check_vec::<i32, Vec<i32>>(Vec::new());
+        check_swap_remove::<i32, Vec<i32>>(Vec::new());
         check_resize::<i32, Vec<i32>>(Vec::new());
         check_assign(vec![1i32], vec![2i32, 3i32]);
 

@@ -345,12 +345,54 @@ pub trait Remove<K: ?Sized>: Keyed {
     fn remove(&mut self, key: &K) -> Self::Output;
 }
 
+/// Remove an element under a key by swapping it with the last element,
+/// returning the removed value.
+///
+/// Unlike [`Remove`], this may invalidate other keys: the last element is moved
+/// into the vacated slot (unless the removed key was already last).
+///
+/// # Examples
+///
+/// ```
+/// use maplike::ops::{Get, Len, Push, SwapRemove};
+///
+/// let mut vec = Vec::new();
+///
+/// Push::push(&mut vec, 10);
+/// Push::push(&mut vec, 20);
+/// Push::push(&mut vec, 30);
+/// Push::push(&mut vec, 40);
+/// Push::push(&mut vec, 50);
+///
+/// assert_eq!(SwapRemove::swap_remove(&mut vec, &1), 20);
+/// assert_eq!(Len::len(&vec), 4);
+/// assert_eq!(vec.get(&0), Some(&10));
+///
+/// // Previously last element is now second, in place of the swap-removed
+/// // element.
+/// assert_eq!(vec.get(&1), Some(&50));
+///
+/// assert_eq!(vec.get(&2), Some(&30));
+/// assert_eq!(vec.get(&3), Some(&40));
+/// ```
+pub trait SwapRemove<K: ?Sized>: Keyed {
+    /// Return type of [`swap_remove`](SwapRemove::swap_remove).
+    type Output;
+
+    /// Remove an element under a key by swapping it with the last element,
+    /// returning the removed value.
+    ///
+    /// Unlike [`Remove`], this may invalidate other keys: the last element is
+    /// moved into the vacated slot (unless the removed key was already last).
+    fn swap_remove(&mut self, key: &K) -> Self::Output;
+}
+
 /// Remove the left and right values from pair corresponding to the given left
 /// value in a bidirectional map.
 ///
 /// Should be only implemented only for bidirectional maps (not for
-/// unidirectional maps) along with [`RemoveByRight::remove_by_right()`], and should
-/// behave identically to [`Remove`].
+/// unidirectional maps) along with [`RemoveByRight::remove_by_right()`], and
+/// should behave identically to [`Remove`].
 ///
 /// # Examples
 ///

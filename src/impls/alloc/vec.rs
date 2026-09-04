@@ -6,7 +6,7 @@ use alloc_::vec::Vec;
 
 use crate::abc::Keyed;
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, Get, Len, Modify, Pop, Push, Put, Resize, Set, WithOne};
+use crate::ops::{Clear, Get, Len, Modify, Pop, Push, Put, Resize, Set, SwapRemove, WithOne};
 
 impl<V> Keyed for Vec<V> {
     type Key = usize;
@@ -62,6 +62,15 @@ impl<V> Pop for Vec<V> {
     #[inline(always)]
     fn pop(&mut self) -> Option<V> {
         Vec::pop(self)
+    }
+}
+
+impl<V> SwapRemove<usize> for Vec<V> {
+    type Output = V;
+
+    #[inline(always)]
+    fn swap_remove(&mut self, key: &usize) -> V {
+        Vec::swap_remove(self, *key)
     }
 }
 
