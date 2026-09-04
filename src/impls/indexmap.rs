@@ -11,12 +11,12 @@ use indexmap::map::{
     VacantEntry as IndexMapVacantEntry,
 };
 
-use crate::abc::Container;
+use crate::abc::Keyed;
 use crate::entry::{CombinedEntry, Entry, OccupiedEntry, VacantEntry};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
 use crate::ops::{Clear, Get, Insert, Len, Modify, Remove, Set};
 
-impl<K, V> Container for IndexMap<K, V> {
+impl<K, V> Keyed for IndexMap<K, V> {
     type Key = K;
     type Value = V;
 }

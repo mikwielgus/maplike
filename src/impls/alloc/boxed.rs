@@ -4,11 +4,11 @@
 
 use alloc_::boxed::Box;
 
-use crate::abc::Container;
+use crate::abc::Keyed;
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
 use crate::ops::{Get, Len, Modify, Put, Set, WithOne};
 
-impl<V> Container for Box<V> {
+impl<V> Keyed for Box<V> {
     type Key = usize;
     type Value = V;
 }

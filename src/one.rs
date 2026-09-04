@@ -4,7 +4,7 @@
 
 //! `One`, a collection that holds always exactly one element.
 
-use crate::abc::Container;
+use crate::abc::Keyed;
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
 use crate::ops::{Get, Len, Modify, Put, Set, WithOne};
 
@@ -23,7 +23,7 @@ impl<V> One<V> {
     }
 }
 
-impl<V> Container for One<V> {
+impl<V> Keyed for One<V> {
     type Key = usize;
     type Value = V;
 }

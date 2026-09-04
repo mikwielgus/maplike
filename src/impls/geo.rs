@@ -7,14 +7,14 @@ use geo_types::{
     MultiPolygon, Point, Polygon, Rect, Triangle,
 };
 
-use crate::abc::Container;
+use crate::abc::Keyed;
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
 use crate::ops::{Clear, Get, Len, Modify, Pop, Push, Put, Resize, Set, WithOne};
 
 macro_rules! impl_traits_for_geo_noncollection {
     ($($ty:ident),* $(,)?) => {
         $(
-            impl<T: CoordNum> Container for $ty<T> {
+            impl<T: CoordNum> Keyed for $ty<T> {
                 type Key = usize;
                 type Value = Self;
             }
@@ -115,7 +115,7 @@ impl_traits_for_geo_noncollection!(Coord, Point, Line, Rect, Triangle, Polygon, 
 
 macro_rules! impl_traits_for_geo_veclike {
     ($wrapper:ident, $value:ty, $ctor:ident) => {
-        impl<T: CoordNum> Container for $wrapper<T> {
+        impl<T: CoordNum> Keyed for $wrapper<T> {
             type Key = usize;
             type Value = $value;
         }

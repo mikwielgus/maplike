@@ -6,13 +6,13 @@ use core::borrow::Borrow;
 
 use bidimap::{BiBTreeMap, Overwritten};
 
-use crate::abc::Container;
+use crate::abc::Keyed;
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
 use crate::ops::{
     Clear, Get, GetByLeft, GetByRight, Insert, Len, RemoveByLeft, RemoveByRight, Set,
 };
 
-impl<L, R> Container for BiBTreeMap<L, R> {
+impl<L, R> Keyed for BiBTreeMap<L, R> {
     type Key = L;
     type Value = R;
 }

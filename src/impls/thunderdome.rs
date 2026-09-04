@@ -4,11 +4,11 @@
 
 use thunderdome::{Arena, Index};
 
-use crate::abc::Container;
+use crate::abc::Keyed;
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
 use crate::ops::{Clear, Get, Insert, Len, Modify, Push, Put, Remove, Set, WithOne};
 
-impl<V> Container for Arena<V> {
+impl<V> Keyed for Arena<V> {
     type Key = Index;
     type Value = V;
 }

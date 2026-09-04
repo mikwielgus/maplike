@@ -4,11 +4,11 @@
 
 use tinyvec::{Array, ArrayVec, TinyVec};
 
-use crate::abc::Container;
+use crate::abc::Keyed;
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
 use crate::ops::{Clear, Get, Len, Modify, Pop, Push, Put, Resize, Set, WithOne};
 
-impl<A: Array> Container for ArrayVec<A> {
+impl<A: Array> Keyed for ArrayVec<A> {
     type Key = usize;
     type Value = A::Item;
 }
@@ -140,7 +140,7 @@ impl<A: Array> IntoIter<usize> for ArrayVec<A> {
     }
 }
 
-impl<A: Array> Container for TinyVec<A> {
+impl<A: Array> Keyed for TinyVec<A> {
     type Key = usize;
     type Value = A::Item;
 }

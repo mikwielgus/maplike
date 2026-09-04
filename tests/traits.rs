@@ -10,7 +10,7 @@
 
 use std::fmt::Debug;
 
-use maplike::abc::Container;
+use maplike::abc::Keyed;
 use maplike::entry::{CombinedEntry, Entry, OccupiedEntry, VacantEntry};
 use maplike::iter::IntoIter;
 use maplike::ops::{
@@ -55,7 +55,7 @@ where
     K: FromUsize + Clone,
     V: FromUsize + Clone + PartialEq + Debug,
     O: PartialEq + Debug,
-    C: Container<Key = K, Value = V>
+    C: Keyed<Key = K, Value = V>
         + Get<K>
         + Set<K>
         + Insert<K>
@@ -93,7 +93,7 @@ fn check_entry<K, V, C>(mut c: C)
 where
     K: FromUsize + Clone + PartialEq + Debug,
     V: FromUsize + Clone + PartialEq + Debug + Default,
-    C: Container<Key = K, Value = V> + Entry<K> + Get<K> + Clear,
+    C: Keyed<Key = K, Value = V> + Entry<K> + Get<K> + Clear,
     for<'a> <C as Entry<K>>::Entry<'a>: CombinedEntry<'a, K, V>,
 {
     let k = K::from_usize(1);
@@ -183,7 +183,7 @@ fn check_modify<K, V, C>(mut c: C)
 where
     K: FromUsize + Clone,
     V: FromUsize + Clone + PartialEq + Debug,
-    C: Container<Key = K, Value = V> + Insert<K> + Get<K> + Modify<K> + Clear,
+    C: Keyed<Key = K, Value = V> + Insert<K> + Get<K> + Modify<K> + Clear,
 {
     let k = K::from_usize(1);
 
@@ -199,7 +199,7 @@ fn check_into_iter<K, V, C>(mut c: C)
 where
     K: FromUsize + Clone + PartialEq + Debug,
     V: FromUsize + Clone + PartialEq + Debug,
-    C: Container<Key = K, Value = V> + Insert<K> + IntoIter<K>,
+    C: Keyed<Key = K, Value = V> + Insert<K> + IntoIter<K>,
 {
     c.insert(K::from_usize(1), V::from_usize(10));
     c.insert(K::from_usize(2), V::from_usize(20));
@@ -224,7 +224,7 @@ where
 
 fn check_borrow_str<C>(mut c: C)
 where
-    C: Container<Key = String, Value = i32>
+    C: Keyed<Key = String, Value = i32>
         + Insert<String>
         + Get<str>
         + Modify<str>
@@ -247,7 +247,7 @@ fn check_push_put<K, V, C>(mut c: C)
 where
     K: Clone,
     V: FromUsize + Clone + Ord + PartialEq + Debug,
-    C: Container<Key = K, Value = V> + Push<K> + Get<K> + Set<K> + Modify<K> + Put<V> + IntoIter<K>,
+    C: Keyed<Key = K, Value = V> + Push<K> + Get<K> + Set<K> + Modify<K> + Put<V> + IntoIter<K>,
 {
     let k0 = c.push(V::from_usize(10));
     let k1 = c.push(V::from_usize(20));
@@ -274,7 +274,7 @@ where
 fn check_with_one<E, V, C>(element: E, expected: V)
 where
     V: PartialEq + Debug,
-    C: Container<Value = V> + WithOne<E> + IntoIter<<C as Container>::Key>,
+    C: Keyed<Value = V> + WithOne<E> + IntoIter<<C as Keyed>::Key>,
 {
     let values: Vec<V> = IntoIter::into_iter(C::with_one(element))
         .map(|(_, value)| value)
@@ -286,7 +286,7 @@ fn check_pushed_insert_remove<K, V, C>(mut c: C)
 where
     K: Clone,
     V: FromUsize + Clone + PartialEq + Debug,
-    C: Container<Key = K, Value = V>
+    C: Keyed<Key = K, Value = V>
         + Push<K>
         + Get<K>
         + Insert<K>
@@ -308,7 +308,7 @@ where
 fn check_vec<V, C>(mut c: C)
 where
     V: FromUsize + Clone + PartialEq + Debug,
-    C: Container<Key = usize, Value = V> + Push<usize> + Pop + Len + Clear,
+    C: Keyed<Key = usize, Value = V> + Push<usize> + Pop + Len + Clear,
 {
     c.push(V::from_usize(10));
     c.push(V::from_usize(20));
@@ -322,7 +322,7 @@ where
 fn check_resize<V, C>(mut c: C)
 where
     V: FromUsize + Clone + PartialEq + Debug,
-    C: Container<Key = usize, Value = V> + Get<usize> + Len + Resize,
+    C: Keyed<Key = usize, Value = V> + Get<usize> + Len + Resize,
 {
     c.resize(3, V::from_usize(1));
     assert_eq!(Len::len(&c), 3);
@@ -341,7 +341,7 @@ where
 
 fn check_indexed<C>(c: &mut C)
 where
-    C: ?Sized + Container<Key = usize, Value = i32> + Get<usize> + Set<usize> + Modify<usize> + Len,
+    C: ?Sized + Keyed<Key = usize, Value = i32> + Get<usize> + Set<usize> + Modify<usize> + Len,
 {
     assert_eq!(Len::len(&*c), 3);
 
@@ -357,7 +357,7 @@ where
 fn check_scalar<V>(initial: V, alt1: V, alt2: V, alt3: V)
 where
     V: Clone + PartialEq + Debug,
-    V: Container<Key = usize, Value = V>
+    V: Keyed<Key = usize, Value = V>
         + Get<usize>
         + Set<usize, Output = Option<V>>
         + Modify<usize>
@@ -1103,7 +1103,7 @@ mod bidimap_tests {
 
     fn check_bidirectional_map<C>(mut c: C)
     where
-        C: Container<Key = String, Value = i32>
+        C: Keyed<Key = String, Value = i32>
             + Get<String>
             + GetByLeft<str>
             + GetByRight<String>

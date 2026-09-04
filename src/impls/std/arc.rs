@@ -4,11 +4,11 @@
 
 use std_::sync::{Arc, Weak};
 
-use crate::abc::Container;
+use crate::abc::Keyed;
 use crate::iter::{Iter, Values};
 use crate::ops::{Clear, Get, Len, Modify, Put, Remove, Set, WithOne};
 
-impl<V> Container for Arc<V> {
+impl<V> Keyed for Arc<V> {
     type Key = usize;
     type Value = V;
 }
@@ -86,7 +86,7 @@ impl<'a, V: 'a> Iter<'a, usize> for Arc<V> {
     }
 }
 
-impl<V> Container for Weak<V> {
+impl<V> Keyed for Weak<V> {
     type Key = usize;
     type Value = V;
 }

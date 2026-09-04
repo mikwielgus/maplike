@@ -4,11 +4,11 @@
 
 use smallvec::{Array, SmallVec};
 
-use crate::abc::Container;
+use crate::abc::Keyed;
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
 use crate::ops::{Clear, Get, Len, Modify, Pop, Push, Put, Resize, Set, WithOne};
 
-impl<A: Array> Container for SmallVec<A> {
+impl<A: Array> Keyed for SmallVec<A> {
     type Key = usize;
     type Value = A::Item;
 }

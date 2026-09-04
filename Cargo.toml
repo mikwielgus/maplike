@@ -25,7 +25,7 @@ maintenance = { status = "actively-developed" }
 [features]
 default = ["std"]
 
-## Enables the `Container` and `Assign` derive macros.
+## Enables the `Keyed` and `Assign` derive macros.
 derive = ["dep:maplike_derive"]
 
 ## Disable for `no_std` compatibility. Implies `alloc`.

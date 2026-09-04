@@ -61,8 +61,8 @@ maplike = { version = "0.14.0", features = ["derive"] }
 ```
 
 The `derive` feature flag is only needed if you want to
-derive the `Container` trait using derive macro
-[`#[derive(Container)]`](https://docs.rs/maplike/latest/maplike/derive.Container.html).
+derive the `Keyed` trait using derive macro
+[`#[derive(Keyed)]`](https://docs.rs/maplike/latest/maplike/derive.Keyed.html).
 
 ### Usage examples
 
@@ -108,7 +108,7 @@ for code that is generic over
 [`tinyvec::TinyVec`](https://docs.rs/tinyvec/latest/tinyvec/enum.TinyVec.html).
 
 ```rust
-use maplike::abc::{Container, Veclike};
+use maplike::abc::{Keyed, Veclike};
 use maplike::ops::{Clear, Push};
 
 // This function is generic over any `Veclike` collection. The `Veclike` bound

@@ -6,7 +6,7 @@
 
 use core::borrow::Borrow;
 
-use crate::abc::Container;
+use crate::abc::Keyed;
 
 /// Construct a container with exactly one element.
 pub trait WithOne<E> {
@@ -50,7 +50,7 @@ pub trait Assign<V = Self> {
     fn assign(&mut self, value: V);
 }
 
-impl<V: Container> Assign for V {
+impl<V: Keyed> Assign for V {
     #[inline(always)]
     fn assign(&mut self, value: V) {
         *self = value;
@@ -88,7 +88,7 @@ impl<V: Container> Assign for V {
 ///     Some(&20),
 /// );
 /// ```
-pub trait Get<K: ?Sized>: Container {
+pub trait Get<K: ?Sized>: Keyed {
     /// Returns a reference to the value corresponding to the key.
     fn get(&self, key: &K) -> Option<&Self::Value>;
 }
@@ -122,7 +122,7 @@ pub trait Get<K: ?Sized>: Container {
 ///     assert_eq!(hashmap.get_by_left("west"), Some(&2));
 /// }
 /// ```
-pub trait GetByLeft<K: ?Sized>: Container {
+pub trait GetByLeft<K: ?Sized>: Keyed {
     /// Returns a reference to the right value corresponding to the given left value.
     ///
     /// Should be only implemented only for bidirectional maps (not for
@@ -162,7 +162,7 @@ pub trait GetByLeft<K: ?Sized>: Container {
 ///     assert_eq!(hashmap.get_by_right(&1), Some(&"east".to_string()));
 /// }
 /// ```
-pub trait GetByRight<K: ?Sized, Q: ?Sized = <Self as Container>::Value>: Container
+pub trait GetByRight<K: ?Sized, Q: ?Sized = <Self as Keyed>::Value>: Keyed
 where
     Self::Value: Borrow<Q>,
 {
@@ -207,7 +207,7 @@ where
 /// btree_map.set(1, 20.0);
 /// assert_eq!(btree_map.get(&1), Some(&20.0));
 /// ```
-pub trait Set<K>: Container {
+pub trait Set<K>: Keyed {
     /// Return type of [`set`](Set::set).
     type Output;
 
@@ -249,7 +249,7 @@ pub trait Set<K>: Container {
 /// btree_map.modify(&1, |value| *value *= 10.0);
 /// assert_eq!(btree_map.get(&1), Some(&20.0));
 /// ```
-pub trait Modify<K: ?Sized>: Container {
+pub trait Modify<K: ?Sized>: Keyed {
     /// Modify the value under key with a closure.
     ///
     /// This is useful if something always has to be done before or after the
@@ -279,7 +279,7 @@ pub trait Modify<K: ?Sized>: Container {
 /// btreemap.insert(1, 2.0);
 /// assert_eq!(btreemap.get(&1), Some(&2.0));
 /// ```
-pub trait Insert<K>: Container {
+pub trait Insert<K>: Keyed {
     /// Return type of [`insert`](Insert::insert).
     type Output;
 
@@ -321,7 +321,7 @@ pub trait Insert<K>: Container {
 /// assert_eq!(btreemap.remove(&1), Some(2.0));
 /// assert_eq!(btreemap.get(&1), None);
 /// ```
-pub trait Remove<K: ?Sized>: Container {
+pub trait Remove<K: ?Sized>: Keyed {
     /// Return type of [`remove`](Remove::remove).
     type Output;
 
@@ -374,7 +374,7 @@ pub trait Remove<K: ?Sized>: Container {
 ///     assert_eq!(bihashmap.get_by_left("west"), None);
 /// }
 /// ```
-pub trait RemoveByLeft<K: ?Sized>: Container {
+pub trait RemoveByLeft<K: ?Sized>: Keyed {
     /// Remove the left and right values from pair corresponding to the given
     /// left value in a bidirectional map.
     ///
@@ -417,7 +417,7 @@ pub trait RemoveByLeft<K: ?Sized>: Container {
 ///     assert_eq!(bihashmap.get_by_right(&1), None);
 /// }
 /// ```
-pub trait RemoveByRight<K, Q: ?Sized = <Self as Container>::Value>: Container
+pub trait RemoveByRight<K, Q: ?Sized = <Self as Keyed>::Value>: Keyed
 where
     Self::Value: Borrow<Q>,
 {
@@ -453,7 +453,7 @@ where
 /// assert_eq!(deque.push(2.0), 1);
 /// assert_eq!(Get::get(&deque, &1), Some(&2.0));
 /// ```
-pub trait Push<K>: Container {
+pub trait Push<K>: Keyed {
     /// Insert a value into the collection without specifying a key, returning
     /// the key that was automatically generated.
     fn push(&mut self, value: Self::Value) -> K;
@@ -484,7 +484,7 @@ pub trait Push<K>: Container {
 /// assert_eq!(deque.pop(), Some(2.0));
 /// assert_eq!(deque.pop(), Some(1.0));
 /// ```
-pub trait Pop: Container {
+pub trait Pop: Keyed {
     /// Remove the last element of the collection, returning it.
     ///
     /// If `Push` is also implemented, calling `Pop` should revert the previous
@@ -619,7 +619,7 @@ pub trait Len {
 /// assert_eq!(vec.len(), 1);
 /// assert_eq!(vec.get(&0), Some(&1.0));
 /// ```
-pub trait Resize: Container {
+pub trait Resize: Keyed {
     /// Resize the collection to the given length.
     ///
     /// If `new_len` is greater than the current length, the collection is extended

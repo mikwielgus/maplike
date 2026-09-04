@@ -2,12 +2,12 @@
 //
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
-use crate::abc::Container;
+use crate::abc::Keyed;
 use crate::ops::{Get, Len, Modify, Set};
 
-macro_rules! impl_container_for_tuple {
+macro_rules! impl_keyed_for_tuple {
     ($($idx:tt $typ:ident),+) => {
-        impl<$($typ,)+> Container for ($($typ,)+) {
+        impl<$($typ,)+> Keyed for ($($typ,)+) {
             type Key = usize;
             type Value = Self;
         }
@@ -22,20 +22,20 @@ macro_rules! impl_container_for_tuple {
 }
 
 // Tuples with up to 12 elements are supported.
-impl_container_for_tuple!(0 T0);
-impl_container_for_tuple!(0 T0, 1 T1);
-impl_container_for_tuple!(0 T0, 1 T1, 2 T2);
-impl_container_for_tuple!(0 T0, 1 T1, 2 T2, 3 T3);
-impl_container_for_tuple!(0 T0, 1 T1, 2 T2, 3 T3, 4 T4);
-impl_container_for_tuple!(0 T0, 1 T1, 2 T2, 3 T3, 4 T4, 5 T5);
-impl_container_for_tuple!(0 T0, 1 T1, 2 T2, 3 T3, 4 T4, 5 T5, 6 T6);
-impl_container_for_tuple!(0 T0, 1 T1, 2 T2, 3 T3, 4 T4, 5 T5, 6 T6, 7 T7);
-impl_container_for_tuple!(0 T0, 1 T1, 2 T2, 3 T3, 4 T4, 5 T5, 6 T6, 7 T7, 8 T8);
-impl_container_for_tuple!(0 T0, 1 T1, 2 T2, 3 T3, 4 T4, 5 T5, 6 T6, 7 T7, 8 T8, 9 T9);
-impl_container_for_tuple!(0 T0, 1 T1, 2 T2, 3 T3, 4 T4, 5 T5, 6 T6, 7 T7, 8 T8, 9 T9, 10 T10);
-impl_container_for_tuple!(0 T0, 1 T1, 2 T2, 3 T3, 4 T4, 5 T5, 6 T6, 7 T7, 8 T8, 9 T9, 10 T10, 11 T11);
+impl_keyed_for_tuple!(0 T0);
+impl_keyed_for_tuple!(0 T0, 1 T1);
+impl_keyed_for_tuple!(0 T0, 1 T1, 2 T2);
+impl_keyed_for_tuple!(0 T0, 1 T1, 2 T2, 3 T3);
+impl_keyed_for_tuple!(0 T0, 1 T1, 2 T2, 3 T3, 4 T4);
+impl_keyed_for_tuple!(0 T0, 1 T1, 2 T2, 3 T3, 4 T4, 5 T5);
+impl_keyed_for_tuple!(0 T0, 1 T1, 2 T2, 3 T3, 4 T4, 5 T5, 6 T6);
+impl_keyed_for_tuple!(0 T0, 1 T1, 2 T2, 3 T3, 4 T4, 5 T5, 6 T6, 7 T7);
+impl_keyed_for_tuple!(0 T0, 1 T1, 2 T2, 3 T3, 4 T4, 5 T5, 6 T6, 7 T7, 8 T8);
+impl_keyed_for_tuple!(0 T0, 1 T1, 2 T2, 3 T3, 4 T4, 5 T5, 6 T6, 7 T7, 8 T8, 9 T9);
+impl_keyed_for_tuple!(0 T0, 1 T1, 2 T2, 3 T3, 4 T4, 5 T5, 6 T6, 7 T7, 8 T8, 9 T9, 10 T10);
+impl_keyed_for_tuple!(0 T0, 1 T1, 2 T2, 3 T3, 4 T4, 5 T5, 6 T6, 7 T7, 8 T8, 9 T9, 10 T10, 11 T11);
 
-impl<V, const N: usize> Container for [V; N] {
+impl<V, const N: usize> Keyed for [V; N] {
     type Key = usize;
     type Value = V;
 }
@@ -73,7 +73,7 @@ impl<V, const N: usize> Len for [V; N] {
     }
 }
 
-impl<V> Container for [V] {
+impl<V> Keyed for [V] {
     type Key = usize;
     type Value = V;
 }

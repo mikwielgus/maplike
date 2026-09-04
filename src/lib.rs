@@ -24,6 +24,6 @@ pub mod one;
 pub mod ops;
 
 #[cfg(feature = "derive")]
-pub use maplike_derive::Container;
+pub use maplike_derive::Keyed;
 
 mod impls;

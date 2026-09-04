@@ -2,14 +2,14 @@
 //
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
-use crate::abc::Container;
+use crate::abc::Keyed;
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
 use crate::ops::{Get, Len, Modify, Put, Set, WithOne};
 
 macro_rules! impl_traits_for_scalar {
     ($($t:ty),*) => {
         $(
-            impl Container for $t {
+            impl Keyed for $t {
                 type Key = usize;
                 type Value = Self;
             }

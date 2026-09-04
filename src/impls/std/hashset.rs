@@ -6,11 +6,11 @@ use core::borrow::Borrow;
 
 use std_::{collections::HashSet, hash::Hash};
 
-use crate::abc::Container;
+use crate::abc::Keyed;
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
 use crate::ops::{Clear, Get, Insert, Len, Put, Remove, Set, WithOne};
 
-impl<K> Container for HashSet<K> {
+impl<K> Keyed for HashSet<K> {
     type Key = K;
     type Value = ();
 }

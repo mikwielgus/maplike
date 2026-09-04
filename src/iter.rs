@@ -4,10 +4,10 @@
 
 //! Iteration traits for map-like containers.
 
-use crate::abc::Container;
+use crate::abc::Keyed;
 
 /// Borrow the collection and yield values.
-pub trait Values<'a>: Container
+pub trait Values<'a>: Keyed
 where
     Self: 'a,
 {
@@ -19,7 +19,7 @@ where
 }
 
 /// Consume the collection and yield owned values.
-pub trait IntoValues: Container {
+pub trait IntoValues: Keyed {
     /// Iterator that consumes the collection and yields owned values.
     type IntoValues: Iterator<Item = Self::Value>;
 
@@ -28,7 +28,7 @@ pub trait IntoValues: Container {
 }
 
 /// Borrow the collection and yield key-value pairs.
-pub trait Iter<'a, K>: Container
+pub trait Iter<'a, K>: Keyed
 where
     Self: 'a,
 {
@@ -40,7 +40,7 @@ where
 }
 
 /// Consume the collection and yield owned key-value pairs.
-pub trait IntoIter<K>: Container {
+pub trait IntoIter<K>: Keyed {
     /// Iterator that consumes the collection.
     type IntoIter: Iterator<Item = (K, Self::Value)>;
 

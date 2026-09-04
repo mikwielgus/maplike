@@ -6,27 +6,27 @@
 
 use maplike::ops::Assign;
 
-#[derive(maplike::Container, Debug, PartialEq)]
+#[derive(maplike::Keyed, Debug, PartialEq)]
 struct TestStruct {
     integer: i64,
     string: String,
 }
 
-#[derive(maplike::Container, Debug, PartialEq)]
+#[derive(maplike::Keyed, Debug, PartialEq)]
 enum TestEnum {
     Usize(usize),
     Strings(String, String),
 }
 
-fn assert_derived_container<T>()
+fn assert_derived_keyed<T>()
 where
-    T: maplike::abc::Container<Key = usize, Value = T>,
+    T: maplike::abc::Keyed<Key = usize, Value = T>,
 {
 }
 
 #[test]
 fn test_assign_on_struct() {
-    assert_derived_container::<TestStruct>();
+    assert_derived_keyed::<TestStruct>();
 
     let mut s = TestStruct {
         integer: 0,
@@ -49,7 +49,7 @@ fn test_assign_on_struct() {
 
 #[test]
 fn test_assign_on_enum() {
-    assert_derived_container::<TestEnum>();
+    assert_derived_keyed::<TestEnum>();
 
     let mut e = TestEnum::Usize(0);
 
