@@ -2,14 +2,17 @@
 //
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
-use crate::abc::Keyed;
+use crate::abc::{Container, Keyed};
 use crate::ops::{Get, Len, Modify, Set};
 
 macro_rules! impl_keyed_for_tuple {
     ($($idx:tt $typ:ident),+) => {
+        impl<$($typ,)+> Container for ($($typ,)+) {
+            type Value = Self;
+        }
+
         impl<$($typ,)+> Keyed for ($($typ,)+) {
             type Key = usize;
-            type Value = Self;
         }
 
         impl<$($typ,)+> Len for ($($typ,)+) {
@@ -35,9 +38,12 @@ impl_keyed_for_tuple!(0 T0, 1 T1, 2 T2, 3 T3, 4 T4, 5 T5, 6 T6, 7 T7, 8 T8, 9 T9
 impl_keyed_for_tuple!(0 T0, 1 T1, 2 T2, 3 T3, 4 T4, 5 T5, 6 T6, 7 T7, 8 T8, 9 T9, 10 T10);
 impl_keyed_for_tuple!(0 T0, 1 T1, 2 T2, 3 T3, 4 T4, 5 T5, 6 T6, 7 T7, 8 T8, 9 T9, 10 T10, 11 T11);
 
+impl<V, const N: usize> Container for [V; N] {
+    type Value = V;
+}
+
 impl<V, const N: usize> Keyed for [V; N] {
     type Key = usize;
-    type Value = V;
 }
 
 impl<V, const N: usize> Get<usize> for [V; N] {
@@ -73,9 +79,12 @@ impl<V, const N: usize> Len for [V; N] {
     }
 }
 
+impl<V> Container for [V] {
+    type Value = V;
+}
+
 impl<V> Keyed for [V] {
     type Key = usize;
-    type Value = V;
 }
 
 impl<V> Get<usize> for [V] {

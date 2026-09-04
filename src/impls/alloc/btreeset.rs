@@ -6,13 +6,16 @@ use core::borrow::Borrow;
 
 use alloc_::collections::BTreeSet;
 
-use crate::abc::Keyed;
+use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
 use crate::ops::{Clear, Get, Insert, Len, Put, Remove, Set, WithOne};
 
+impl<K> Container for BTreeSet<K> {
+    type Value = ();
+}
+
 impl<K> Keyed for BTreeSet<K> {
     type Key = K;
-    type Value = ();
 }
 
 impl<K: Ord> WithOne<K> for BTreeSet<K> {

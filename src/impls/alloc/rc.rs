@@ -4,13 +4,16 @@
 
 use alloc_::rc::{Rc, Weak};
 
-use crate::abc::Keyed;
+use crate::abc::{Container, Keyed};
 use crate::iter::{Iter, Values};
 use crate::ops::{Clear, Get, Len, Modify, Put, Remove, Set, WithOne};
 
+impl<V> Container for Rc<V> {
+    type Value = V;
+}
+
 impl<V> Keyed for Rc<V> {
     type Key = usize;
-    type Value = V;
 }
 
 impl<V> WithOne<V> for Rc<V> {
@@ -86,9 +89,12 @@ impl<'a, V: 'a> Iter<'a, usize> for Rc<V> {
     }
 }
 
+impl<V> Container for Weak<V> {
+    type Value = V;
+}
+
 impl<V> Keyed for Weak<V> {
     type Key = usize;
-    type Value = V;
 }
 
 impl<V> Remove<usize> for Weak<V> {

@@ -4,13 +4,16 @@
 
 use stable_vec::StableVecFacade;
 
-use crate::abc::Keyed;
+use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
 use crate::ops::{Clear, Get, Insert, Len, Modify, Push, Put, Remove, Set, WithOne};
 
+impl<V, C: stable_vec::core::Core<V>> Container for StableVecFacade<V, C> {
+    type Value = V;
+}
+
 impl<V, C: stable_vec::core::Core<V>> Keyed for StableVecFacade<V, C> {
     type Key = usize;
-    type Value = V;
 }
 
 impl<V, C: stable_vec::core::Core<V>> WithOne<V> for StableVecFacade<V, C> {

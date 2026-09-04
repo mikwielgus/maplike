@@ -2,13 +2,16 @@
 //
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
-use crate::abc::Keyed;
+use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
 use crate::ops::{Clear, Get, Len, Modify, Put, Remove, Set, WithOne};
 
+impl<V> Container for Option<V> {
+    type Value = V;
+}
+
 impl<V> Keyed for Option<V> {
     type Key = usize;
-    type Value = V;
 }
 
 impl<V> WithOne<V> for Option<V> {

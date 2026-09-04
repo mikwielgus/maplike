@@ -4,13 +4,16 @@
 
 use alloc_::vec::Vec;
 
-use crate::abc::Keyed;
+use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
 use crate::ops::{Clear, Get, Len, Modify, Pop, Push, Put, Resize, Set, SwapRemove, WithOne};
 
+impl<V> Container for Vec<V> {
+    type Value = V;
+}
+
 impl<V> Keyed for Vec<V> {
     type Key = usize;
-    type Value = V;
 }
 
 impl<V> WithOne<V> for Vec<V> {

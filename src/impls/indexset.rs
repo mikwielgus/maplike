@@ -7,13 +7,16 @@ use core::hash::Hash;
 
 use indexmap::IndexSet;
 
-use crate::abc::Keyed;
+use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
 use crate::ops::{Clear, Get, Insert, Len, Put, Remove, Set, WithOne};
 
+impl<K> Container for IndexSet<K> {
+    type Value = ();
+}
+
 impl<K> Keyed for IndexSet<K> {
     type Key = K;
-    type Value = ();
 }
 
 impl<K: Eq + Hash> WithOne<K> for IndexSet<K> {

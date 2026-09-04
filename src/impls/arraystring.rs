@@ -4,12 +4,15 @@
 //
 use arrayvec::ArrayString;
 
-use crate::abc::Keyed;
+use crate::abc::{Container, Keyed};
 use crate::ops::{Clear, Len, Pop, Push, Put, WithOne};
+
+impl<const CAP: usize> Container for ArrayString<CAP> {
+    type Value = char;
+}
 
 impl<const CAP: usize> Keyed for ArrayString<CAP> {
     type Key = usize;
-    type Value = char;
 }
 
 impl<const CAP: usize> WithOne<char> for ArrayString<CAP> {

@@ -9,14 +9,17 @@ use std_::collections::hash_map::{
 };
 use std_::{collections::HashMap, hash::Hash};
 
-use crate::abc::Keyed;
+use crate::abc::{Container, Keyed};
 use crate::entry::{CombinedEntry, Entry, OccupiedEntry, VacantEntry};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
 use crate::ops::{Clear, Get, Insert, Len, Modify, Remove, Set};
 
+impl<K, V> Container for HashMap<K, V> {
+    type Value = V;
+}
+
 impl<K, V> Keyed for HashMap<K, V> {
     type Key = K;
-    type Value = V;
 }
 
 impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V> Get<Q> for HashMap<K, V>

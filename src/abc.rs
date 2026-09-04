@@ -11,17 +11,23 @@ use core::ops::Index;
 
 use crate::ops::{Clear, Get, Insert, Len, Pop, Push, Remove, Set};
 
+/// Base trait for collections, without any operations defined yet.
+///
+/// Only declares the value type. Keyed collections also implement [`Keyed`].
+pub trait Container {
+    /// Type of the values in the collection.
+    type Value;
+}
+
 /// Base trait for keyed collections, without any operations defined yet.
 ///
 /// Just a key-value map without any methods yet. We however use the name
 /// `Keyed` instead of `Map` to distinguish maps from vectors and stable
 /// vectors, which also are keyed collections but with slightly different sets
 /// of operations.
-pub trait Keyed {
+pub trait Keyed: Container {
     /// Type of the keys in the keyed collection.
     type Key;
-    /// Type of the values in the keyed collection.
-    type Value;
 }
 
 /// A single assignable value.

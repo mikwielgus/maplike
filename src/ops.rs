@@ -6,7 +6,7 @@
 
 use core::borrow::Borrow;
 
-use crate::abc::Keyed;
+use crate::abc::{Container, Keyed};
 
 /// Construct a container with exactly one element.
 pub trait WithOne<E> {
@@ -162,7 +162,7 @@ pub trait GetByLeft<K: ?Sized>: Keyed {
 ///     assert_eq!(hashmap.get_by_right(&1), Some(&"east".to_string()));
 /// }
 /// ```
-pub trait GetByRight<K: ?Sized, Q: ?Sized = <Self as Keyed>::Value>: Keyed
+pub trait GetByRight<K: ?Sized, Q: ?Sized = <Self as Container>::Value>: Keyed
 where
     Self::Value: Borrow<Q>,
 {
@@ -461,7 +461,7 @@ pub trait RemoveByLeft<K: ?Sized>: Keyed {
 ///     assert_eq!(bihashmap.get_by_right(&1), None);
 /// }
 /// ```
-pub trait RemoveByRight<K, Q: ?Sized = <Self as Keyed>::Value>: Keyed
+pub trait RemoveByRight<K, Q: ?Sized = <Self as Container>::Value>: Keyed
 where
     Self::Value: Borrow<Q>,
 {

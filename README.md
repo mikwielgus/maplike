@@ -206,6 +206,8 @@ types that have an Entry API:
 ### Containers
 
 For brevity and convenience, we also provide
+[`Container`](https://docs.rs/maplike/latest/maplike/abc/trait.Container.html),
+[`Keyed`](https://docs.rs/maplike/latest/maplike/abc/trait.Keyed.html),
 [`Scalarlike`](https://docs.rs/maplike/latest/maplike/abc/trait.Scalarlike.html),
 [`Maplike`](https://docs.rs/maplike/latest/maplike/abc/trait.Maplike.html),
 [`Setlike`](https://docs.rs/maplike/latest/maplike/abc/trait.Setlike.html),

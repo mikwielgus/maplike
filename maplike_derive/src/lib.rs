@@ -17,11 +17,16 @@ fn expand_keyed(input: DeriveInput) -> syn::Result<TokenStream> {
     let name = &input.ident;
 
     let output = quote! {
+        impl #impl_generics ::maplike::abc::Container for #name #ty_generics
+        #where_clause
+        {
+            type Value = Self;
+        }
+
         impl #impl_generics ::maplike::abc::Keyed for #name #ty_generics
         #where_clause
         {
             type Key = usize;
-            type Value = Self;
         }
     };
     Ok(output.into())

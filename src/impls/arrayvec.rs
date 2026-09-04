@@ -4,13 +4,16 @@
 
 use arrayvec::ArrayVec;
 
-use crate::abc::Keyed;
+use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
 use crate::ops::{Clear, Get, Len, Modify, Pop, Push, Put, Set, WithOne};
 
+impl<T, const CAP: usize> Container for ArrayVec<T, CAP> {
+    type Value = T;
+}
+
 impl<T, const CAP: usize> Keyed for ArrayVec<T, CAP> {
     type Key = usize;
-    type Value = T;
 }
 
 impl<T, const CAP: usize> WithOne<T> for ArrayVec<T, CAP> {

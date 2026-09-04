@@ -4,13 +4,16 @@
 
 use alloc_::collections::VecDeque;
 
-use crate::abc::Keyed;
+use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
 use crate::ops::{Clear, Get, Len, Modify, Pop, Push, Put, Resize, Set, WithOne};
 
+impl<V> Container for VecDeque<V> {
+    type Value = V;
+}
+
 impl<V> Keyed for VecDeque<V> {
     type Key = usize;
-    type Value = V;
 }
 
 impl<V> WithOne<V> for VecDeque<V> {

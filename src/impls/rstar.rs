@@ -4,13 +4,16 @@
 
 use rstar::{RTree, RTreeObject, RTreeParams};
 
-use crate::abc::Keyed;
+use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
 use crate::ops::{Clear, Get, Insert, Len, Put, Remove, Set, WithOne};
 
+impl<K: RTreeObject, Params: RTreeParams> Container for RTree<K, Params> {
+    type Value = ();
+}
+
 impl<K: RTreeObject, Params: RTreeParams> Keyed for RTree<K, Params> {
     type Key = K;
-    type Value = ();
 }
 
 impl<K: RTreeObject, Params: RTreeParams> WithOne<K> for RTree<K, Params> {

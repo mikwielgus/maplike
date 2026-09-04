@@ -4,13 +4,16 @@
 
 use slab::Slab;
 
-use crate::abc::Keyed;
+use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
 use crate::ops::{Clear, Get, Len, Modify, Push, Put, Remove, Set, WithOne};
 
+impl<V> Container for Slab<V> {
+    type Value = V;
+}
+
 impl<V> Keyed for Slab<V> {
     type Key = usize;
-    type Value = V;
 }
 
 impl<V> WithOne<V> for Slab<V> {

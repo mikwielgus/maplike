@@ -7,15 +7,18 @@ use core::borrow::Borrow;
 use bidimap::{BiHashMap, Overwritten};
 use std_::hash::Hash;
 
-use crate::abc::Keyed;
+use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
 use crate::ops::{
     Clear, Get, GetByLeft, GetByRight, Insert, Len, RemoveByLeft, RemoveByRight, Set,
 };
 
+impl<L, R> Container for BiHashMap<L, R> {
+    type Value = R;
+}
+
 impl<L, R> Keyed for BiHashMap<L, R> {
     type Key = L;
-    type Value = R;
 }
 
 impl<L: Eq + Hash, R: Eq + Hash, Q: Eq + Hash + ?Sized> Get<Q> for BiHashMap<L, R>

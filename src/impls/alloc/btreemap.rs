@@ -10,14 +10,17 @@ use alloc_::collections::btree_map::{
     VacantEntry as BTreeMapVacantEntry,
 };
 
-use crate::abc::Keyed;
+use crate::abc::{Container, Keyed};
 use crate::entry::{CombinedEntry, Entry, OccupiedEntry, VacantEntry};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
 use crate::ops::{Clear, Get, Insert, Len, Modify, Remove, Set};
 
+impl<K, V> Container for BTreeMap<K, V> {
+    type Value = V;
+}
+
 impl<K, V> Keyed for BTreeMap<K, V> {
     type Key = K;
-    type Value = V;
 }
 
 impl<K: Ord, Q: Ord + ?Sized, V> Get<Q> for BTreeMap<K, V>
