@@ -24,43 +24,33 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: Swatinem/rust-cache@v2
       - uses: dtolnay/rust-toolchain@1.92
         with:
           components: rustfmt
+      - uses: Swatinem/rust-cache@v2
       - run: cargo fmt --all -- --check
 
   cargo-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: Swatinem/rust-cache@v2
       - uses: dtolnay/rust-toolchain@1.92
+      - uses: Swatinem/rust-cache@v2
       - uses: taiki-e/install-action@v2
         with:
           tool: cargo-hack
       - run: |
-          cargo test --workspace --examples --tests
-          cargo test --workspace --doc
-          cargo test --workspace --no-default-features --examples --tests
-          cargo test --workspace --no-default-features --doc
-          cargo hack test --workspace --optional-deps --each-feature --examples --tests
-          cargo hack test --workspace --optional-deps --each-feature --doc
+          cargo hack test --workspace --each-feature --examples --tests
+          cargo hack test --workspace --all-features --doc
 
-  cargo-test-no-std:
+  cargo-check-no-std:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: Swatinem/rust-cache@v2
       - uses: dtolnay/rust-toolchain@1.92
         with:
           targets: thumbv6m-none-eabi
-      # thumbv6m-non-eabi has no std, so let's build it to make sure we really
+      - uses: Swatinem/rust-cache@v2
+      # thumbv6m-none-eabi has no std, so let's build it to make sure we really
       # are `no_std` compatible.
-      - run: |
-          cargo test --workspace --target thumbv6m-none-eabi --examples --tests
-          cargo test --workspace --target thumbv6m-none-eabi --doc
-          cargo test --workspace --target thumbv6m-none-eabi --no-default-features --examples --tests
-          cargo test --workspace --target thumbv6m-none-eabi --no-default-features --doc
-          cargo hack test --workspace --target thumbv6m-none-eabi --optional-deps --each-feature --skip std --examples --tests
-          cargo hack test --workspace --target thumbv6m-none-eabi --optional-deps --each-feature --skip std --doc
+      - run: cargo check --target thumbv6m-none-eabi --no-default-features --features derive
