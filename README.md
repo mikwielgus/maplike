@@ -49,6 +49,10 @@ over its underlying containers.
 This crate is compatible with `no_std` and `serde` and contains no `unsafe`
 code.
 
+If you are looking for abstract number traits in addition to
+abstract container traits, also check out another crate of ours,
+[`numlike`](https://github.com/mikwielgus/maplike).
+
 ## Usage
 
 ### Adding dependency
@@ -268,6 +272,9 @@ trait implementations for data structures from certain external crates:
   gated by the `indexmap` feature flag;
 - [`rstar::RTree`](https://docs.rs/rstar/0.12.2/rstar/index.html), gated by the
   `rstar` feature flag;
+- [`slab::Slab`](https://docs.rs/slab/latest/slab/), gated by the `slab`
+  feature flag (`Insert` is not implemented; see
+  [Technical sidenotes](#technical-sidenotes));
 - [`stable_vec::StableVec`](https://docs.rs/stable-vec/latest/stable_vec/),
   gated by the `stable-vec` feature flag;
 - [`thunderdome::Arena`](https://docs.rs/thunderdome/latest/thunderdome/),
@@ -306,8 +313,7 @@ directory of the [`undoredo`](https://github.com/mikwielgus/undoredo) crate.
 ## Unsupported containers
 
 Among stable vector data structures,
-[`Slab`](https://docs.rs/slab/latest/slab/),
-[`SlotMap`](https://docs.rs/slotmap/latest/slotmap/),
+[`SlotMap`](https://docs.rs/slotmap/latest/slotmap/) and
 [`generational-arena`](https://docs.rs/generational-arena/latest/generational_arena/)
 are not supported because they lack interfaces for insertion at an arbitrary
 key.
@@ -332,4 +338,8 @@ an element at an arbitrary vacant index would require removing that index from
 the freelist. But since there is no backwards link available at a given key,
 doing so would require traversing the freelist from the beginning to find the
 position of the previous node, which would incur a slow `O(n)` time cost.
-Because of that, we have chosen to not support for it for now.
+
+Because of that, `Slab` implements the most of the traits, but not
+[`Insert`](https://docs.rs/maplike/latest/maplike/ops/trait.Insert.html)
+(and therefore it is also not
+[`Maplike`](https://docs.rs/maplike/latest/maplike/abc/trait.Maplike.html)).

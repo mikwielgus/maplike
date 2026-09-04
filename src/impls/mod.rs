@@ -27,6 +27,9 @@ mod indexset;
 #[cfg(feature = "rstar")]
 mod rstar;
 
+#[cfg(feature = "slab")]
+mod slab;
+
 #[cfg(feature = "stable-vec")]
 mod stable_vec;
 

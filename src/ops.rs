@@ -302,8 +302,9 @@ pub trait Insert<K>: Keyed {
 ///
 /// If you need this trait on a contiguous data type with constant-time
 /// insertion, lookup, and removal, try
-/// [`stable_vec::StableVec`](https://docs.rs/stable-vec/latest/stable_vec/type.StableVec.html)
-/// or [`thunderdome::Arena`](https://docs.rs/thunderdome/latest/thunderdome/struct.Arena.html).
+/// [`stable_vec::StableVec`](https://docs.rs/stable-vec/latest/stable_vec/type.StableVec.html),
+/// [`thunderdome::Arena`](https://docs.rs/thunderdome/latest/thunderdome/struct.Arena.html),
+/// or [`slab::Slab`](https://docs.rs/slab/latest/slab/struct.Slab.html).
 ///
 /// # Examples
 ///
@@ -338,8 +339,9 @@ pub trait Remove<K: ?Sized>: Keyed {
     ///
     /// If you need this trait on a contiguous data type with constant-time
     /// insertion, lookup, and removal, try
-    /// [`stable_vec::StableVec`](https://docs.rs/stable-vec/latest/stable_vec/type.StableVec.html)
-    /// or [`thunderdome::Arena`](https://docs.rs/thunderdome/latest/thunderdome/struct.Arena.html).
+    /// [`stable_vec::StableVec`](https://docs.rs/stable-vec/latest/stable_vec/type.StableVec.html),
+    /// [`thunderdome::Arena`](https://docs.rs/thunderdome/latest/thunderdome/struct.Arena.html),
+    /// or [`slab::Slab`](https://docs.rs/slab/latest/slab/struct.Slab.html).
     fn remove(&mut self, key: &K) -> Self::Output;
 }
 
