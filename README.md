@@ -49,9 +49,9 @@ over its underlying containers.
 This crate is compatible with `no_std` and `serde` and contains no `unsafe`
 code.
 
-If you are looking for abstract number traits in addition to
-abstract container traits, also check out another crate of ours,
-[`numlike`](https://github.com/mikwielgus/maplike).
+If you are looking for abstract number traits instead of or in addition
+to abstract container traits, also check out another crate of ours,
+[`numlike`](https://github.com/mikwielgus/numlike).
 
 ## Usage
 
