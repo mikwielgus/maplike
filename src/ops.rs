@@ -584,7 +584,7 @@ pub trait Put<E> {
     fn put(&mut self, element: E) -> Option<E>;
 }
 
-/// Remove all elements from the collection.
+/// Remove all elements from the container.
 ///
 /// # Examples
 ///
@@ -608,11 +608,11 @@ pub trait Put<E> {
 /// assert_eq!(btreemap.get(&1), None);
 /// ```
 pub trait Clear {
-    /// Remove all elements from the collection.
+    /// Remove all elements from the container.
     fn clear(&mut self);
 }
 
-/// Returns the number of elements in the collection.
+/// Returns the number of elements in the container.
 ///
 /// # Examples
 ///
@@ -637,7 +637,7 @@ pub trait Clear {
 /// assert_eq!(hashmap.len(), 2);
 /// ```
 pub trait Len {
-    /// Returns the number of elements in the collection.
+    /// Returns the number of elements in the container.
     fn len(&self) -> usize;
 }
 
