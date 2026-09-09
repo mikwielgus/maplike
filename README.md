@@ -15,9 +15,10 @@ SPDX-License-Identifier: MIT OR Apache-2.0
 Rust traits for abstract containers and operations over them.
 
 With this library, you can write code that is generic over various built-in,
-standard library, and third-party collections, containers, and primitives. You
-can have the same code work on both on `BTreeMap` and `HashMap`, and in many
-cases also on `Vec`, `Option`, `Box`, `Rc`, and more.
+standard library, and third-party containers, including collections, and
+primitives. You can have the same code work on both on `BTreeMap` and `HashMap`,
+and in many cases also on `Vec`, `VecDeque`, `Option`, `Box`, `Rc`, `Arc` and
+more.
 
 See the [Supported containers](#supported-containers) section for a complete
 list of supported containers.
@@ -25,10 +26,10 @@ list of supported containers.
 Basically, this is Python's
 [collections.abc](https://docs.python.org/3/library/collections.abc.html), but
 in Rust, and with traits not only for different kinds of containers, but also
-for each operation. Essentially, every container is treated as if it was a
-map. If it is not really a map, then it is treated as if its key type was
-`usize`, even when there can be at most only one element. Hence the crate name,
-`maplike`.
+for each operation. Essentially, every container, including non-collections, is
+treated as if it was a map. If it is not really a map, then it is treated as if
+its key type was `usize`, even when there can be at most only one element. Hence
+the crate name, `maplike`.
 
 The traits are implemented for many containers from `std` and third-party
 crates. See the [Traits](#traits) section for a list of all available traits.
@@ -46,8 +47,8 @@ containers chosen by the user;
 half-edge data structure (aka. doubly connected edge list, DCEL) generically
 over its underlying containers.
 
-This crate is compatible with `no_std` and `serde` and contains no `unsafe`
-code.
+This crate is compatible with `no_std` and
+[`serde`](https://crates.io/crates/serde) and contains no `unsafe` code.
 
 If you are looking for abstract number traits instead of or in addition
 to abstract container traits, also check out another crate of ours,
