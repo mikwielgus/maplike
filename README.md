@@ -43,6 +43,9 @@ snapshots, or commands on arbitrary data structures;
 - [`multi_bimap`](https://github.com/mikwielgus/multi_bimap), a crate
 implementing many-to-many bidirectional map using two antiparallel internal
 containers chosen by the user;
+- [`rstared`](https://github.com/mikwielgus/rstared), a simple Rust decorator to
+add a passively listening R-tree (`rstar::RTree`) to many standard library and
+third-party collection types.
 - [`dcel`](https://github.com/mikwielgus/dcel), a crate that implements the
 half-edge data structure (aka. doubly connected edge list, DCEL) generically
 over its underlying containers.
