@@ -51,7 +51,8 @@ half-edge data structure (aka. doubly connected edge list, DCEL) generically
 over its underlying containers.
 
 This crate is compatible with `no_std` and
-[`serde`](https://crates.io/crates/serde) and contains no `unsafe` code.
+[`serde`](https://crates.io/crates/serde) and contains no `unsafe` code. MSRV
+is 1.92.
 
 If you are looking for abstract number traits instead of or in addition
 to abstract container traits, also check out another crate of ours,
@@ -74,8 +75,8 @@ derive the `Keyed` trait using derive macro
 
 ### Usage examples
 
-`maplike`'s traits allow you to write functions that are generic over many
-different collection types. A single trait like
+`maplike`'s container and collection traits allow you to write functions that
+are generic over many different collection types. A single collection trait like
 [`Get`](https://docs.rs/maplike/latest/maplike/ops/trait.Get.html) is enough to
 abstract over `Vec`s, arrays, and maps alike.
 
