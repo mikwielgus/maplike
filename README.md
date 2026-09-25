@@ -294,6 +294,11 @@ trait implementations for data structures from certain external crates:
   `arrayvec` types do not implement
   [`Index`](https://doc.rust-lang.org/std/ops/trait.Index.html));
 - `smallvec::SmallVec`, gated by the `smallvec` feature flag;
+- [`thin_vec::ThinVec`](https://docs.rs/thin-vec/latest/thin_vec/struct.ThinVec.html),
+  gated by the `thin-vec` feature flag (individual vec-like traits, but not
+  [`Veclike`](https://docs.rs/maplike/latest/maplike/abc/trait.Veclike.html), because
+  `ThinVec` does not implement
+  [`Index`](https://doc.rust-lang.org/std/ops/trait.Index.html));
 - [`tinyvec::ArrayVec`](https://docs.rs/tinyvec/latest/tinyvec/struct.ArrayVec.html),
   and [`tinyvec::TinyVec`](https://docs.rs/tinyvec/latest/tinyvec/enum.TinyVec.html),
   gated by the `tinyvec` feature flag;

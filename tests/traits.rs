@@ -1036,6 +1036,34 @@ mod smallvec_tests {
     }
 }
 
+#[cfg(feature = "thin-vec")]
+mod thin_vec_tests {
+    use super::*;
+    use thin_vec::ThinVec;
+
+    #[test]
+    fn test_traits_on_thin_vec() {
+        check_push_put::<usize, i32, ThinVec<i32>>(ThinVec::new());
+        check_with_one::<i32, i32, ThinVec<i32>>(30, 30);
+        check_vec::<i32, ThinVec<i32>>(ThinVec::new());
+        check_swap_remove::<i32, ThinVec<i32>>(ThinVec::new());
+        check_resize::<i32, ThinVec<i32>>(ThinVec::new());
+        check_assign(
+            {
+                let mut a = ThinVec::<i32>::new();
+                a.push(1);
+                a
+            },
+            {
+                let mut b = ThinVec::<i32>::new();
+                b.push(2);
+                b.push(3);
+                b
+            },
+        );
+    }
+}
+
 #[cfg(feature = "tinyvec")]
 mod tinyvec_tests {
     use super::*;
