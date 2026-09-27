@@ -6,7 +6,7 @@ use alloc_::rc::{Rc, Weak};
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{Iter, Values};
-use crate::ops::{Clear, Get, Len, Modify, Put, Remove, Set, WithOne};
+use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Put, Remove, Set, WithOne};
 
 impl<V> Container for Rc<V> {
     type Value = V;
@@ -20,6 +20,13 @@ impl<V> WithOne<V> for Rc<V> {
     #[inline(always)]
     fn with_one(value: V) -> Self {
         Rc::new(value)
+    }
+}
+
+impl<V> ContainsKey<usize> for Rc<V> {
+    #[inline(always)]
+    fn contains_key(&self, index: &usize) -> bool {
+        *index == 0
     }
 }
 

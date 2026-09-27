@@ -4,7 +4,7 @@
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Get, Len, Modify, Put, Set, WithOne};
+use crate::ops::{ContainsKey, Get, Len, Modify, Put, Set, WithOne};
 
 macro_rules! impl_traits_for_scalar {
     ($($t:ty),*) => {
@@ -21,6 +21,13 @@ macro_rules! impl_traits_for_scalar {
                 #[inline(always)]
                 fn with_one(value: Self) -> Self {
                     value
+                }
+            }
+
+            impl ContainsKey<usize> for $t {
+                #[inline(always)]
+                fn contains_key(&self, index: &usize) -> bool {
+                    *index == 0
                 }
             }
 

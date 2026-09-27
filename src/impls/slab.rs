@@ -6,7 +6,7 @@ use slab::Slab;
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{Clear, Get, Len, Modify, Push, Put, Remove, Set, WithOne};
+use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Push, Put, Remove, Set, WithOne};
 
 impl<V> Container for Slab<V> {
     type Value = V;
@@ -23,6 +23,13 @@ impl<V> WithOne<V> for Slab<V> {
         Slab::insert(&mut slab, element);
 
         slab
+    }
+}
+
+impl<V> ContainsKey<usize> for Slab<V> {
+    #[inline(always)]
+    fn contains_key(&self, key: &usize) -> bool {
+        Slab::contains(self, *key)
     }
 }
 

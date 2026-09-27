@@ -8,7 +8,7 @@ use alloc_::collections::BTreeSet;
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{Clear, Get, Insert, Len, Put, Remove, Set, WithOne};
+use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Put, Remove, Set, WithOne};
 
 impl<K> Container for BTreeSet<K> {
     type Value = ();
@@ -25,6 +25,16 @@ impl<K: Ord> WithOne<K> for BTreeSet<K> {
         BTreeSet::insert(&mut btreeset, element);
 
         btreeset
+    }
+}
+
+impl<K: Ord, Q: Ord + ?Sized> ContainsKey<Q> for BTreeSet<K>
+where
+    K: Borrow<Q>,
+{
+    #[inline(always)]
+    fn contains_key(&self, key: &Q) -> bool {
+        BTreeSet::contains(self, key)
     }
 }
 

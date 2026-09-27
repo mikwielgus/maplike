@@ -8,7 +8,7 @@ use std_::{collections::HashSet, hash::Hash};
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{Clear, Get, Insert, Len, Put, Remove, Set, WithOne};
+use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Put, Remove, Set, WithOne};
 
 impl<K> Container for HashSet<K> {
     type Value = ();
@@ -25,6 +25,16 @@ impl<K: Eq + Hash> WithOne<K> for HashSet<K> {
         HashSet::insert(&mut hashset, element);
 
         hashset
+    }
+}
+
+impl<K: Eq + Hash, Q: Eq + Hash + ?Sized> ContainsKey<Q> for HashSet<K>
+where
+    K: Borrow<Q>,
+{
+    #[inline(always)]
+    fn contains_key(&self, key: &Q) -> bool {
+        HashSet::contains(self, key)
     }
 }
 

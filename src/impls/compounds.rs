@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use crate::abc::{Container, Keyed};
-use crate::ops::{Get, Len, Modify, Set};
+use crate::ops::{ContainsKey, Get, Len, Modify, Set};
 
 macro_rules! impl_keyed_for_tuple {
     ($($idx:tt $typ:ident),+) => {
@@ -46,6 +46,13 @@ impl<V, const N: usize> Keyed for [V; N] {
     type Key = usize;
 }
 
+impl<V, const N: usize> ContainsKey<usize> for [V; N] {
+    #[inline(always)]
+    fn contains_key(&self, index: &usize) -> bool {
+        *index < N
+    }
+}
+
 impl<V, const N: usize> Get<usize> for [V; N] {
     #[inline(always)]
     fn get(&self, index: &usize) -> Option<&V> {
@@ -85,6 +92,13 @@ impl<V> Container for [V] {
 
 impl<V> Keyed for [V] {
     type Key = usize;
+}
+
+impl<V> ContainsKey<usize> for [V] {
+    #[inline(always)]
+    fn contains_key(&self, index: &usize) -> bool {
+        *index < self.len()
+    }
 }
 
 impl<V> Get<usize> for [V] {

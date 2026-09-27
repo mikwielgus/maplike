@@ -6,7 +6,7 @@ use smallvec::{Array, SmallVec};
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, Get, Len, Modify, Pop, Push, Put, Resize, Set, WithOne};
+use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, WithOne};
 
 impl<A: Array> Container for SmallVec<A> {
     type Value = A::Item;
@@ -23,6 +23,13 @@ impl<A: Array> WithOne<A::Item> for SmallVec<A> {
         SmallVec::push(&mut small_vec, element);
 
         small_vec
+    }
+}
+
+impl<A: Array> ContainsKey<usize> for SmallVec<A> {
+    #[inline(always)]
+    fn contains_key(&self, index: &usize) -> bool {
+        *index < self.len()
     }
 }
 

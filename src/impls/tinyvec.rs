@@ -6,7 +6,7 @@ use tinyvec::{Array, ArrayVec, TinyVec};
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, Get, Len, Modify, Pop, Push, Put, Resize, Set, WithOne};
+use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, WithOne};
 
 impl<A: Array> Container for ArrayVec<A> {
     type Value = A::Item;
@@ -23,6 +23,13 @@ impl<A: Array> WithOne<A::Item> for ArrayVec<A> {
         ArrayVec::push(&mut array_vec, element);
 
         array_vec
+    }
+}
+
+impl<A: Array> ContainsKey<usize> for ArrayVec<A> {
+    #[inline(always)]
+    fn contains_key(&self, index: &usize) -> bool {
+        *index < self.len()
     }
 }
 
@@ -158,6 +165,13 @@ impl<A: Array> WithOne<A::Item> for TinyVec<A> {
         TinyVec::push(&mut tiny_vec, element);
 
         tiny_vec
+    }
+}
+
+impl<A: Array> ContainsKey<usize> for TinyVec<A> {
+    #[inline(always)]
+    fn contains_key(&self, index: &usize) -> bool {
+        *index < self.len()
     }
 }
 

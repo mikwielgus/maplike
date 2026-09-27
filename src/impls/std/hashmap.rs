@@ -12,7 +12,7 @@ use std_::{collections::HashMap, hash::Hash};
 use crate::abc::{Container, Keyed};
 use crate::entry::{CombinedEntry, Entry, OccupiedEntry, VacantEntry};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, Get, Insert, Len, Modify, Remove, Set};
+use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Modify, Remove, Set};
 
 impl<K, V> Container for HashMap<K, V> {
     type Value = V;
@@ -20,6 +20,16 @@ impl<K, V> Container for HashMap<K, V> {
 
 impl<K, V> Keyed for HashMap<K, V> {
     type Key = K;
+}
+
+impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V> ContainsKey<Q> for HashMap<K, V>
+where
+    K: Borrow<Q>,
+{
+    #[inline(always)]
+    fn contains_key(&self, key: &Q) -> bool {
+        HashMap::contains_key(self, key)
+    }
 }
 
 impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V> Get<Q> for HashMap<K, V>

@@ -13,7 +13,7 @@ use alloc_::collections::btree_map::{
 use crate::abc::{Container, Keyed};
 use crate::entry::{CombinedEntry, Entry, OccupiedEntry, VacantEntry};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, Get, Insert, Len, Modify, Remove, Set};
+use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Modify, Remove, Set};
 
 impl<K, V> Container for BTreeMap<K, V> {
     type Value = V;
@@ -21,6 +21,16 @@ impl<K, V> Container for BTreeMap<K, V> {
 
 impl<K, V> Keyed for BTreeMap<K, V> {
     type Key = K;
+}
+
+impl<K: Ord, Q: Ord + ?Sized, V> ContainsKey<Q> for BTreeMap<K, V>
+where
+    K: Borrow<Q>,
+{
+    #[inline(always)]
+    fn contains_key(&self, key: &Q) -> bool {
+        BTreeMap::contains_key(self, key)
+    }
 }
 
 impl<K: Ord, Q: Ord + ?Sized, V> Get<Q> for BTreeMap<K, V>

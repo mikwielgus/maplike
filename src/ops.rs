@@ -57,6 +57,36 @@ impl<V: Keyed> Assign for V {
     }
 }
 
+/// Returns true if the container contains a value under the specified key.
+///
+/// # Examples
+///
+/// ```
+/// use maplike::ops::ContainsKey;
+/// use std::collections::{BTreeMap, HashMap};
+///
+/// // Generic over any collection implementing `ContainsKey`.
+/// fn contains_second_element<C: ContainsKey<usize>>(collection: &C) -> bool {
+///     collection.contains_key(&1)
+/// }
+///
+/// // `contains_second_element()` works for `Vec`.
+/// assert!(contains_second_element(&vec![10, 20, 30]));
+///
+/// // `contains_second_element()` works for `[T; N]`.
+/// assert!(contains_second_element(&[10, 20, 30]));
+///
+/// // `contains_second_element()` works for `HashMap`.
+/// assert!(contains_second_element(&HashMap::from([(0, 10), (1, 20)])));
+///
+/// // `contains_second_element()` works for `BTreeMap`.
+/// assert!(contains_second_element(&BTreeMap::from([(0, 10), (1, 20)])));
+/// ```
+pub trait ContainsKey<K: ?Sized>: Keyed {
+    /// Returns true if the container contains a value under the specified key.
+    fn contains_key(&self, key: &K) -> bool;
+}
+
 /// Returns a reference to the value corresponding to the key.
 ///
 /// # Examples
