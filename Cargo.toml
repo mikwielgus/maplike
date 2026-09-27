@@ -58,6 +58,9 @@ rstar = ["dep:rstar"]
 ## Enables convenience implementations for `slab::Slab`.
 slab = ["dep:slab"]
 
+## Enables convenience implementations for `slotmap::SlotMap`.
+slotmap = ["dep:slotmap"]
+
 ## Enables convenience implementations for `stable_vec::StableVec`.
 stable-vec = ["dep:stable-vec"]
 
@@ -87,7 +90,8 @@ geo-types = { version = "0.7", optional = true, default-features = false }
 indexmap = { version = "2.14", optional = true }
 rstar = { version = ">= 0.12, < 0.14", optional = true }
 slab = { version = "0.4", optional = true, default-features = false }
-smallvec = { version = "1", optional = true }
+slotmap = { version = "1.1", optional = true, default-features = false }
+smallvec = { version = "1.16", optional = true }
 stable-vec = { version = "0.4", optional = true }
 thin-vec = { version = "0.2", optional = true, default-features = false }
 thunderdome = { version = "0.6", optional = true }
@@ -97,6 +101,7 @@ serde = { version = "1.0", optional = true, default-features = false, features =
 [dev-dependencies]
 indexmap = "2.14"
 slab = { version = "0.4", default-features = false }
+slotmap = { version = "1", default-features = false }
 stable-vec = "0.4"
 thunderdome = "0.6"
 rstar = ">= 0.12, < 0.14"

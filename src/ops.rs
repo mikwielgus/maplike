@@ -334,7 +334,8 @@ pub trait Insert<K>: Keyed {
 /// insertion, lookup, and removal, try
 /// [`stable_vec::StableVec`](https://docs.rs/stable-vec/latest/stable_vec/type.StableVec.html),
 /// [`thunderdome::Arena`](https://docs.rs/thunderdome/latest/thunderdome/struct.Arena.html),
-/// or [`slab::Slab`](https://docs.rs/slab/latest/slab/struct.Slab.html).
+/// [`slab::Slab`](https://docs.rs/slab/latest/slab/struct.Slab.html),
+/// or [`slotmap::SlotMap`](https://docs.rs/slotmap/latest/slotmap/struct.SlotMap.html).
 ///
 /// # Examples
 ///
@@ -371,7 +372,8 @@ pub trait Remove<K: ?Sized>: Keyed {
     /// insertion, lookup, and removal, try
     /// [`stable_vec::StableVec`](https://docs.rs/stable-vec/latest/stable_vec/type.StableVec.html),
     /// [`thunderdome::Arena`](https://docs.rs/thunderdome/latest/thunderdome/struct.Arena.html),
-    /// or [`slab::Slab`](https://docs.rs/slab/latest/slab/struct.Slab.html).
+    /// [`slab::Slab`](https://docs.rs/slab/latest/slab/struct.Slab.html),
+    /// or [`slotmap::SlotMap`](https://docs.rs/slotmap/latest/slotmap/struct.SlotMap.html).
     fn remove(&mut self, key: &K) -> Self::Output;
 }
 

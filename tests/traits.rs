@@ -913,9 +913,13 @@ mod slab_tests {
         let k1 = a.push(2);
         let k2 = a.push(3);
         assert_eq!(Len::len(&a), 3);
+        assert!(ContainsKey::contains_key(&a, &k0));
         assert_eq!(Get::get(&a, &k0), Some(&1));
+
         assert_eq!(Remove::remove(&mut a, &k1), Some(2));
+        assert!(!ContainsKey::contains_key(&a, &k1));
         assert_eq!(Get::get(&a, &k1), None);
+        assert_eq!(Get::get(&a, &k2), Some(&3));
         assert_eq!(Len::len(&a), 2);
 
         let items: Vec<(usize, i32)> = IntoIter::into_iter(a).collect();
@@ -926,6 +930,47 @@ mod slab_tests {
         let mut x: Slab<i32> = Slab::new();
         x.push(5);
         let mut y: Slab<i32> = Slab::new();
+        let j = y.push(7);
+        x.assign(y);
+        assert_eq!(Get::get(&x, &j), Some(&7));
+        assert_eq!(Len::len(&x), 1);
+    }
+}
+
+#[cfg(feature = "slotmap")]
+mod slotmap_tests {
+    use super::*;
+    use slotmap::{DefaultKey, SlotMap};
+
+    #[test]
+    fn test_traits_on_slotmap() {
+        check_push_put::<DefaultKey, i32, SlotMap<DefaultKey, i32>>(SlotMap::new());
+        check_with_one::<i32, i32, SlotMap<DefaultKey, i32>>(30, 30);
+
+        let mut a: SlotMap<DefaultKey, i32> = SlotMap::new();
+        assert_eq!(Len::len(&a), 0);
+
+        let k0 = a.push(1);
+        let k1 = a.push(2);
+        let k2 = a.push(3);
+        assert_eq!(Len::len(&a), 3);
+        assert!(ContainsKey::contains_key(&a, &k0));
+        assert_eq!(Get::get(&a, &k0), Some(&1));
+
+        assert_eq!(Remove::remove(&mut a, &k1), Some(2));
+        assert!(!ContainsKey::contains_key(&a, &k1));
+        assert_eq!(Get::get(&a, &k1), None);
+        assert_eq!(Get::get(&a, &k2), Some(&3));
+        assert_eq!(Len::len(&a), 2);
+
+        let items: Vec<(DefaultKey, i32)> = IntoIter::into_iter(a).collect();
+        assert_eq!(items.len(), 2);
+        assert!(items.contains(&(k0, 1)));
+        assert!(items.contains(&(k2, 3)));
+
+        let mut x: SlotMap<DefaultKey, i32> = SlotMap::new();
+        x.push(5);
+        let mut y: SlotMap<DefaultKey, i32> = SlotMap::new();
         let j = y.push(7);
         x.assign(y);
         assert_eq!(Get::get(&x, &j), Some(&7));
@@ -947,13 +992,21 @@ mod thunderdome_tests {
         let mut a: Arena<i32> = Arena::new();
         assert_eq!(Len::len(&a), 0);
 
-        a.push(1);
-        a.push(2);
-        a.push(3);
+        let k0 = a.push(1);
+        let k1 = a.push(2);
+        let k2 = a.push(3);
         assert_eq!(Len::len(&a), 3);
+        assert!(ContainsKey::contains_key(&a, &k0));
+        assert_eq!(Get::get(&a, &k0), Some(&1));
+
+        assert_eq!(Remove::remove(&mut a, &k1), Some(2));
+        assert!(!ContainsKey::contains_key(&a, &k1));
+        assert_eq!(Get::get(&a, &k1), None);
+        assert_eq!(Get::get(&a, &k2), Some(&3));
+        assert_eq!(Len::len(&a), 2);
 
         let items: Vec<(thunderdome::Index, i32)> = IntoIter::into_iter(a).collect();
-        assert_eq!(items.len(), 3);
+        assert_eq!(items.len(), 2);
 
         let mut x: Arena<i32> = Arena::new();
         x.push(5);
