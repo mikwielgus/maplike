@@ -335,7 +335,8 @@ pub trait Insert<K>: Keyed {
 /// [`stable_vec::StableVec`](https://docs.rs/stable-vec/latest/stable_vec/type.StableVec.html),
 /// [`thunderdome::Arena`](https://docs.rs/thunderdome/latest/thunderdome/struct.Arena.html),
 /// [`slab::Slab`](https://docs.rs/slab/latest/slab/struct.Slab.html),
-/// or [`slotmap::SlotMap`](https://docs.rs/slotmap/latest/slotmap/struct.SlotMap.html).
+/// [`slotmap::SlotMap`](https://docs.rs/slotmap/latest/slotmap/struct.SlotMap.html),
+/// or [`slotmap::DenseSlotMap`](https://docs.rs/slotmap/latest/slotmap/struct.DenseSlotMap.html).
 ///
 /// # Examples
 ///
@@ -373,7 +374,8 @@ pub trait Remove<K: ?Sized>: Keyed {
     /// [`stable_vec::StableVec`](https://docs.rs/stable-vec/latest/stable_vec/type.StableVec.html),
     /// [`thunderdome::Arena`](https://docs.rs/thunderdome/latest/thunderdome/struct.Arena.html),
     /// [`slab::Slab`](https://docs.rs/slab/latest/slab/struct.Slab.html),
-    /// or [`slotmap::SlotMap`](https://docs.rs/slotmap/latest/slotmap/struct.SlotMap.html).
+    /// [`slotmap::SlotMap`](https://docs.rs/slotmap/latest/slotmap/struct.SlotMap.html),
+    /// or [`slotmap::DenseSlotMap`](https://docs.rs/slotmap/latest/slotmap/struct.DenseSlotMap.html).
     fn remove(&mut self, key: &K) -> Self::Output;
 }
 

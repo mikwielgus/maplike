@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
-use slotmap::{Key, SecondaryMap, SlotMap};
+use slotmap::{DenseSlotMap, Key, SecondaryMap, SlotMap};
 
 #[cfg(feature = "std")]
 use slotmap::SparseSecondaryMap;
@@ -130,6 +130,132 @@ impl<'a, K: Key + 'a, V: 'a> Iter<'a, K> for SlotMap<K, V> {
 
 impl<K: Key, V> IntoIter<K> for SlotMap<K, V> {
     type IntoIter = slotmap::basic::IntoIter<K, V>;
+
+    #[inline(always)]
+    fn into_iter(self) -> Self::IntoIter {
+        IntoIterator::into_iter(self)
+    }
+}
+
+impl<K: Key, V> Container for DenseSlotMap<K, V> {
+    type Value = V;
+}
+
+impl<K: Key, V> Keyed for DenseSlotMap<K, V> {
+    type Key = K;
+}
+
+impl<K: Key, V> WithOne<V> for DenseSlotMap<K, V> {
+    #[inline(always)]
+    fn with_one(element: V) -> Self {
+        let mut slot_map = DenseSlotMap::with_key();
+        DenseSlotMap::insert(&mut slot_map, element);
+
+        slot_map
+    }
+}
+
+impl<K: Key, V> ContainsKey<K> for DenseSlotMap<K, V> {
+    #[inline(always)]
+    fn contains_key(&self, key: &K) -> bool {
+        DenseSlotMap::contains_key(self, *key)
+    }
+}
+
+impl<K: Key, V> Get<K> for DenseSlotMap<K, V> {
+    #[inline(always)]
+    fn get(&self, key: &K) -> Option<&V> {
+        DenseSlotMap::get(self, *key)
+    }
+}
+
+impl<K: Key, V> Set<K> for DenseSlotMap<K, V> {
+    type Output = Option<V>;
+
+    #[inline(always)]
+    fn set(&mut self, key: K, value: V) -> Option<V> {
+        Some(core::mem::replace(&mut self[key], value))
+    }
+}
+
+impl<K: Key, V> Modify<K> for DenseSlotMap<K, V> {
+    #[inline(always)]
+    fn modify<F>(&mut self, key: &K, f: F)
+    where
+        F: FnOnce(&mut V),
+    {
+        f(self.get_mut(*key).expect("no value under key"));
+    }
+}
+
+impl<K: Key, V> Remove<K> for DenseSlotMap<K, V> {
+    type Output = Option<V>;
+
+    #[inline(always)]
+    fn remove(&mut self, key: &K) -> Option<V> {
+        DenseSlotMap::remove(self, *key)
+    }
+}
+
+impl<K: Key, V> Push<K> for DenseSlotMap<K, V> {
+    #[inline(always)]
+    fn push(&mut self, value: V) -> K {
+        DenseSlotMap::insert(self, value)
+    }
+}
+
+impl<K: Key, V> Put<V> for DenseSlotMap<K, V> {
+    #[inline(always)]
+    fn put(&mut self, value: V) -> Option<V> {
+        DenseSlotMap::insert(self, value);
+
+        None
+    }
+}
+
+impl<K: Key, V> Clear for DenseSlotMap<K, V> {
+    #[inline(always)]
+    fn clear(&mut self) {
+        DenseSlotMap::clear(self);
+    }
+}
+
+impl<K: Key, V> Len for DenseSlotMap<K, V> {
+    #[inline(always)]
+    fn len(&self) -> usize {
+        DenseSlotMap::len(self)
+    }
+}
+
+impl<'a, K: Key + 'a, V: 'a> Values<'a> for DenseSlotMap<K, V> {
+    type Values = slotmap::dense::Values<'a, K, V>;
+
+    #[inline(always)]
+    fn values(&'a self) -> Self::Values {
+        DenseSlotMap::values(self)
+    }
+}
+
+impl<K: Key, V> IntoValues for DenseSlotMap<K, V> {
+    type IntoValues = ValuesFromKeyValuePairs<slotmap::dense::IntoIter<K, V>>;
+
+    #[inline(always)]
+    fn into_values(self) -> Self::IntoValues {
+        ValuesFromKeyValuePairs(IntoIterator::into_iter(self))
+    }
+}
+
+impl<'a, K: Key + 'a, V: 'a> Iter<'a, K> for DenseSlotMap<K, V> {
+    type Iter = slotmap::dense::Iter<'a, K, V>;
+
+    #[inline(always)]
+    fn iter(&'a self) -> Self::Iter {
+        DenseSlotMap::iter(self)
+    }
+}
+
+impl<K: Key, V> IntoIter<K> for DenseSlotMap<K, V> {
+    type IntoIter = slotmap::dense::IntoIter<K, V>;
 
     #[inline(always)]
     fn into_iter(self) -> Self::IntoIter {
