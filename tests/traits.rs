@@ -1006,7 +1006,7 @@ mod slab_tests {
 #[cfg(feature = "slotmap")]
 mod slotmap_tests {
     use super::*;
-    use slotmap::{DefaultKey, SecondaryMap, SlotMap};
+    use slotmap::{DefaultKey, DenseSlotMap, SecondaryMap, SlotMap};
 
     #[test]
     fn test_traits_on_slotmap() {
@@ -1014,6 +1014,16 @@ mod slotmap_tests {
         check_with_one::<i32, i32, SlotMap<DefaultKey, i32>>(30, 30);
         check_push_remove_into_iter::<DefaultKey, i32, SlotMap<DefaultKey, i32>>(SlotMap::new());
         check_assign_no_partial_eq(SlotMap::<DefaultKey, i32>::new(), SlotMap::new());
+    }
+
+    #[test]
+    fn test_traits_on_dense_slotmap() {
+        check_push_put::<DefaultKey, i32, DenseSlotMap<DefaultKey, i32>>(DenseSlotMap::new());
+        check_with_one::<i32, i32, DenseSlotMap<DefaultKey, i32>>(30, 30);
+        check_push_remove_into_iter::<DefaultKey, i32, DenseSlotMap<DefaultKey, i32>>(
+            DenseSlotMap::new(),
+        );
+        check_assign_no_partial_eq(DenseSlotMap::<DefaultKey, i32>::new(), DenseSlotMap::new());
     }
 
     #[test]
