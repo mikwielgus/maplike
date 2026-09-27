@@ -2,11 +2,11 @@
 //
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
-use slotmap::{Key, SlotMap};
+use slotmap::{Key, SecondaryMap, SlotMap};
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Push, Put, Remove, Set, WithOne};
+use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove, Set, WithOne};
 
 impl<K: Key, V> Container for SlotMap<K, V> {
     type Value = V;
@@ -127,6 +127,115 @@ impl<'a, K: Key + 'a, V: 'a> Iter<'a, K> for SlotMap<K, V> {
 
 impl<K: Key, V> IntoIter<K> for SlotMap<K, V> {
     type IntoIter = slotmap::basic::IntoIter<K, V>;
+
+    #[inline(always)]
+    fn into_iter(self) -> Self::IntoIter {
+        IntoIterator::into_iter(self)
+    }
+}
+
+impl<K: Key, V> Container for SecondaryMap<K, V> {
+    type Value = V;
+}
+
+impl<K: Key, V> Keyed for SecondaryMap<K, V> {
+    type Key = K;
+}
+
+impl<K: Key, V> ContainsKey<K> for SecondaryMap<K, V> {
+    #[inline(always)]
+    fn contains_key(&self, key: &K) -> bool {
+        SecondaryMap::contains_key(self, *key)
+    }
+}
+
+impl<K: Key, V> Get<K> for SecondaryMap<K, V> {
+    #[inline(always)]
+    fn get(&self, key: &K) -> Option<&V> {
+        SecondaryMap::get(self, *key)
+    }
+}
+
+impl<K: Key, V> Set<K> for SecondaryMap<K, V> {
+    type Output = Option<V>;
+
+    #[inline(always)]
+    fn set(&mut self, key: K, value: V) -> Option<V> {
+        SecondaryMap::insert(self, key, value)
+    }
+}
+
+impl<K: Key, V> Modify<K> for SecondaryMap<K, V> {
+    #[inline(always)]
+    fn modify<F>(&mut self, key: &K, f: F)
+    where
+        F: FnOnce(&mut V),
+    {
+        f(self.get_mut(*key).expect("no value under key"));
+    }
+}
+
+impl<K: Key, V> Insert<K> for SecondaryMap<K, V> {
+    type Output = Option<V>;
+
+    #[inline(always)]
+    fn insert(&mut self, key: K, value: V) -> Option<V> {
+        SecondaryMap::insert(self, key, value)
+    }
+}
+
+impl<K: Key, V> Remove<K> for SecondaryMap<K, V> {
+    type Output = Option<V>;
+
+    #[inline(always)]
+    fn remove(&mut self, key: &K) -> Option<V> {
+        SecondaryMap::remove(self, *key)
+    }
+}
+
+impl<K: Key, V> Clear for SecondaryMap<K, V> {
+    #[inline(always)]
+    fn clear(&mut self) {
+        SecondaryMap::clear(self);
+    }
+}
+
+impl<K: Key, V> Len for SecondaryMap<K, V> {
+    #[inline(always)]
+    fn len(&self) -> usize {
+        SecondaryMap::len(self)
+    }
+}
+
+impl<'a, K: Key + 'a, V: 'a> Values<'a> for SecondaryMap<K, V> {
+    type Values = slotmap::secondary::Values<'a, K, V>;
+
+    #[inline(always)]
+    fn values(&'a self) -> Self::Values {
+        SecondaryMap::values(self)
+    }
+}
+
+impl<K: Key, V> IntoValues for SecondaryMap<K, V> {
+    type IntoValues = ValuesFromKeyValuePairs<slotmap::secondary::IntoIter<K, V>>;
+
+    #[inline(always)]
+    fn into_values(self) -> Self::IntoValues {
+        ValuesFromKeyValuePairs(IntoIterator::into_iter(self))
+    }
+}
+
+impl<'a, K: Key + 'a, V: 'a> Iter<'a, K> for SecondaryMap<K, V> {
+    type Iter = slotmap::secondary::Iter<'a, K, V>;
+
+    #[inline(always)]
+    fn iter(&'a self) -> Self::Iter {
+        SecondaryMap::iter(self)
+    }
+}
+
+impl<K: Key, V> IntoIter<K> for SecondaryMap<K, V> {
+    type IntoIter = slotmap::secondary::IntoIter<K, V>;
 
     #[inline(always)]
     fn into_iter(self) -> Self::IntoIter {

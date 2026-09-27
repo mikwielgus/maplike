@@ -58,7 +58,8 @@ rstar = ["dep:rstar"]
 ## Enables convenience implementations for `slab::Slab`.
 slab = ["dep:slab"]
 
-## Enables convenience implementations for `slotmap::SlotMap`.
+## Enables convenience implementations for `slotmap::SlotMap` and
+## `slotmap::SecondaryMap`.
 slotmap = ["dep:slotmap"]
 
 ## Enables convenience implementations for `stable_vec::StableVec`.
