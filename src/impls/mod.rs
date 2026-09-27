@@ -30,6 +30,9 @@ mod rstar;
 #[cfg(feature = "slab")]
 mod slab;
 
+#[cfg(feature = "slotmap")]
+mod slotmap;
+
 #[cfg(feature = "stable-vec")]
 mod stable_vec;
 
