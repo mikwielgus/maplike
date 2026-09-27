@@ -243,6 +243,83 @@ where
     assert_eq!(Len::len(&initial), 1);
 }
 
+fn check_push_remove_into_iter<K, V, C>(mut c: C)
+where
+    K: Clone + PartialEq + Debug,
+    V: FromUsize + Clone + PartialEq + Debug,
+    C: Keyed<Key = K, Value = V>
+        + Push<K>
+        + ContainsKey<K>
+        + Get<K>
+        + Remove<K, Output = Option<V>>
+        + Len
+        + IntoIter<K>,
+{
+    assert_eq!(Len::len(&c), 0);
+
+    let k0 = c.push(V::from_usize(1));
+    let k1 = c.push(V::from_usize(2));
+    let k2 = c.push(V::from_usize(3));
+    assert_eq!(Len::len(&c), 3);
+    assert!(c.contains_key(&k0));
+    assert_eq!(c.get(&k0), Some(&V::from_usize(1)));
+
+    assert_eq!(c.remove(&k1), Some(V::from_usize(2)));
+    assert!(!c.contains_key(&k1));
+    assert_eq!(c.get(&k1), None);
+    assert_eq!(c.get(&k2), Some(&V::from_usize(3)));
+    assert_eq!(Len::len(&c), 2);
+
+    let items: Vec<(K, V)> = IntoIter::into_iter(c).collect();
+    assert_eq!(items.len(), 2);
+    assert!(items.contains(&(k0, V::from_usize(1))));
+    assert!(items.contains(&(k2, V::from_usize(3))));
+}
+
+fn check_insert_map_with_keys<K, V, C>(mut c: C, k0: K, k1: K, k2: K)
+where
+    K: Clone + PartialEq + Debug,
+    V: FromUsize + Clone + PartialEq + Debug,
+    C: Keyed<Key = K, Value = V>
+        + ContainsKey<K>
+        + Get<K>
+        + Set<K, Output = Option<V>>
+        + Modify<K>
+        + Insert<K, Output = Option<V>>
+        + Remove<K, Output = Option<V>>
+        + Len
+        + IntoIter<K>,
+{
+    assert_eq!(Len::len(&c), 0);
+    assert!(!c.contains_key(&k0));
+
+    assert_eq!(c.insert(k0.clone(), V::from_usize(10)), None);
+    assert_eq!(c.insert(k1.clone(), V::from_usize(20)), None);
+    assert!(c.contains_key(&k0));
+    assert_eq!(c.get(&k0), Some(&V::from_usize(10)));
+    assert_eq!(c.get(&k1), Some(&V::from_usize(20)));
+    assert_eq!(Len::len(&c), 2);
+
+    assert_eq!(
+        c.set(k0.clone(), V::from_usize(11)),
+        Some(V::from_usize(10))
+    );
+    assert_eq!(c.get(&k0), Some(&V::from_usize(11)));
+
+    c.modify(&k1, |v| *v = V::from_usize(21));
+    assert_eq!(c.get(&k1), Some(&V::from_usize(21)));
+
+    assert_eq!(c.insert(k2.clone(), V::from_usize(30)), None);
+    assert_eq!(c.remove(&k1), Some(V::from_usize(21)));
+    assert!(!c.contains_key(&k1));
+    assert_eq!(Len::len(&c), 2);
+
+    let items: Vec<(K, V)> = IntoIter::into_iter(c).collect();
+    assert_eq!(items.len(), 2);
+    assert!(items.contains(&(k0, V::from_usize(11))));
+    assert!(items.contains(&(k2, V::from_usize(30))));
+}
+
 fn check_borrow_str<C>(mut c: C)
 where
     C: Keyed<Key = String, Value = i32>
@@ -921,27 +998,7 @@ mod slab_tests {
     fn test_traits_on_slab() {
         check_push_put::<usize, i32, Slab<i32>>(Slab::new());
         check_with_one::<i32, i32, Slab<i32>>(30, 30);
-
-        let mut a: Slab<i32> = Slab::new();
-        assert_eq!(Len::len(&a), 0);
-        let k0 = a.push(1);
-        let k1 = a.push(2);
-        let k2 = a.push(3);
-        assert_eq!(Len::len(&a), 3);
-        assert!(ContainsKey::contains_key(&a, &k0));
-        assert_eq!(Get::get(&a, &k0), Some(&1));
-
-        assert_eq!(Remove::remove(&mut a, &k1), Some(2));
-        assert!(!ContainsKey::contains_key(&a, &k1));
-        assert_eq!(Get::get(&a, &k1), None);
-        assert_eq!(Get::get(&a, &k2), Some(&3));
-        assert_eq!(Len::len(&a), 2);
-
-        let items: Vec<(usize, i32)> = IntoIter::into_iter(a).collect();
-        assert_eq!(items.len(), 2);
-        assert!(items.contains(&(k0, 1)));
-        assert!(items.contains(&(k2, 3)));
-
+        check_push_remove_into_iter::<usize, i32, Slab<i32>>(Slab::new());
         check_assign_no_partial_eq(Slab::<i32>::new(), Slab::new());
     }
 }
@@ -955,28 +1012,7 @@ mod slotmap_tests {
     fn test_traits_on_slotmap() {
         check_push_put::<DefaultKey, i32, SlotMap<DefaultKey, i32>>(SlotMap::new());
         check_with_one::<i32, i32, SlotMap<DefaultKey, i32>>(30, 30);
-
-        let mut a: SlotMap<DefaultKey, i32> = SlotMap::new();
-        assert_eq!(Len::len(&a), 0);
-
-        let k0 = a.push(1);
-        let k1 = a.push(2);
-        let k2 = a.push(3);
-        assert_eq!(Len::len(&a), 3);
-        assert!(ContainsKey::contains_key(&a, &k0));
-        assert_eq!(Get::get(&a, &k0), Some(&1));
-
-        assert_eq!(Remove::remove(&mut a, &k1), Some(2));
-        assert!(!ContainsKey::contains_key(&a, &k1));
-        assert_eq!(Get::get(&a, &k1), None);
-        assert_eq!(Get::get(&a, &k2), Some(&3));
-        assert_eq!(Len::len(&a), 2);
-
-        let items: Vec<(DefaultKey, i32)> = IntoIter::into_iter(a).collect();
-        assert_eq!(items.len(), 2);
-        assert!(items.contains(&(k0, 1)));
-        assert!(items.contains(&(k2, 3)));
-
+        check_push_remove_into_iter::<DefaultKey, i32, SlotMap<DefaultKey, i32>>(SlotMap::new());
         check_assign_no_partial_eq(SlotMap::<DefaultKey, i32>::new(), SlotMap::new());
     }
 
@@ -987,39 +1023,33 @@ mod slotmap_tests {
         let k1 = keys.insert(());
         let k2 = keys.insert(());
 
-        let mut a: SecondaryMap<DefaultKey, i32> = SecondaryMap::new();
-        assert_eq!(Len::len(&a), 0);
-        assert!(!ContainsKey::contains_key(&a, &k0));
-
-        assert_eq!(Insert::insert(&mut a, k0, 10), None);
-        assert_eq!(Insert::insert(&mut a, k1, 20), None);
-        assert!(ContainsKey::contains_key(&a, &k0));
-        assert_eq!(Get::get(&a, &k0), Some(&10));
-        assert_eq!(Get::get(&a, &k1), Some(&20));
-        assert_eq!(Len::len(&a), 2);
-
-        assert_eq!(Set::set(&mut a, k0, 11), Some(10));
-        assert_eq!(Get::get(&a, &k0), Some(&11));
-
-        Modify::modify(&mut a, &k1, |v| *v = 21);
-        assert_eq!(Get::get(&a, &k1), Some(&21));
-
-        assert_eq!(Insert::insert(&mut a, k2, 30), None);
-        assert_eq!(Remove::remove(&mut a, &k1), Some(21));
-        assert!(!ContainsKey::contains_key(&a, &k1));
-        assert_eq!(Len::len(&a), 2);
-
-        let items: Vec<(DefaultKey, i32)> = IntoIter::into_iter(a).collect();
-        assert_eq!(items.len(), 2);
-        assert!(items.contains(&(k0, 11)));
-        assert!(items.contains(&(k2, 30)));
+        check_insert_map_with_keys(SecondaryMap::<DefaultKey, i32>::new(), k0, k1, k2);
 
         let mut x: SecondaryMap<DefaultKey, i32> = SecondaryMap::new();
         Insert::insert(&mut x, k0, 5);
         let mut y: SecondaryMap<DefaultKey, i32> = SecondaryMap::new();
         Insert::insert(&mut y, k1, 7);
         Insert::insert(&mut y, k2, 9);
+        check_assign(x, y);
+    }
 
+    #[cfg(feature = "std")]
+    #[test]
+    fn test_traits_on_sparse_secondary_map() {
+        use slotmap::SparseSecondaryMap;
+
+        let mut keys: SlotMap<DefaultKey, ()> = SlotMap::new();
+        let k0 = keys.insert(());
+        let k1 = keys.insert(());
+        let k2 = keys.insert(());
+
+        check_insert_map_with_keys(SparseSecondaryMap::<DefaultKey, i32>::new(), k0, k1, k2);
+
+        let mut x: SparseSecondaryMap<DefaultKey, i32> = SparseSecondaryMap::new();
+        Insert::insert(&mut x, k0, 5);
+        let mut y: SparseSecondaryMap<DefaultKey, i32> = SparseSecondaryMap::new();
+        Insert::insert(&mut y, k1, 7);
+        Insert::insert(&mut y, k2, 9);
         check_assign(x, y);
     }
 }
@@ -1034,26 +1064,7 @@ mod thunderdome_tests {
         check_push_put::<thunderdome::Index, i32, Arena<i32>>(Arena::new());
         check_with_one::<i32, i32, Arena<i32>>(30, 30);
         check_pushed_insert_remove::<thunderdome::Index, i32, Arena<i32>>(Arena::new());
-
-        let mut a: Arena<i32> = Arena::new();
-        assert_eq!(Len::len(&a), 0);
-
-        let k0 = a.push(1);
-        let k1 = a.push(2);
-        let k2 = a.push(3);
-        assert_eq!(Len::len(&a), 3);
-        assert!(ContainsKey::contains_key(&a, &k0));
-        assert_eq!(Get::get(&a, &k0), Some(&1));
-
-        assert_eq!(Remove::remove(&mut a, &k1), Some(2));
-        assert!(!ContainsKey::contains_key(&a, &k1));
-        assert_eq!(Get::get(&a, &k1), None);
-        assert_eq!(Get::get(&a, &k2), Some(&3));
-        assert_eq!(Len::len(&a), 2);
-
-        let items: Vec<(thunderdome::Index, i32)> = IntoIter::into_iter(a).collect();
-        assert_eq!(items.len(), 2);
-
+        check_push_remove_into_iter::<thunderdome::Index, i32, Arena<i32>>(Arena::new());
         check_assign_no_partial_eq(Arena::<i32>::new(), Arena::new());
     }
 }

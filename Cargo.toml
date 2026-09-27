@@ -28,8 +28,9 @@ default = ["std"]
 ## Enables the `Keyed` and `Assign` derive macros.
 derive = ["dep:maplike_derive"]
 
-## Disable for `no_std` compatibility. Implies `alloc`.
-std = ["alloc"]
+## Disable for `no_std` compatibility. Implies `alloc`. Enables `slotmap`'s
+## `std` feature if `slotmap` is enabled.
+std = ["alloc", "slotmap?/std"]
 
 ## Enables convenience implementations for `alloc` collections (`BTreeMap`,
 ## `BTreeSet`, `Vec`, `VecDeque`).
@@ -58,8 +59,9 @@ rstar = ["dep:rstar"]
 ## Enables convenience implementations for `slab::Slab`.
 slab = ["dep:slab"]
 
-## Enables convenience implementations for `slotmap::SlotMap` and
-## `slotmap::SecondaryMap`.
+## Enables convenience implementations for `slotmap::SlotMap`,
+## `slotmap::SecondaryMap`, and, additionally under the `std` feature,
+## `slotmap::SparseSecondaryMap`.
 slotmap = ["dep:slotmap"]
 
 ## Enables convenience implementations for `stable_vec::StableVec`.
