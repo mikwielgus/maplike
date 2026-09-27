@@ -6,7 +6,9 @@ use thin_vec::ThinVec;
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, Get, Len, Modify, Pop, Push, Put, Resize, Set, SwapRemove, WithOne};
+use crate::ops::{
+    Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, SwapRemove, WithOne,
+};
 
 impl<V> Container for ThinVec<V> {
     type Value = V;
@@ -23,6 +25,13 @@ impl<V> WithOne<V> for ThinVec<V> {
         ThinVec::push(&mut thin_vec, element);
 
         thin_vec
+    }
+}
+
+impl<V> ContainsKey<usize> for ThinVec<V> {
+    #[inline(always)]
+    fn contains_key(&self, index: &usize) -> bool {
+        *index < self.len()
     }
 }
 

@@ -6,7 +6,7 @@
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Get, Len, Modify, Put, Set, WithOne};
+use crate::ops::{ContainsKey, Get, Len, Modify, Put, Set, WithOne};
 
 /// A collection that holds exactly one element.
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
@@ -35,6 +35,13 @@ impl<V> WithOne<V> for One<V> {
     #[inline(always)]
     fn with_one(value: V) -> Self {
         Self { value }
+    }
+}
+
+impl<V> ContainsKey<usize> for One<V> {
+    #[inline(always)]
+    fn contains_key(&self, index: &usize) -> bool {
+        *index == 0
     }
 }
 

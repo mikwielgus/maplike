@@ -9,7 +9,7 @@ use indexmap::IndexSet;
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{Clear, Get, Insert, Len, Put, Remove, Set, WithOne};
+use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Put, Remove, Set, WithOne};
 
 impl<K> Container for IndexSet<K> {
     type Value = ();
@@ -26,6 +26,16 @@ impl<K: Eq + Hash> WithOne<K> for IndexSet<K> {
         IndexSet::insert(&mut indexset, element);
 
         indexset
+    }
+}
+
+impl<K: Eq + Hash, Q: Eq + Hash + ?Sized> ContainsKey<Q> for IndexSet<K>
+where
+    K: Borrow<Q>,
+{
+    #[inline(always)]
+    fn contains_key(&self, key: &Q) -> bool {
+        IndexSet::contains(self, key)
     }
 }
 

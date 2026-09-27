@@ -173,6 +173,9 @@ assert_eq!(vec, [4, 5, 6]);
 
 This crate provides traits for common operations over map-like, set-like,
 array-like, and vec-like data structures:
+[`.with_one()`](https://docs.rs/maplike/latest/maplike/ops/trait.WithOne.html#tymethod.with_one),
+[`.assign()`](https://docs.rs/maplike/latest/maplike/ops/trait.Assign.html#tymethod.assign),
+[`.contains_key()`](https://docs.rs/maplike/latest/maplike/ops/trait.ContainsKey.html#tymethod.contains_key),
 [`.get()`](https://docs.rs/maplike/latest/maplike/ops/trait.Get.html#tymethod.get),
 [`.set()`](https://docs.rs/maplike/latest/maplike/ops/trait.Set.html#tymethod.set),
 [`.modify()`](https://docs.rs/maplike/latest/maplike/ops/trait.Modify.html#tymethod.modify),
@@ -185,8 +188,6 @@ array-like, and vec-like data structures:
 [`.clear()`](https://docs.rs/maplike/latest/maplike/ops/trait.Clear.html#tymethod.clear),
 [`.len()`](https://docs.rs/maplike/latest/maplike/ops/trait.Len.html#tymethod.len),
 [`.resize()`](https://docs.rs/maplike/latest/maplike/ops/trait.Resize.html#tymethod.resize),
-[`.with_one()`](https://docs.rs/maplike/latest/maplike/ops/trait.WithOne.html#tymethod.with_one),
-[`.assign()`](https://docs.rs/maplike/latest/maplike/ops/trait.Assign.html#tymethod.assign),
 [`.values()`](https://docs.rs/maplike/latest/maplike/iter/trait.Values.html#tymethod.values),
 [`.into_values()`](https://docs.rs/maplike/latest/maplike/iter/trait.IntoValues.html#tymethod.into_values),
 [`.iter()`](https://docs.rs/maplike/latest/maplike/iter/trait.Iter.html#tymethod.iter), and

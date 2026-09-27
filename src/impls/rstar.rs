@@ -6,7 +6,7 @@ use rstar::{RTree, RTreeObject, RTreeParams};
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{Clear, Get, Insert, Len, Put, Remove, Set, WithOne};
+use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Put, Remove, Set, WithOne};
 
 impl<K: RTreeObject, Params: RTreeParams> Container for RTree<K, Params> {
     type Value = ();
@@ -23,6 +23,13 @@ impl<K: RTreeObject, Params: RTreeParams> WithOne<K> for RTree<K, Params> {
         RTree::insert(&mut rtree, element);
 
         rtree
+    }
+}
+
+impl<K: RTreeObject + PartialEq, Params: RTreeParams> ContainsKey<K> for RTree<K, Params> {
+    #[inline(always)]
+    fn contains_key(&self, key: &K) -> bool {
+        RTree::contains(self, key)
     }
 }
 

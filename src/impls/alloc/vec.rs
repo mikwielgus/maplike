@@ -6,7 +6,9 @@ use alloc_::vec::Vec;
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, Get, Len, Modify, Pop, Push, Put, Resize, Set, SwapRemove, WithOne};
+use crate::ops::{
+    Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, SwapRemove, WithOne,
+};
 
 impl<V> Container for Vec<V> {
     type Value = V;
@@ -23,6 +25,13 @@ impl<V> WithOne<V> for Vec<V> {
         Vec::push(&mut vec, element);
 
         vec
+    }
+}
+
+impl<V> ContainsKey<usize> for Vec<V> {
+    #[inline(always)]
+    fn contains_key(&self, index: &usize) -> bool {
+        *index < self.len()
     }
 }
 

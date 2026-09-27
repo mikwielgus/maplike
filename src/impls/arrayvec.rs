@@ -6,7 +6,7 @@ use arrayvec::ArrayVec;
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, Get, Len, Modify, Pop, Push, Put, Set, WithOne};
+use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Set, WithOne};
 
 impl<T, const CAP: usize> Container for ArrayVec<T, CAP> {
     type Value = T;
@@ -23,6 +23,13 @@ impl<T, const CAP: usize> WithOne<T> for ArrayVec<T, CAP> {
         ArrayVec::push(&mut array_vec, element);
 
         array_vec
+    }
+}
+
+impl<T, const CAP: usize> ContainsKey<usize> for ArrayVec<T, CAP> {
+    #[inline(always)]
+    fn contains_key(&self, index: &usize) -> bool {
+        *index < self.len()
     }
 }
 

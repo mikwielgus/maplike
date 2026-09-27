@@ -6,7 +6,7 @@ use stable_vec::StableVecFacade;
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{Clear, Get, Insert, Len, Modify, Push, Put, Remove, Set, WithOne};
+use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove, Set, WithOne};
 
 impl<V, C: stable_vec::core::Core<V>> Container for StableVecFacade<V, C> {
     type Value = V;
@@ -23,6 +23,13 @@ impl<V, C: stable_vec::core::Core<V>> WithOne<V> for StableVecFacade<V, C> {
         StableVecFacade::push(&mut stable_vec, element);
 
         stable_vec
+    }
+}
+
+impl<V, C: stable_vec::core::Core<V>> ContainsKey<usize> for StableVecFacade<V, C> {
+    #[inline(always)]
+    fn contains_key(&self, index: &usize) -> bool {
+        StableVecFacade::has_element_at(self, *index)
     }
 }
 

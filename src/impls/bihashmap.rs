@@ -10,7 +10,7 @@ use std_::hash::Hash;
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
 use crate::ops::{
-    Clear, Get, GetByLeft, GetByRight, Insert, Len, RemoveByLeft, RemoveByRight, Set,
+    Clear, ContainsKey, Get, GetByLeft, GetByRight, Insert, Len, RemoveByLeft, RemoveByRight, Set,
 };
 
 impl<L, R> Container for BiHashMap<L, R> {
@@ -19,6 +19,16 @@ impl<L, R> Container for BiHashMap<L, R> {
 
 impl<L, R> Keyed for BiHashMap<L, R> {
     type Key = L;
+}
+
+impl<L: Eq + Hash, R: Eq + Hash, Q: Eq + Hash + ?Sized> ContainsKey<Q> for BiHashMap<L, R>
+where
+    L: Borrow<Q>,
+{
+    #[inline(always)]
+    fn contains_key(&self, key: &Q) -> bool {
+        BiHashMap::get_by_left(self, key).is_some()
+    }
 }
 
 impl<L: Eq + Hash, R: Eq + Hash, Q: Eq + Hash + ?Sized> Get<Q> for BiHashMap<L, R>

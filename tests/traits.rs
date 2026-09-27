@@ -14,8 +14,8 @@ use maplike::abc::Keyed;
 use maplike::entry::{CombinedEntry, Entry, OccupiedEntry, VacantEntry};
 use maplike::iter::IntoIter;
 use maplike::ops::{
-    Assign, Clear, Get, GetByLeft, GetByRight, Insert, Len, Modify, Pop, Push, Put, Remove,
-    RemoveByLeft, RemoveByRight, Resize, Set, SwapRemove, WithOne,
+    Assign, Clear, ContainsKey, Get, GetByLeft, GetByRight, Insert, Len, Modify, Pop, Push, Put,
+    Remove, RemoveByLeft, RemoveByRight, Resize, Set, SwapRemove, WithOne,
 };
 
 trait FromUsize {
@@ -56,6 +56,7 @@ where
     V: FromUsize + Clone + PartialEq + Debug,
     O: PartialEq + Debug,
     C: Keyed<Key = K, Value = V>
+        + ContainsKey<K>
         + Get<K>
         + Set<K>
         + Insert<K>
@@ -70,12 +71,15 @@ where
 
     assert_eq!(Len::len(&c), 0);
     assert_eq!(c.get(&k1), None);
+    assert!(!c.contains_key(&k1));
 
     c.insert(k1.clone(), v1.clone());
     c.insert(k2.clone(), v2.clone());
     assert_eq!(Len::len(&c), 2);
     assert_eq!(c.get(&k1), Some(&v1));
     assert_eq!(c.get(&k2), Some(&v2));
+    assert!(c.contains_key(&k1));
+    assert!(c.contains_key(&k2));
 
     c.set(k1.clone(), v2.clone());
     assert_eq!(c.get(&k1), Some(&v2));
@@ -83,10 +87,12 @@ where
     assert_eq!(c.remove(&k1), expected_removed);
     assert_eq!(Len::len(&c), 1);
     assert_eq!(c.get(&k1), None);
+    assert!(!c.contains_key(&k1));
 
     c.clear();
     assert_eq!(Len::len(&c), 0);
     assert_eq!(c.get(&k2), None);
+    assert!(!c.contains_key(&k2));
 }
 
 fn check_entry<K, V, C>(mut c: C)

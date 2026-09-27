@@ -6,7 +6,7 @@ use alloc_::collections::VecDeque;
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, Get, Len, Modify, Pop, Push, Put, Resize, Set, WithOne};
+use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, WithOne};
 
 impl<V> Container for VecDeque<V> {
     type Value = V;
@@ -23,6 +23,13 @@ impl<V> WithOne<V> for VecDeque<V> {
         VecDeque::push_back(&mut vecdeque, element);
 
         vecdeque
+    }
+}
+
+impl<V> ContainsKey<usize> for VecDeque<V> {
+    #[inline(always)]
+    fn contains_key(&self, index: &usize) -> bool {
+        *index < self.len()
     }
 }
 

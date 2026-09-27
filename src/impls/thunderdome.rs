@@ -6,7 +6,7 @@ use thunderdome::{Arena, Index};
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{Clear, Get, Insert, Len, Modify, Push, Put, Remove, Set, WithOne};
+use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove, Set, WithOne};
 
 impl<V> Container for Arena<V> {
     type Value = V;
@@ -23,6 +23,13 @@ impl<V> WithOne<V> for Arena<V> {
         Arena::insert(&mut arena, element);
 
         arena
+    }
+}
+
+impl<V> ContainsKey<Index> for Arena<V> {
+    #[inline(always)]
+    fn contains_key(&self, key: &Index) -> bool {
+        Arena::contains(self, *key)
     }
 }
 

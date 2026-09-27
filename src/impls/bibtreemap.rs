@@ -9,7 +9,7 @@ use bidimap::{BiBTreeMap, Overwritten};
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
 use crate::ops::{
-    Clear, Get, GetByLeft, GetByRight, Insert, Len, RemoveByLeft, RemoveByRight, Set,
+    Clear, ContainsKey, Get, GetByLeft, GetByRight, Insert, Len, RemoveByLeft, RemoveByRight, Set,
 };
 
 impl<L, R> Container for BiBTreeMap<L, R> {
@@ -18,6 +18,16 @@ impl<L, R> Container for BiBTreeMap<L, R> {
 
 impl<L, R> Keyed for BiBTreeMap<L, R> {
     type Key = L;
+}
+
+impl<L: Ord, R: Ord, Q: Ord + ?Sized> ContainsKey<Q> for BiBTreeMap<L, R>
+where
+    L: Borrow<Q>,
+{
+    #[inline(always)]
+    fn contains_key(&self, key: &Q) -> bool {
+        BiBTreeMap::get_by_left(self, key).is_some()
+    }
 }
 
 impl<L: Ord, R: Ord, Q: Ord + ?Sized> Get<Q> for BiBTreeMap<L, R>

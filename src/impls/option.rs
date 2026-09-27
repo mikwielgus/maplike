@@ -4,7 +4,7 @@
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, Get, Len, Modify, Put, Remove, Set, WithOne};
+use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Put, Remove, Set, WithOne};
 
 impl<V> Container for Option<V> {
     type Value = V;
@@ -18,6 +18,13 @@ impl<V> WithOne<V> for Option<V> {
     #[inline(always)]
     fn with_one(element: V) -> Self {
         Some(element)
+    }
+}
+
+impl<V> ContainsKey<usize> for Option<V> {
+    #[inline(always)]
+    fn contains_key(&self, index: &usize) -> bool {
+        *index == 0 && self.is_some()
     }
 }
 

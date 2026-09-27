@@ -6,7 +6,7 @@ use alloc_::boxed::Box;
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Get, Len, Modify, Put, Set, WithOne};
+use crate::ops::{ContainsKey, Get, Len, Modify, Put, Set, WithOne};
 
 impl<V> Container for Box<V> {
     type Value = V;
@@ -20,6 +20,13 @@ impl<V> WithOne<V> for Box<V> {
     #[inline(always)]
     fn with_one(value: V) -> Self {
         Box::new(value)
+    }
+}
+
+impl<V> ContainsKey<usize> for Box<V> {
+    #[inline(always)]
+    fn contains_key(&self, index: &usize) -> bool {
+        *index == 0
     }
 }
 
