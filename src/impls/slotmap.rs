@@ -4,6 +4,9 @@
 
 use slotmap::{Key, SecondaryMap, SlotMap};
 
+#[cfg(feature = "std")]
+use slotmap::SparseSecondaryMap;
+
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
 use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove, Set, WithOne};
@@ -236,6 +239,129 @@ impl<'a, K: Key + 'a, V: 'a> Iter<'a, K> for SecondaryMap<K, V> {
 
 impl<K: Key, V> IntoIter<K> for SecondaryMap<K, V> {
     type IntoIter = slotmap::secondary::IntoIter<K, V>;
+
+    #[inline(always)]
+    fn into_iter(self) -> Self::IntoIter {
+        IntoIterator::into_iter(self)
+    }
+}
+
+#[cfg(feature = "std")]
+impl<K: Key, V> Container for SparseSecondaryMap<K, V> {
+    type Value = V;
+}
+
+#[cfg(feature = "std")]
+impl<K: Key, V> Keyed for SparseSecondaryMap<K, V> {
+    type Key = K;
+}
+
+#[cfg(feature = "std")]
+impl<K: Key, V> ContainsKey<K> for SparseSecondaryMap<K, V> {
+    #[inline(always)]
+    fn contains_key(&self, key: &K) -> bool {
+        SparseSecondaryMap::contains_key(self, *key)
+    }
+}
+
+#[cfg(feature = "std")]
+impl<K: Key, V> Get<K> for SparseSecondaryMap<K, V> {
+    #[inline(always)]
+    fn get(&self, key: &K) -> Option<&V> {
+        SparseSecondaryMap::get(self, *key)
+    }
+}
+
+#[cfg(feature = "std")]
+impl<K: Key, V> Set<K> for SparseSecondaryMap<K, V> {
+    type Output = Option<V>;
+
+    #[inline(always)]
+    fn set(&mut self, key: K, value: V) -> Option<V> {
+        SparseSecondaryMap::insert(self, key, value)
+    }
+}
+
+#[cfg(feature = "std")]
+impl<K: Key, V> Modify<K> for SparseSecondaryMap<K, V> {
+    #[inline(always)]
+    fn modify<F>(&mut self, key: &K, f: F)
+    where
+        F: FnOnce(&mut V),
+    {
+        f(self.get_mut(*key).expect("no value under key"));
+    }
+}
+
+#[cfg(feature = "std")]
+impl<K: Key, V> Insert<K> for SparseSecondaryMap<K, V> {
+    type Output = Option<V>;
+
+    #[inline(always)]
+    fn insert(&mut self, key: K, value: V) -> Option<V> {
+        SparseSecondaryMap::insert(self, key, value)
+    }
+}
+
+#[cfg(feature = "std")]
+impl<K: Key, V> Remove<K> for SparseSecondaryMap<K, V> {
+    type Output = Option<V>;
+
+    #[inline(always)]
+    fn remove(&mut self, key: &K) -> Option<V> {
+        SparseSecondaryMap::remove(self, *key)
+    }
+}
+
+#[cfg(feature = "std")]
+impl<K: Key, V> Clear for SparseSecondaryMap<K, V> {
+    #[inline(always)]
+    fn clear(&mut self) {
+        SparseSecondaryMap::clear(self);
+    }
+}
+
+#[cfg(feature = "std")]
+impl<K: Key, V> Len for SparseSecondaryMap<K, V> {
+    #[inline(always)]
+    fn len(&self) -> usize {
+        SparseSecondaryMap::len(self)
+    }
+}
+
+#[cfg(feature = "std")]
+impl<'a, K: Key + 'a, V: 'a> Values<'a> for SparseSecondaryMap<K, V> {
+    type Values = slotmap::sparse_secondary::Values<'a, K, V>;
+
+    #[inline(always)]
+    fn values(&'a self) -> Self::Values {
+        SparseSecondaryMap::values(self)
+    }
+}
+
+#[cfg(feature = "std")]
+impl<K: Key, V> IntoValues for SparseSecondaryMap<K, V> {
+    type IntoValues = ValuesFromKeyValuePairs<slotmap::sparse_secondary::IntoIter<K, V>>;
+
+    #[inline(always)]
+    fn into_values(self) -> Self::IntoValues {
+        ValuesFromKeyValuePairs(IntoIterator::into_iter(self))
+    }
+}
+
+#[cfg(feature = "std")]
+impl<'a, K: Key + 'a, V: 'a> Iter<'a, K> for SparseSecondaryMap<K, V> {
+    type Iter = slotmap::sparse_secondary::Iter<'a, K, V>;
+
+    #[inline(always)]
+    fn iter(&'a self) -> Self::Iter {
+        SparseSecondaryMap::iter(self)
+    }
+}
+
+#[cfg(feature = "std")]
+impl<K: Key, V> IntoIter<K> for SparseSecondaryMap<K, V> {
+    type IntoIter = slotmap::sparse_secondary::IntoIter<K, V>;
 
     #[inline(always)]
     fn into_iter(self) -> Self::IntoIter {
