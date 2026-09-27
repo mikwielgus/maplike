@@ -228,6 +228,21 @@ where
     assert_eq!(c, replacement);
 }
 
+fn check_assign_no_partial_eq<K, V, C>(mut initial: C, mut replacement: C)
+where
+    V: FromUsize + PartialEq + Debug,
+    C: Assign + Push<K> + Get<K> + Len + Keyed<Key = K, Value = V>,
+{
+    // Yeah, some containers don't implement `PartialEq`. For these we test
+    // `Assign` using this testing function, not `check_assign()`.
+
+    initial.push(V::from_usize(5));
+    let key = replacement.push(V::from_usize(7));
+    initial.assign(replacement);
+    assert_eq!(Get::get(&initial, &key), Some(&V::from_usize(7)));
+    assert_eq!(Len::len(&initial), 1);
+}
+
 fn check_borrow_str<C>(mut c: C)
 where
     C: Keyed<Key = String, Value = i32>
@@ -927,20 +942,14 @@ mod slab_tests {
         assert!(items.contains(&(k0, 1)));
         assert!(items.contains(&(k2, 3)));
 
-        let mut x: Slab<i32> = Slab::new();
-        x.push(5);
-        let mut y: Slab<i32> = Slab::new();
-        let j = y.push(7);
-        x.assign(y);
-        assert_eq!(Get::get(&x, &j), Some(&7));
-        assert_eq!(Len::len(&x), 1);
+        check_assign_no_partial_eq(Slab::<i32>::new(), Slab::new());
     }
 }
 
 #[cfg(feature = "slotmap")]
 mod slotmap_tests {
     use super::*;
-    use slotmap::{DefaultKey, SlotMap};
+    use slotmap::{DefaultKey, SecondaryMap, SlotMap};
 
     #[test]
     fn test_traits_on_slotmap() {
@@ -968,13 +977,50 @@ mod slotmap_tests {
         assert!(items.contains(&(k0, 1)));
         assert!(items.contains(&(k2, 3)));
 
-        let mut x: SlotMap<DefaultKey, i32> = SlotMap::new();
-        x.push(5);
-        let mut y: SlotMap<DefaultKey, i32> = SlotMap::new();
-        let j = y.push(7);
-        x.assign(y);
-        assert_eq!(Get::get(&x, &j), Some(&7));
-        assert_eq!(Len::len(&x), 1);
+        check_assign_no_partial_eq(SlotMap::<DefaultKey, i32>::new(), SlotMap::new());
+    }
+
+    #[test]
+    fn test_traits_on_secondary_map() {
+        let mut keys: SlotMap<DefaultKey, ()> = SlotMap::new();
+        let k0 = keys.insert(());
+        let k1 = keys.insert(());
+        let k2 = keys.insert(());
+
+        let mut a: SecondaryMap<DefaultKey, i32> = SecondaryMap::new();
+        assert_eq!(Len::len(&a), 0);
+        assert!(!ContainsKey::contains_key(&a, &k0));
+
+        assert_eq!(Insert::insert(&mut a, k0, 10), None);
+        assert_eq!(Insert::insert(&mut a, k1, 20), None);
+        assert!(ContainsKey::contains_key(&a, &k0));
+        assert_eq!(Get::get(&a, &k0), Some(&10));
+        assert_eq!(Get::get(&a, &k1), Some(&20));
+        assert_eq!(Len::len(&a), 2);
+
+        assert_eq!(Set::set(&mut a, k0, 11), Some(10));
+        assert_eq!(Get::get(&a, &k0), Some(&11));
+
+        Modify::modify(&mut a, &k1, |v| *v = 21);
+        assert_eq!(Get::get(&a, &k1), Some(&21));
+
+        assert_eq!(Insert::insert(&mut a, k2, 30), None);
+        assert_eq!(Remove::remove(&mut a, &k1), Some(21));
+        assert!(!ContainsKey::contains_key(&a, &k1));
+        assert_eq!(Len::len(&a), 2);
+
+        let items: Vec<(DefaultKey, i32)> = IntoIter::into_iter(a).collect();
+        assert_eq!(items.len(), 2);
+        assert!(items.contains(&(k0, 11)));
+        assert!(items.contains(&(k2, 30)));
+
+        let mut x: SecondaryMap<DefaultKey, i32> = SecondaryMap::new();
+        Insert::insert(&mut x, k0, 5);
+        let mut y: SecondaryMap<DefaultKey, i32> = SecondaryMap::new();
+        Insert::insert(&mut y, k1, 7);
+        Insert::insert(&mut y, k2, 9);
+
+        check_assign(x, y);
     }
 }
 
@@ -1008,13 +1054,7 @@ mod thunderdome_tests {
         let items: Vec<(thunderdome::Index, i32)> = IntoIter::into_iter(a).collect();
         assert_eq!(items.len(), 2);
 
-        let mut x: Arena<i32> = Arena::new();
-        x.push(5);
-        let mut y: Arena<i32> = Arena::new();
-        let j = y.push(7);
-        x.assign(y);
-        assert_eq!(Get::get(&x, &j), Some(&7));
-        assert_eq!(Len::len(&x), 1);
+        check_assign_no_partial_eq(Arena::<i32>::new(), Arena::new());
     }
 }
 

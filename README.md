@@ -284,9 +284,10 @@ trait implementations for data structures from certain external crates:
 - [`slab::Slab`](https://docs.rs/slab/latest/slab/), gated by the `slab`
   feature flag (`Insert` is not implemented; see
   [Technical sidenotes](#technical-sidenotes));
-- [`slotmap::SlotMap`](https://docs.rs/slotmap/latest/slotmap/struct.SlotMap.html),
-  gated by the `slotmap` feature flag (`Insert` is not implemented; see
-  [Technical sidenotes](#technical-sidenotes));
+- [`slotmap::SlotMap`](https://docs.rs/slotmap/latest/slotmap/struct.SlotMap.html)
+  and [`slotmap::SecondaryMap`](https://docs.rs/slotmap/latest/slotmap/struct.SecondaryMap.html),
+  gated by the `slotmap` feature flag (`Insert` is not implemented for
+  `SlotMap`; see [Technical sidenotes](#technical-sidenotes));
 - [`stable_vec::StableVec`](https://docs.rs/stable-vec/latest/stable_vec/),
   gated by the `stable-vec` feature flag;
 - [`thunderdome::Arena`](https://docs.rs/thunderdome/latest/thunderdome/),
