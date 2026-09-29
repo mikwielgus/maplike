@@ -91,7 +91,7 @@ bidimap = { version = "0.7", optional = true }
 document-features = { version = "0.2", optional = true }
 geo-types = { version = "0.7", optional = true, default-features = false }
 indexmap = { version = "2.14", optional = true }
-rstar = { version = ">= 0.12, < 0.14", optional = true }
+rstar = { version = "0.13", optional = true }
 slab = { version = "0.4", optional = true, default-features = false }
 slotmap = { version = "1.1", optional = true, default-features = false }
 smallvec = { version = "1.16", optional = true }
@@ -107,13 +107,12 @@ slab = { version = "0.4", default-features = false }
 slotmap = { version = "1", default-features = false }
 stable-vec = "0.4"
 thunderdome = "0.6"
-rstar = ">= 0.12, < 0.14"
+rstar = "0.13"
 smallvec = "1"
 arrayvec = "0.7"
 thin-vec = { version = "0.2", default-features = false }
 tinyvec = { version = "1", features = ["alloc"] }
 geo-types = { version = "0.7", default-features = false }
-
 
 # Version replacements apply only to this crate. We have to keep this here
 # and not in `release.toml` because the replacements are applied to each

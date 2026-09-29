@@ -279,7 +279,7 @@ trait implementations for data structures from certain external crates:
 - [`indexmap::IndexMap`](https://docs.rs/indexmap/latest/indexmap/map/struct.IndexMap.html)
   and [`indexmap::IndexSet`](https://docs.rs/indexmap/latest/indexmap/set/struct.IndexSet.html),
   gated by the `indexmap` feature flag;
-- [`rstar::RTree`](https://docs.rs/rstar/0.12.2/rstar/index.html), gated by the
+- [`rstar::RTree`](https://docs.rs/rstar/0.13.0/rstar/index.html), gated by the
   `rstar` feature flag;
 - [`slab::Slab`](https://docs.rs/slab/latest/slab/), gated by the `slab`
   feature flag (`Insert` is not implemented; see
