@@ -113,6 +113,7 @@ for code that is generic over
 [`Vec`](https://doc.rust-lang.org/std/vec/struct.Vec.html),
 [`VecDeque`](https://doc.rust-lang.org/alloc/collections/vec_deque/struct.VecDeque.html),
 `smallvec::SmallVec`,
+[`thin_vec::ThinVec`](https://docs.rs/thin-vec/latest/thin_vec/struct.ThinVec.html),
 [`tinyvec::ArrayVec`](https://docs.rs/tinyvec/latest/tinyvec/struct.ArrayVec.html), and
 [`tinyvec::TinyVec`](https://docs.rs/tinyvec/latest/tinyvec/enum.TinyVec.html).
 
@@ -146,6 +147,16 @@ assert_eq!(vec, [4, 5, 6]);
     let mut small_vec: SmallVec<[i32; 8]> = SmallVec::new();
     replace_all(&mut small_vec, &[7, 8, 9]);
     assert_eq!(small_vec.as_slice(), [7, 8, 9]);
+}
+
+#[cfg(feature = "thin-vec")]
+{
+    use thin_vec::ThinVec;
+
+    // Works on `thin_vec::ThinVec`.
+    let mut thin_vec = ThinVec::new();
+    replace_all(&mut thin_vec, &[7, 8, 9]);
+    assert_eq!(thin_vec.as_slice(), [7, 8, 9]);
 }
 
 #[cfg(feature = "tinyvec")]
@@ -306,10 +317,7 @@ trait implementations for data structures from certain external crates:
   [`Index`](https://doc.rust-lang.org/std/ops/trait.Index.html));
 - `smallvec::SmallVec`, gated by the `smallvec` feature flag;
 - [`thin_vec::ThinVec`](https://docs.rs/thin-vec/latest/thin_vec/struct.ThinVec.html),
-  gated by the `thin-vec` feature flag (individual vec-like traits, but not
-  [`Veclike`](https://docs.rs/maplike/latest/maplike/abc/trait.Veclike.html), because
-  `ThinVec` does not implement
-  [`Index`](https://doc.rust-lang.org/std/ops/trait.Index.html));
+  gated by the `thin-vec` feature flag;
 - [`tinyvec::ArrayVec`](https://docs.rs/tinyvec/latest/tinyvec/struct.ArrayVec.html),
   and [`tinyvec::TinyVec`](https://docs.rs/tinyvec/latest/tinyvec/enum.TinyVec.html),
   gated by the `tinyvec` feature flag;
@@ -333,13 +341,6 @@ trait implementations for data structures from certain external crates:
 For some examples of practical use, see the
 [examples](https://github.com/mikwielgus/undoredo/tree/develop/examples)
 directory of the [`undoredo`](https://github.com/mikwielgus/undoredo) crate.
-
-## Unsupported containers
-
-Among stable vector data structures,
-[`generational-arena`](https://docs.rs/generational-arena/latest/generational_arena/)
-is not supported because it lacks an interface for insertion at an arbitrary
-key.
 
 ### Technical sidenotes
 
