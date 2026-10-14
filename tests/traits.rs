@@ -894,6 +894,24 @@ mod alloc_tests {
         let items: Vec<(usize, i32)> = IntoIter::into_iter(c).collect();
         assert_eq!(items, vec![(0, 10), (1, 20), (2, 30)]);
     }
+
+    #[test]
+    fn test_traits_on_linkedlist() {
+        use std::collections::LinkedList;
+
+        check_push_put::<usize, i32, LinkedList<i32>>(LinkedList::new());
+        check_with_one::<i32, i32, LinkedList<i32>>(30, 30);
+        check_vec::<i32, LinkedList<i32>>(LinkedList::new());
+        check_resize::<i32, LinkedList<i32>>(LinkedList::new());
+        check_assign(LinkedList::from([1i32]), LinkedList::from([2i32, 3i32]));
+
+        let mut c: LinkedList<i32> = LinkedList::new();
+        c.push(10);
+        c.push(20);
+        c.push(30);
+        let items: Vec<(usize, i32)> = IntoIter::into_iter(c).collect();
+        assert_eq!(items, vec![(0, 10), (1, 20), (2, 30)]);
+    }
 }
 
 mod array_tests {

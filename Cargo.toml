@@ -33,7 +33,7 @@ derive = ["dep:maplike_derive"]
 std = ["alloc", "slotmap?/std"]
 
 ## Enables convenience implementations for `alloc` collections (`BTreeMap`,
-## `BTreeSet`, `Vec`, `VecDeque`).
+## `BTreeSet`, `LinkedList`, `Vec`, `VecDeque`).
 alloc = []
 
 ## Enables convenience implementations for `arrayvec::ArrayVec` and

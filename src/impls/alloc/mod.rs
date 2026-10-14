@@ -5,6 +5,7 @@
 mod boxed;
 mod btreemap;
 mod btreeset;
+mod linkedlist;
 mod rc;
 mod vec;
 mod vecdeque;

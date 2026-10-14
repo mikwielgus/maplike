@@ -17,8 +17,8 @@ Rust traits for abstract containers and operations over them.
 With this library, you can write code that is generic over various built-in,
 standard library, and third-party containers, including collections, and
 primitives. You can have the same code work on both on `BTreeMap` and `HashMap`,
-and in many cases also on `Vec`, `VecDeque`, `Option`, `Box`, `Rc`, `Arc` and
-more.
+and in many cases also on `Vec`, `VecDeque`, `LinkedList`, `Option`, `Box`,
+`Rc`, `Arc` and more.
 
 See the [Supported containers](#supported-containers) section for a complete
 list of supported containers.
@@ -245,6 +245,7 @@ implementations:
 - [`BTreeSet`](https://doc.rust-lang.org/stable/std/collections/struct.BTreeSet.html), gated by the `alloc` feature (enabled by default);
 - [`Vec`](https://doc.rust-lang.org/std/vec/struct.Vec.html), gated by the `alloc` feature (enabled by default);
 - [`VecDeque`](https://doc.rust-lang.org/alloc/collections/vec_deque/struct.VecDeque.html), gated by the `alloc` feature (enabled by default);
+- [`LinkedList`](https://doc.rust-lang.org/alloc/collections/linked_list/struct.LinkedList.html), gated by the `alloc` feature (enabled by default);
 - [`Box`](https://doc.rust-lang.org/std/boxed/struct.Box.html), gated by the `alloc` feature (enabled by default);
 - [`Rc`](https://doc.rust-lang.org/std/rc/struct.Rc.html) and its weak pointer,
   [`std::rc::Weak`](https://doc.rust-lang.org/std/rc/struct.Weak.html), both
