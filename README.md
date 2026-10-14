@@ -75,8 +75,8 @@ derive the `Keyed` trait using derive macro
 
 ### Usage examples
 
-`maplike`'s container and collection traits allow you to write functions that
-are generic over many different collection types. A single collection trait like
+`maplike`'s container traits allow you to write functions that are generic
+over many different collection types. A single collection trait like
 [`Get`](https://docs.rs/maplike/latest/maplike/ops/trait.Get.html) is enough to
 abstract over `Vec`s, arrays, and maps alike.
 
@@ -98,8 +98,8 @@ assert_eq!(get_second_element(&BTreeMap::from([(0, 10), (1, 20)])), Some(&20));
 assert_eq!(get_second_element(&HashMap::from([(0, 10), (1, 20)])), Some(&20));
 ```
 
-An abstract container trait can bundle together several traits
-for container methods together in one short bound. For example,
+An abstract container trait can bundle together several traits for container
+methods together in one short bound. For example, an abstract collection trait
 [`Veclike`](https://docs.rs/maplike/latest/maplike/abc/trait.Veclike.html) joins
 together
 ([`Get`](https://docs.rs/maplike/latest/maplike/ops/trait.Get.html),
@@ -222,15 +222,16 @@ types that have an Entry API:
 
 ### Containers
 
-For brevity and convenience, we also provide
+For brevity and convenience, we also provide abstract container traits:
 [`Container`](https://docs.rs/maplike/latest/maplike/abc/trait.Container.html),
 [`Keyed`](https://docs.rs/maplike/latest/maplike/abc/trait.Keyed.html),
 [`Scalarlike`](https://docs.rs/maplike/latest/maplike/abc/trait.Scalarlike.html),
+and particularly abstract collection traits
 [`Maplike`](https://docs.rs/maplike/latest/maplike/abc/trait.Maplike.html),
 [`Setlike`](https://docs.rs/maplike/latest/maplike/abc/trait.Setlike.html),
 [`Arraylike`](https://docs.rs/maplike/latest/maplike/abc/trait.Arraylike.html), and
-[`Veclike`](https://docs.rs/maplike/latest/maplike/abc/trait.Veclike.html) abstract
-container traits that join together traits of multiple operations.
+[`Veclike`](https://docs.rs/maplike/latest/maplike/abc/trait.Veclike.html) that
+join together traits of multiple operations.
 
 ## Supported containers
 
