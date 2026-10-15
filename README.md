@@ -35,8 +35,9 @@ The traits are implemented for many containers from `std` and third-party
 crates. See the [Traits](#traits) section for a list of all available traits.
 
 This library is maintained and champaigned (aka.
-[dogfooded](https://en.wikipedia.org/wiki/Eating_your_own_dog_food)) by the
-authors, who use has it as a dependency for
+[dogfooded](https://en.wikipedia.org/wiki/Eating_your_own_dog_food)) as
+a dependency by its authors, who use it for container-generic code in the
+following crates:
 - [`undoredo`](https://github.com/mikwielgus/undoredo), a versatile crate for
 implementing Undo/Redo and non-linear history tree using sparse deltas (diffs),
 snapshots, or commands on arbitrary data structures;
