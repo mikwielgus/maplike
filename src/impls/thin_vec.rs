@@ -7,7 +7,8 @@ use thin_vec::ThinVec;
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
 use crate::ops::{
-    Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, SwapRemove, WithOne,
+    Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, ShiftRemove, SwapRemove,
+    WithOne,
 };
 
 impl<V> Container for ThinVec<V> {
@@ -83,6 +84,15 @@ impl<V> SwapRemove<usize> for ThinVec<V> {
     #[inline(always)]
     fn swap_remove(&mut self, key: &usize) -> V {
         ThinVec::swap_remove(self, *key)
+    }
+}
+
+impl<V> ShiftRemove<usize> for ThinVec<V> {
+    type Output = V;
+
+    #[inline(always)]
+    fn shift_remove(&mut self, key: &usize) -> V {
+        ThinVec::remove(self, *key)
     }
 }
 

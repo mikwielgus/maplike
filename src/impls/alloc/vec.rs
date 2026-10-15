@@ -7,7 +7,8 @@ use alloc_::vec::Vec;
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
 use crate::ops::{
-    Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, SwapRemove, WithOne,
+    Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, ShiftRemove, SwapRemove,
+    WithOne,
 };
 
 impl<V> Container for Vec<V> {
@@ -83,6 +84,15 @@ impl<V> SwapRemove<usize> for Vec<V> {
     #[inline(always)]
     fn swap_remove(&mut self, key: &usize) -> V {
         Vec::swap_remove(self, *key)
+    }
+}
+
+impl<V> ShiftRemove<usize> for Vec<V> {
+    type Output = V;
+
+    #[inline(always)]
+    fn shift_remove(&mut self, key: &usize) -> V {
+        Vec::remove(self, *key)
     }
 }
 

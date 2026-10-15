@@ -6,7 +6,9 @@ use tinyvec::{Array, ArrayVec, TinyVec};
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, WithOne};
+use crate::ops::{
+    Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, ShiftRemove, WithOne,
+};
 
 impl<A: Array> Container for ArrayVec<A> {
     type Value = A::Item;
@@ -72,6 +74,15 @@ impl<A: Array> Pop for ArrayVec<A> {
     #[inline(always)]
     fn pop(&mut self) -> Option<A::Item> {
         ArrayVec::pop(self)
+    }
+}
+
+impl<A: Array> ShiftRemove<usize> for ArrayVec<A> {
+    type Output = A::Item;
+
+    #[inline(always)]
+    fn shift_remove(&mut self, key: &usize) -> A::Item {
+        ArrayVec::remove(self, *key)
     }
 }
 
@@ -214,6 +225,15 @@ impl<A: Array> Pop for TinyVec<A> {
     #[inline(always)]
     fn pop(&mut self) -> Option<A::Item> {
         TinyVec::pop(self)
+    }
+}
+
+impl<A: Array> ShiftRemove<usize> for TinyVec<A> {
+    type Output = A::Item;
+
+    #[inline(always)]
+    fn shift_remove(&mut self, key: &usize) -> A::Item {
+        TinyVec::remove(self, *key)
     }
 }
 

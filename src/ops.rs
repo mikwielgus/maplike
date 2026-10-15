@@ -382,8 +382,9 @@ pub trait Remove<K: ?Sized>: Keyed {
 /// Remove an element under a key by swapping it with the last element,
 /// returning the removed value.
 ///
-/// Unlike [`Remove`], this may invalidate other keys: the last element is moved
-/// into the vacated slot (unless the removed key was already last).
+/// Unlike [`Remove::remove()`], this may invalidate other keys: the last
+/// element is moved into the vacated slot (unless the removed key was already
+/// last).
 ///
 /// # Examples
 ///
@@ -419,6 +420,64 @@ pub trait SwapRemove<K: ?Sized>: Keyed {
     /// Unlike [`Remove`], this may invalidate other keys: the last element is
     /// moved into the vacated slot (unless the removed key was already last).
     fn swap_remove(&mut self, key: &K) -> Self::Output;
+}
+
+/// Remove an element under a key by shifting later elements down, returning the
+/// removed value.
+///
+/// Unlike [`Remove`], this may invalidate other keys: every element after the
+/// removed key is moved one slot toward the front.
+///
+/// Unlike [`SwapRemove`], the relative order of the remaining elements is
+/// preserved.
+///
+/// This behaves the same as `Vec::remove()`, and as such has `O(n)` time
+/// complexity. If plain `Remove::remove()` is not available, we recommend that
+/// you use `SwapRemove::swap_remove()` instead, as it's `O(1)`, unless you need
+/// to preserve the element order (which is rarely needed).
+///
+/// # Examples
+///
+/// ```
+/// use maplike::ops::{Get, Len, Push, ShiftRemove};
+///
+/// let mut vec = Vec::new();
+///
+/// Push::push(&mut vec, 10);
+/// Push::push(&mut vec, 20);
+/// Push::push(&mut vec, 30);
+/// Push::push(&mut vec, 40);
+/// Push::push(&mut vec, 50);
+///
+/// assert_eq!(ShiftRemove::shift_remove(&mut vec, &1), 20);
+/// assert_eq!(Len::len(&vec), 4);
+///
+/// // The element before removee's slot stays where it was.
+/// assert_eq!(vec.get(&0), Some(&10));
+///
+/// // Later elements are shifted to the left, preserving their order.
+/// assert_eq!(vec.get(&1), Some(&30));
+/// assert_eq!(vec.get(&2), Some(&40));
+/// assert_eq!(vec.get(&3), Some(&50));
+/// ```
+pub trait ShiftRemove<K: ?Sized>: Keyed {
+    /// Return type of [`shift_remove`](ShiftRemove::shift_remove).
+    type Output;
+
+    /// Remove an element under a key by shifting later elements down, returning the
+    /// removed value.
+    ///
+    /// Unlike [`Remove`], this may invalidate other keys: every element after the
+    /// removed key is moved one slot toward the front.
+    ///
+    /// Unlike [`SwapRemove`], the relative order of the remaining elements is
+    /// preserved.
+    ///
+    /// This behaves the same as `Vec::remove()`, and as such has `O(n)` time
+    /// complexity. If plain `Remove::remove()` is not available, we recommend that
+    /// you use `SwapRemove::swap_remove()` instead, as it's `O(1)`, unless you need
+    /// to preserve the element order (which is rarely needed).
+    fn shift_remove(&mut self, key: &K) -> Self::Output;
 }
 
 /// Remove the left and right values from pair corresponding to the given left

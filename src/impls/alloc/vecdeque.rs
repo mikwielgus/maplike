@@ -6,7 +6,9 @@ use alloc_::collections::VecDeque;
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, WithOne};
+use crate::ops::{
+    Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, ShiftRemove, WithOne,
+};
 
 impl<V> Container for VecDeque<V> {
     type Value = V;
@@ -72,6 +74,15 @@ impl<V> Pop for VecDeque<V> {
     #[inline(always)]
     fn pop(&mut self) -> Option<V> {
         VecDeque::pop_back(self)
+    }
+}
+
+impl<V> ShiftRemove<usize> for VecDeque<V> {
+    type Output = V;
+
+    #[inline(always)]
+    fn shift_remove(&mut self, key: &usize) -> V {
+        VecDeque::remove(self, *key).unwrap()
     }
 }
 

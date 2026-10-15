@@ -6,7 +6,9 @@ use smallvec::{Array, SmallVec};
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, WithOne};
+use crate::ops::{
+    Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, ShiftRemove, WithOne,
+};
 
 impl<A: Array> Container for SmallVec<A> {
     type Value = A::Item;
@@ -72,6 +74,15 @@ impl<A: Array> Pop for SmallVec<A> {
     #[inline(always)]
     fn pop(&mut self) -> Option<A::Item> {
         SmallVec::pop(self)
+    }
+}
+
+impl<A: Array> ShiftRemove<usize> for SmallVec<A> {
+    type Output = A::Item;
+
+    #[inline(always)]
+    fn shift_remove(&mut self, key: &usize) -> A::Item {
+        SmallVec::remove(self, *key)
     }
 }
 

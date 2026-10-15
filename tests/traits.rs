@@ -15,7 +15,7 @@ use maplike::entry::{CombinedEntry, Entry, OccupiedEntry, VacantEntry};
 use maplike::iter::IntoIter;
 use maplike::ops::{
     Assign, Clear, ContainsKey, Get, GetByLeft, GetByRight, Insert, Len, Modify, Pop, Push, Put,
-    Remove, RemoveByLeft, RemoveByRight, Resize, Set, SwapRemove, WithOne,
+    Remove, RemoveByLeft, RemoveByRight, Resize, Set, ShiftRemove, SwapRemove, WithOne,
 };
 
 trait FromUsize {
@@ -438,6 +438,37 @@ where
     assert_eq!(c.swap_remove(&1), V::from_usize(30));
     assert_eq!(Len::len(&c), 1);
     assert_eq!(c.get(&0), Some(&V::from_usize(10)));
+}
+
+fn check_shift_remove<V, C>(mut c: C)
+where
+    V: FromUsize + Clone + PartialEq + Debug,
+    C: Keyed<Key = usize, Value = V>
+        + Push<usize>
+        + Get<usize>
+        + ShiftRemove<usize, Output = V>
+        + Len,
+{
+    c.push(V::from_usize(10));
+    c.push(V::from_usize(20));
+    c.push(V::from_usize(30));
+    c.push(V::from_usize(40));
+    c.push(V::from_usize(50));
+
+    assert_eq!(c.shift_remove(&1), V::from_usize(20));
+    assert_eq!(Len::len(&c), 4);
+
+    assert_eq!(c.get(&0), Some(&V::from_usize(10)));
+    assert_eq!(c.get(&1), Some(&V::from_usize(30)));
+    assert_eq!(c.get(&2), Some(&V::from_usize(40)));
+    assert_eq!(c.get(&3), Some(&V::from_usize(50)));
+
+    assert_eq!(c.shift_remove(&1), V::from_usize(30));
+    assert_eq!(Len::len(&c), 3);
+
+    assert_eq!(c.get(&0), Some(&V::from_usize(10)));
+    assert_eq!(c.get(&1), Some(&V::from_usize(40)));
+    assert_eq!(c.get(&2), Some(&V::from_usize(50)));
 }
 
 fn check_resize<V, C>(mut c: C)
@@ -866,6 +897,7 @@ mod alloc_tests {
         check_with_one::<i32, i32, Vec<i32>>(30, 30);
         check_vec::<i32, Vec<i32>>(Vec::new());
         check_swap_remove::<i32, Vec<i32>>(Vec::new());
+        check_shift_remove::<i32, Vec<i32>>(Vec::new());
         check_resize::<i32, Vec<i32>>(Vec::new());
         check_assign(vec![1i32], vec![2i32, 3i32]);
 
@@ -884,6 +916,7 @@ mod alloc_tests {
         check_push_put::<usize, i32, VecDeque<i32>>(VecDeque::new());
         check_with_one::<i32, i32, VecDeque<i32>>(30, 30);
         check_vec::<i32, VecDeque<i32>>(VecDeque::new());
+        check_shift_remove::<i32, VecDeque<i32>>(VecDeque::new());
         check_resize::<i32, VecDeque<i32>>(VecDeque::new());
         check_assign(VecDeque::from([1i32]), VecDeque::from([2i32, 3i32]));
 
@@ -1107,6 +1140,7 @@ mod arrayvec_tests {
         check_push_put::<usize, i32, ArrayVec<i32, 8>>(ArrayVec::new());
         check_with_one::<i32, i32, ArrayVec<i32, 8>>(30, 30);
         check_vec::<i32, ArrayVec<i32, 8>>(ArrayVec::new());
+        check_shift_remove::<i32, ArrayVec<i32, 8>>(ArrayVec::new());
         check_assign(
             {
                 let mut a = ArrayVec::<i32, 8>::new();
@@ -1157,6 +1191,7 @@ mod smallvec_tests {
         check_push_put::<usize, i32, SmallVec<[i32; 8]>>(SmallVec::new());
         check_with_one::<i32, i32, SmallVec<[i32; 8]>>(30, 30);
         check_vec::<i32, SmallVec<[i32; 8]>>(SmallVec::new());
+        check_shift_remove::<i32, SmallVec<[i32; 8]>>(SmallVec::new());
         check_resize::<i32, SmallVec<[i32; 8]>>(SmallVec::new());
         check_assign(
             {
@@ -1185,6 +1220,7 @@ mod thin_vec_tests {
         check_with_one::<i32, i32, ThinVec<i32>>(30, 30);
         check_vec::<i32, ThinVec<i32>>(ThinVec::new());
         check_swap_remove::<i32, ThinVec<i32>>(ThinVec::new());
+        check_shift_remove::<i32, ThinVec<i32>>(ThinVec::new());
         check_resize::<i32, ThinVec<i32>>(ThinVec::new());
         check_assign(
             {
@@ -1212,6 +1248,7 @@ mod tinyvec_tests {
         check_push_put::<usize, i32, ArrayVec<[i32; 8]>>(ArrayVec::new());
         check_with_one::<i32, i32, ArrayVec<[i32; 8]>>(30, 30);
         check_vec::<i32, ArrayVec<[i32; 8]>>(ArrayVec::new());
+        check_shift_remove::<i32, ArrayVec<[i32; 8]>>(ArrayVec::new());
         check_resize::<i32, ArrayVec<[i32; 8]>>(ArrayVec::new());
         check_assign(
             ArrayVec::from_array_len([1i32, 0, 0, 0, 0, 0, 0, 0], 1),
@@ -1224,6 +1261,7 @@ mod tinyvec_tests {
         check_push_put::<usize, i32, TinyVec<[i32; 8]>>(TinyVec::new());
         check_with_one::<i32, i32, TinyVec<[i32; 8]>>(30, 30);
         check_vec::<i32, TinyVec<[i32; 8]>>(TinyVec::new());
+        check_shift_remove::<i32, TinyVec<[i32; 8]>>(TinyVec::new());
         check_resize::<i32, TinyVec<[i32; 8]>>(TinyVec::new());
 
         let mut a = TinyVec::<[i32; 8]>::new();
