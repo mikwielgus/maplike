@@ -6,7 +6,7 @@ use alloc_::collections::LinkedList;
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, WithOne};
+use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Set, WithOne};
 
 impl<V> Container for LinkedList<V> {
     type Value = V;
@@ -95,22 +95,6 @@ impl<V> Len for LinkedList<V> {
     #[inline(always)]
     fn len(&self) -> usize {
         LinkedList::len(self)
-    }
-}
-
-impl<V> Resize for LinkedList<V> {
-    #[inline(always)]
-    fn resize(&mut self, new_len: usize, value: V)
-    where
-        V: Clone,
-    {
-        let len = self.len();
-
-        if new_len > len {
-            self.extend(core::iter::repeat_n(value, new_len - len));
-        } else {
-            let _ = self.split_off(new_len);
-        }
     }
 }
 
