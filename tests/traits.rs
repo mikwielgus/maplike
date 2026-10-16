@@ -1293,6 +1293,72 @@ mod rstar_tests {
     }
 }
 
+#[cfg(feature = "hashbrown")]
+mod hashbrown_tests {
+    use super::*;
+    use hashbrown::hash_map::Entry as HashMapHbEntry;
+    use hashbrown::{HashMap, HashSet};
+
+    fn check_hashmap_entry_variants() {
+        let mut map = HashMap::<usize, i32>::new();
+        let HashMapHbEntry::Vacant(v) = map.entry(1) else {
+            panic!("expected vacant entry");
+        };
+        assert_eq!(VacantEntry::key(&v), &1);
+
+        let mut map = HashMap::<usize, i32>::new();
+        let HashMapHbEntry::Vacant(v) = map.entry(1) else {
+            panic!("expected vacant entry");
+        };
+        assert_eq!(VacantEntry::into_key(v), 1);
+
+        let mut map = HashMap::<usize, i32>::new();
+        let HashMapHbEntry::Vacant(v) = map.entry(2) else {
+            panic!("expected vacant entry");
+        };
+        assert_eq!(*VacantEntry::insert(v, 20), 20);
+        assert_eq!(map.get(&2), Some(&20));
+
+        let mut map = HashMap::<usize, i32>::new();
+        let HashMapHbEntry::Vacant(v) = map.entry(3) else {
+            panic!("expected vacant entry");
+        };
+        let occupied = VacantEntry::insert_entry(v, 30);
+        assert_eq!(OccupiedEntry::get(&occupied), &30);
+        assert_eq!(map.get(&3), Some(&30));
+
+        let mut map = HashMap::<usize, i32>::new();
+        map.entry(4).or_insert(40);
+        let HashMapHbEntry::Occupied(o) = map.entry(4) else {
+            panic!("expected occupied entry");
+        };
+        assert_eq!(OccupiedEntry::key(&o), &4);
+        assert_eq!(OccupiedEntry::get(&o), &40);
+    }
+
+    #[test]
+    fn test_traits_on_hashbrown_hashmap() {
+        check_keyed(HashMap::<usize, i32>::new(), Some(20));
+        check_modify::<usize, i32, HashMap<usize, i32>>(HashMap::new());
+        check_into_iter::<usize, i32, HashMap<usize, i32>>(HashMap::new());
+        check_borrow_str(HashMap::<String, i32>::new());
+        check_entry::<usize, i32, HashMap<usize, i32>>(HashMap::new());
+        check_hashmap_entry_variants();
+        check_assign(
+            HashMap::from([(1, 1i32)]),
+            HashMap::from([(2, 2i32), (3, 3i32)]),
+        );
+    }
+
+    #[test]
+    fn test_traits_on_hashbrown_hashset() {
+        check_keyed(HashSet::<usize>::new(), Some(()));
+        check_into_iter::<usize, (), HashSet<usize>>(HashSet::new());
+        check_with_one::<usize, (), HashSet<usize>>(7, ());
+        check_assign(HashSet::from([1]), HashSet::from([2, 3]));
+    }
+}
+
 #[cfg(feature = "indexmap")]
 mod indexmap_tests {
     use super::*;

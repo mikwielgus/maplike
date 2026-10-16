@@ -18,6 +18,12 @@ mod bibtreemap;
 #[cfg(all(feature = "bidimap", feature = "std"))]
 mod bihashmap;
 
+#[cfg(feature = "hashbrown")]
+mod hashbrown_hashmap;
+
+#[cfg(feature = "hashbrown")]
+mod hashbrown_hashset;
+
 #[cfg(feature = "indexmap")]
 mod indexmap;
 

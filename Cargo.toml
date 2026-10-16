@@ -49,6 +49,10 @@ bidimap = ["dep:bidimap"]
 ## crates. Implies `alloc`.
 geo = ["dep:geo-types", "alloc"]
 
+## Enables convenience implementations for `hashbrown::HashMap` and
+## `hashbrown::HashSet`.
+hashbrown = ["dep:hashbrown"]
+
 ## Enables convenience implementations for `indexmap::IndexMap` and
 ## `indexmap::IndexSet`.
 indexmap = ["dep:indexmap"]
@@ -90,6 +94,7 @@ arrayvec = { version = "0.7", optional = true }
 bidimap = { version = "0.7", optional = true }
 document-features = { version = "0.2", optional = true }
 geo-types = { version = "0.7", optional = true, default-features = false }
+hashbrown = { version = "0.17", optional = true, default-features = false, features = ["default-hasher", "equivalent", "inline-more"] }
 indexmap = { version = "2.14", optional = true }
 rstar = { version = "0.13", optional = true }
 slab = { version = "0.4", optional = true, default-features = false }
@@ -102,6 +107,7 @@ tinyvec = { version = "1", features = ["alloc"], optional = true }
 serde = { version = "1.0", optional = true, default-features = false, features = ["derive", "alloc"] }
 
 [dev-dependencies]
+hashbrown = { version = "0.17", default-features = false, features = ["default-hasher", "equivalent", "inline-more"] }
 indexmap = "2.14"
 slab = { version = "0.4", default-features = false }
 slotmap = { version = "1", default-features = false }

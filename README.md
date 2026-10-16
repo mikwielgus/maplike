@@ -219,7 +219,9 @@ We provide generic
 [Entry](https://docs.rs/maplike/latest/maplike/entry/trait.Entry.html) API for
 types that have an Entry API:
 [`HashMap`](https://doc.rust-lang.org/std/collections/struct.HashMap.html),
-[`BTreeMap`](https://doc.rust-lang.org/std/collections/struct.BTreeMap.html), and
+[`BTreeMap`](https://doc.rust-lang.org/std/collections/struct.BTreeMap.html),
+[`hashbrown::HashMap`](https://docs.rs/hashbrown/latest/hashbrown/struct.HashMap.html),
+and
 [`indexmap::IndexMap`](https://docs.rs/indexmap/latest/indexmap/map/struct.IndexMap.html).
 
 ### Containers
@@ -291,6 +293,9 @@ trait implementations for data structures from certain external crates:
   [`bidimap`](https://github.com/urschrei/bidimap)
   is a maintained fork of the currently unmaintained
   [`bimap`](https://github.com/brson/bimap) crate;
+- [`hashbrown::HashMap`](https://docs.rs/hashbrown/latest/hashbrown/struct.HashMap.html)
+  and [`hashbrown::HashSet`](https://docs.rs/hashbrown/latest/hashbrown/struct.HashSet.html),
+  gated by the `hashbrown` feature flag;
 - [`indexmap::IndexMap`](https://docs.rs/indexmap/latest/indexmap/map/struct.IndexMap.html)
   and [`indexmap::IndexSet`](https://docs.rs/indexmap/latest/indexmap/set/struct.IndexSet.html),
   gated by the `indexmap` feature flag;
