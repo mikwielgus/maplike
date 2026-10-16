@@ -2,41 +2,45 @@
 //
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
-use core::hash::Hash;
+use core::hash::{BuildHasher, Hash};
 
 use hashbrown::hash_map::{
     Entry as HashMapEntry, OccupiedEntry as HashMapOccupiedEntry, VacantEntry as HashMapVacantEntry,
 };
-use hashbrown::{DefaultHashBuilder, Equivalent, HashMap};
+use hashbrown::{Equivalent, HashMap};
 
 use crate::abc::{Container, Keyed};
 use crate::entry::{CombinedEntry, Entry, OccupiedEntry, VacantEntry};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
 use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Modify, Remove, Set};
 
-impl<K, V> Container for HashMap<K, V> {
+impl<K, V, S> Container for HashMap<K, V, S> {
     type Value = V;
 }
 
-impl<K, V> Keyed for HashMap<K, V> {
+impl<K, V, S> Keyed for HashMap<K, V, S> {
     type Key = K;
 }
 
-impl<K: Eq + Hash, Q: Hash + Equivalent<K> + ?Sized, V> ContainsKey<Q> for HashMap<K, V> {
+impl<K: Eq + Hash, Q: Hash + Equivalent<K> + ?Sized, V, S: BuildHasher> ContainsKey<Q>
+    for HashMap<K, V, S>
+{
     #[inline(always)]
     fn contains_key(&self, key: &Q) -> bool {
         HashMap::contains_key(self, key)
     }
 }
 
-impl<K: Eq + Hash, Q: Hash + Equivalent<K> + ?Sized, V> Get<Q> for HashMap<K, V> {
+impl<K: Eq + Hash, Q: Hash + Equivalent<K> + ?Sized, V, S: BuildHasher> Get<Q>
+    for HashMap<K, V, S>
+{
     #[inline(always)]
     fn get(&self, key: &Q) -> Option<&V> {
         HashMap::get(self, key)
     }
 }
 
-impl<K: Eq + Hash, V> Set<K> for HashMap<K, V> {
+impl<K: Eq + Hash, V, S: BuildHasher> Set<K> for HashMap<K, V, S> {
     type Output = Option<V>;
 
     #[inline(always)]
@@ -45,7 +49,9 @@ impl<K: Eq + Hash, V> Set<K> for HashMap<K, V> {
     }
 }
 
-impl<K: Eq + Hash, Q: Hash + Equivalent<K> + ?Sized, V> Modify<Q> for HashMap<K, V> {
+impl<K: Eq + Hash, Q: Hash + Equivalent<K> + ?Sized, V, S: BuildHasher> Modify<Q>
+    for HashMap<K, V, S>
+{
     #[inline(always)]
     fn modify<F>(&mut self, key: &Q, f: F)
     where
@@ -55,7 +61,7 @@ impl<K: Eq + Hash, Q: Hash + Equivalent<K> + ?Sized, V> Modify<Q> for HashMap<K,
     }
 }
 
-impl<K: Eq + Hash, V> Insert<K> for HashMap<K, V> {
+impl<K: Eq + Hash, V, S: BuildHasher> Insert<K> for HashMap<K, V, S> {
     type Output = Option<V>;
 
     #[inline(always)]
@@ -64,7 +70,9 @@ impl<K: Eq + Hash, V> Insert<K> for HashMap<K, V> {
     }
 }
 
-impl<K: Eq + Hash, Q: Hash + Equivalent<K> + ?Sized, V> Remove<Q> for HashMap<K, V> {
+impl<K: Eq + Hash, Q: Hash + Equivalent<K> + ?Sized, V, S: BuildHasher> Remove<Q>
+    for HashMap<K, V, S>
+{
     type Output = Option<V>;
 
     #[inline(always)]
@@ -73,26 +81,27 @@ impl<K: Eq + Hash, Q: Hash + Equivalent<K> + ?Sized, V> Remove<Q> for HashMap<K,
     }
 }
 
-impl<K: Eq + Hash, V> Clear for HashMap<K, V> {
+impl<K, V, S> Clear for HashMap<K, V, S> {
     #[inline(always)]
     fn clear(&mut self) {
         HashMap::clear(self);
     }
 }
 
-impl<K, V> Len for HashMap<K, V> {
+impl<K, V, S> Len for HashMap<K, V, S> {
     #[inline(always)]
     fn len(&self) -> usize {
         HashMap::len(self)
     }
 }
 
-impl<K: Eq + Hash, V> Entry<K> for HashMap<K, V> {
+impl<K: Eq + Hash, V, S: BuildHasher> Entry<K> for HashMap<K, V, S> {
     type Entry<'a>
-        = HashMapEntry<'a, K, V, DefaultHashBuilder>
+        = HashMapEntry<'a, K, V, S>
     where
         Self: 'a,
-        K: 'a;
+        K: 'a,
+        S: 'a;
 
     #[inline(always)]
     fn entry(&mut self, key: K) -> Self::Entry<'_> {
@@ -100,8 +109,8 @@ impl<K: Eq + Hash, V> Entry<K> for HashMap<K, V> {
     }
 }
 
-impl<'a, K: Eq + Hash, V> CombinedEntry<'a, K, V> for HashMapEntry<'a, K, V, DefaultHashBuilder> {
-    type OccupiedEntry = HashMapOccupiedEntry<'a, K, V>;
+impl<'a, K: Eq + Hash, V, S: BuildHasher> CombinedEntry<'a, K, V> for HashMapEntry<'a, K, V, S> {
+    type OccupiedEntry = HashMapOccupiedEntry<'a, K, V, S>;
 
     #[inline(always)]
     fn key(&self) -> &K {
@@ -151,7 +160,7 @@ impl<'a, K: Eq + Hash, V> CombinedEntry<'a, K, V> for HashMapEntry<'a, K, V, Def
     }
 }
 
-impl<'a, K: Eq + Hash, V> OccupiedEntry<'a, K, V> for HashMapOccupiedEntry<'a, K, V> {
+impl<'a, K: Eq + Hash, V, S> OccupiedEntry<'a, K, V> for HashMapOccupiedEntry<'a, K, V, S> {
     #[inline(always)]
     fn key(&self) -> &K {
         HashMapOccupiedEntry::key(self)
@@ -188,8 +197,10 @@ impl<'a, K: Eq + Hash, V> OccupiedEntry<'a, K, V> for HashMapOccupiedEntry<'a, K
     }
 }
 
-impl<'a, K: Eq + Hash, V> VacantEntry<'a, K, V> for HashMapVacantEntry<'a, K, V> {
-    type OccupiedEntry = HashMapOccupiedEntry<'a, K, V>;
+impl<'a, K: Eq + Hash, V, S: BuildHasher> VacantEntry<'a, K, V>
+    for HashMapVacantEntry<'a, K, V, S>
+{
+    type OccupiedEntry = HashMapOccupiedEntry<'a, K, V, S>;
 
     #[inline(always)]
     fn key(&self) -> &K {
@@ -212,7 +223,7 @@ impl<'a, K: Eq + Hash, V> VacantEntry<'a, K, V> for HashMapVacantEntry<'a, K, V>
     }
 }
 
-impl<'a, K: 'a, V: 'a> Values<'a> for HashMap<K, V> {
+impl<'a, K: 'a, V: 'a, S: 'a> Values<'a> for HashMap<K, V, S> {
     type Values = hashbrown::hash_map::Values<'a, K, V>;
 
     #[inline(always)]
@@ -221,7 +232,7 @@ impl<'a, K: 'a, V: 'a> Values<'a> for HashMap<K, V> {
     }
 }
 
-impl<K, V> IntoValues for HashMap<K, V> {
+impl<K, V, S> IntoValues for HashMap<K, V, S> {
     type IntoValues = hashbrown::hash_map::IntoValues<K, V>;
 
     #[inline(always)]
@@ -230,7 +241,7 @@ impl<K, V> IntoValues for HashMap<K, V> {
     }
 }
 
-impl<'a, K: 'a, V: 'a> Iter<'a, &'a K> for HashMap<K, V> {
+impl<'a, K: 'a, V: 'a, S: 'a> Iter<'a, &'a K> for HashMap<K, V, S> {
     type Iter = hashbrown::hash_map::Iter<'a, K, V>;
 
     #[inline(always)]
@@ -239,7 +250,7 @@ impl<'a, K: 'a, V: 'a> Iter<'a, &'a K> for HashMap<K, V> {
     }
 }
 
-impl<K, V> IntoIter<K> for HashMap<K, V> {
+impl<K, V, S> IntoIter<K> for HashMap<K, V, S> {
     type IntoIter = hashbrown::hash_map::IntoIter<K, V>;
 
     #[inline(always)]

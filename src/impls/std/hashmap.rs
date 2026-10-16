@@ -3,26 +3,27 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use core::borrow::Borrow;
+use core::hash::{BuildHasher, Hash};
 
+use std_::collections::HashMap;
 use std_::collections::hash_map::{
     Entry as HashMapEntry, OccupiedEntry as HashMapOccupiedEntry, VacantEntry as HashMapVacantEntry,
 };
-use std_::{collections::HashMap, hash::Hash};
 
 use crate::abc::{Container, Keyed};
 use crate::entry::{CombinedEntry, Entry, OccupiedEntry, VacantEntry};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
 use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Modify, Remove, Set};
 
-impl<K, V> Container for HashMap<K, V> {
+impl<K, V, S> Container for HashMap<K, V, S> {
     type Value = V;
 }
 
-impl<K, V> Keyed for HashMap<K, V> {
+impl<K, V, S> Keyed for HashMap<K, V, S> {
     type Key = K;
 }
 
-impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V> ContainsKey<Q> for HashMap<K, V>
+impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V, S: BuildHasher> ContainsKey<Q> for HashMap<K, V, S>
 where
     K: Borrow<Q>,
 {
@@ -32,7 +33,7 @@ where
     }
 }
 
-impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V> Get<Q> for HashMap<K, V>
+impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V, S: BuildHasher> Get<Q> for HashMap<K, V, S>
 where
     K: Borrow<Q>,
 {
@@ -42,7 +43,7 @@ where
     }
 }
 
-impl<K: Eq + Hash, V> Set<K> for HashMap<K, V> {
+impl<K: Eq + Hash, V, S: BuildHasher> Set<K> for HashMap<K, V, S> {
     type Output = Option<V>;
 
     #[inline(always)]
@@ -51,7 +52,7 @@ impl<K: Eq + Hash, V> Set<K> for HashMap<K, V> {
     }
 }
 
-impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V> Modify<Q> for HashMap<K, V>
+impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V, S: BuildHasher> Modify<Q> for HashMap<K, V, S>
 where
     K: Borrow<Q>,
 {
@@ -64,7 +65,7 @@ where
     }
 }
 
-impl<K: Eq + Hash, V> Insert<K> for HashMap<K, V> {
+impl<K: Eq + Hash, V, S: BuildHasher> Insert<K> for HashMap<K, V, S> {
     type Output = Option<V>;
 
     #[inline(always)]
@@ -73,7 +74,7 @@ impl<K: Eq + Hash, V> Insert<K> for HashMap<K, V> {
     }
 }
 
-impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V> Remove<Q> for HashMap<K, V>
+impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V, S: BuildHasher> Remove<Q> for HashMap<K, V, S>
 where
     K: Borrow<Q>,
 {
@@ -85,21 +86,21 @@ where
     }
 }
 
-impl<K: Eq + Hash, V> Clear for HashMap<K, V> {
+impl<K, V, S: BuildHasher> Clear for HashMap<K, V, S> {
     #[inline(always)]
     fn clear(&mut self) {
         HashMap::clear(self);
     }
 }
 
-impl<K, V> Len for HashMap<K, V> {
+impl<K, V, S> Len for HashMap<K, V, S> {
     #[inline(always)]
     fn len(&self) -> usize {
         HashMap::len(self)
     }
 }
 
-impl<K: Eq + Hash, V> Entry<K> for HashMap<K, V> {
+impl<K: Eq + Hash, V, S: BuildHasher> Entry<K> for HashMap<K, V, S> {
     type Entry<'a>
         = HashMapEntry<'a, K, V>
     where
@@ -224,7 +225,7 @@ impl<'a, K: Eq + Hash, V> VacantEntry<'a, K, V> for HashMapVacantEntry<'a, K, V>
     }
 }
 
-impl<'a, K: 'a, V: 'a> Values<'a> for HashMap<K, V> {
+impl<'a, K: 'a, V: 'a, S: 'a> Values<'a> for HashMap<K, V, S> {
     type Values = std_::collections::hash_map::Values<'a, K, V>;
 
     #[inline(always)]
@@ -233,7 +234,7 @@ impl<'a, K: 'a, V: 'a> Values<'a> for HashMap<K, V> {
     }
 }
 
-impl<K, V> IntoValues for HashMap<K, V> {
+impl<K, V, S> IntoValues for HashMap<K, V, S> {
     type IntoValues = std_::collections::hash_map::IntoValues<K, V>;
 
     #[inline(always)]
@@ -242,7 +243,7 @@ impl<K, V> IntoValues for HashMap<K, V> {
     }
 }
 
-impl<'a, K: 'a, V: 'a> Iter<'a, &'a K> for HashMap<K, V> {
+impl<'a, K: 'a, V: 'a, S: 'a> Iter<'a, &'a K> for HashMap<K, V, S> {
     type Iter = std_::collections::hash_map::Iter<'a, K, V>;
 
     #[inline(always)]
@@ -251,7 +252,7 @@ impl<'a, K: 'a, V: 'a> Iter<'a, &'a K> for HashMap<K, V> {
     }
 }
 
-impl<K, V> IntoIter<K> for HashMap<K, V> {
+impl<K, V, S> IntoIter<K> for HashMap<K, V, S> {
     type IntoIter = std_::collections::hash_map::IntoIter<K, V>;
 
     #[inline(always)]
