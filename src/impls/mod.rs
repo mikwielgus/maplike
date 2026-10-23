@@ -30,6 +30,12 @@ mod indexmap;
 #[cfg(feature = "indexmap")]
 mod indexset;
 
+#[cfg(feature = "vecmap")]
+mod vecmap;
+
+#[cfg(feature = "vecmap")]
+mod vecset;
+
 #[cfg(feature = "rstar")]
 mod rstar;
 

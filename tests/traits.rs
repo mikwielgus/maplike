@@ -1425,6 +1425,32 @@ mod indexmap_tests {
     }
 }
 
+#[cfg(feature = "vecmap")]
+mod vecmap_tests {
+    use super::*;
+    use vecmap::{VecMap, VecSet};
+
+    #[test]
+    fn test_traits_on_vecmap() {
+        check_keyed(VecMap::<usize, i32>::new(), Some(20));
+        check_modify::<usize, i32, VecMap<usize, i32>>(VecMap::new());
+        check_into_iter::<usize, i32, VecMap<usize, i32>>(VecMap::new());
+        check_borrow_str(VecMap::<String, i32>::new());
+        check_assign(
+            VecMap::from([(1, 1i32)]),
+            VecMap::from([(2, 2i32), (3, 3i32)]),
+        );
+    }
+
+    #[test]
+    fn test_traits_on_vecset() {
+        check_keyed(VecSet::<usize>::new(), Some(()));
+        check_into_iter::<usize, (), VecSet<usize>>(VecSet::new());
+        check_with_one::<usize, (), VecSet<usize>>(7, ());
+        check_assign(VecSet::from([1]), VecSet::from([2, 3]));
+    }
+}
+
 #[cfg(feature = "bidimap")]
 mod bidimap_tests {
     use super::*;

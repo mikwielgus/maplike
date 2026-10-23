@@ -299,6 +299,9 @@ trait implementations for data structures from certain external crates:
 - [`indexmap::IndexMap`](https://docs.rs/indexmap/latest/indexmap/map/struct.IndexMap.html)
   and [`indexmap::IndexSet`](https://docs.rs/indexmap/latest/indexmap/set/struct.IndexSet.html),
   gated by the `indexmap` feature flag;
+- [`vecmap::VecMap`](https://docs.rs/vecmap-rs/latest/vecmap/struct.VecMap.html)
+  and [`vecmap::VecSet`](https://docs.rs/vecmap-rs/latest/vecmap/struct.VecSet.html),
+  gated by the `vecmap` feature flag;
 - [`rstar::RTree`](https://docs.rs/rstar/0.13.0/rstar/index.html), gated by the
   `rstar` feature flag;
 - [`slab::Slab`](https://docs.rs/slab/latest/slab/), gated by the `slab`
