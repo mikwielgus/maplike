@@ -2,6 +2,8 @@
 //
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
+use core::hash::BuildHasher;
+
 use slotmap::{DenseSlotMap, Key, SecondaryMap, SlotMap};
 
 #[cfg(feature = "std")]
@@ -397,25 +399,25 @@ impl<K: Key, V> IntoIter<K> for SecondaryMap<K, V> {
 }
 
 #[cfg(feature = "std")]
-impl<K: Key, V> Container for SparseSecondaryMap<K, V> {
+impl<K: Key, V, S: BuildHasher> Container for SparseSecondaryMap<K, V, S> {
     type Value = V;
 }
 
 #[cfg(feature = "std")]
-impl<K: Key, V> Keyed for SparseSecondaryMap<K, V> {
+impl<K: Key, V, S: BuildHasher> Keyed for SparseSecondaryMap<K, V, S> {
     type Key = K;
 }
 
 #[cfg(feature = "std")]
-impl<K: Key, V> WithCapacity for SparseSecondaryMap<K, V> {
+impl<K: Key, V, S: BuildHasher + Default> WithCapacity for SparseSecondaryMap<K, V, S> {
     #[inline(always)]
     fn with_capacity(capacity: usize) -> Self {
-        SparseSecondaryMap::with_capacity(capacity)
+        SparseSecondaryMap::with_capacity_and_hasher(capacity, S::default())
     }
 }
 
 #[cfg(feature = "std")]
-impl<K: Key, V, S: core::hash::BuildHasher> WithHasher<S> for SparseSecondaryMap<K, V, S> {
+impl<K: Key, V, S: BuildHasher> WithHasher<S> for SparseSecondaryMap<K, V, S> {
     #[inline(always)]
     fn with_hasher(hasher: S) -> Self {
         SparseSecondaryMap::with_hasher(hasher)
@@ -423,7 +425,7 @@ impl<K: Key, V, S: core::hash::BuildHasher> WithHasher<S> for SparseSecondaryMap
 }
 
 #[cfg(feature = "std")]
-impl<K: Key, V> ContainsKey<K> for SparseSecondaryMap<K, V> {
+impl<K: Key, V, S: BuildHasher> ContainsKey<K> for SparseSecondaryMap<K, V, S> {
     #[inline(always)]
     fn contains_key(&self, key: &K) -> bool {
         SparseSecondaryMap::contains_key(self, *key)
@@ -431,7 +433,7 @@ impl<K: Key, V> ContainsKey<K> for SparseSecondaryMap<K, V> {
 }
 
 #[cfg(feature = "std")]
-impl<K: Key, V> Get<K> for SparseSecondaryMap<K, V> {
+impl<K: Key, V, S: BuildHasher> Get<K> for SparseSecondaryMap<K, V, S> {
     #[inline(always)]
     fn get(&self, key: &K) -> Option<&V> {
         SparseSecondaryMap::get(self, *key)
@@ -439,7 +441,7 @@ impl<K: Key, V> Get<K> for SparseSecondaryMap<K, V> {
 }
 
 #[cfg(feature = "std")]
-impl<K: Key, V> Set<K> for SparseSecondaryMap<K, V> {
+impl<K: Key, V, S: BuildHasher> Set<K> for SparseSecondaryMap<K, V, S> {
     type Output = Option<V>;
 
     #[inline(always)]
@@ -449,7 +451,7 @@ impl<K: Key, V> Set<K> for SparseSecondaryMap<K, V> {
 }
 
 #[cfg(feature = "std")]
-impl<K: Key, V> Modify<K> for SparseSecondaryMap<K, V> {
+impl<K: Key, V, S: BuildHasher> Modify<K> for SparseSecondaryMap<K, V, S> {
     #[inline(always)]
     fn modify<F>(&mut self, key: &K, f: F)
     where
@@ -460,7 +462,7 @@ impl<K: Key, V> Modify<K> for SparseSecondaryMap<K, V> {
 }
 
 #[cfg(feature = "std")]
-impl<K: Key, V> Insert<K> for SparseSecondaryMap<K, V> {
+impl<K: Key, V, S: BuildHasher> Insert<K> for SparseSecondaryMap<K, V, S> {
     type Output = Option<V>;
 
     #[inline(always)]
@@ -470,7 +472,7 @@ impl<K: Key, V> Insert<K> for SparseSecondaryMap<K, V> {
 }
 
 #[cfg(feature = "std")]
-impl<K: Key, V> Remove<K> for SparseSecondaryMap<K, V> {
+impl<K: Key, V, S: BuildHasher> Remove<K> for SparseSecondaryMap<K, V, S> {
     type Output = Option<V>;
 
     #[inline(always)]
@@ -480,7 +482,7 @@ impl<K: Key, V> Remove<K> for SparseSecondaryMap<K, V> {
 }
 
 #[cfg(feature = "std")]
-impl<K: Key, V> Clear for SparseSecondaryMap<K, V> {
+impl<K: Key, V, S: BuildHasher> Clear for SparseSecondaryMap<K, V, S> {
     #[inline(always)]
     fn clear(&mut self) {
         SparseSecondaryMap::clear(self);
@@ -488,7 +490,7 @@ impl<K: Key, V> Clear for SparseSecondaryMap<K, V> {
 }
 
 #[cfg(feature = "std")]
-impl<K: Key, V> Len for SparseSecondaryMap<K, V> {
+impl<K: Key, V, S: BuildHasher> Len for SparseSecondaryMap<K, V, S> {
     #[inline(always)]
     fn len(&self) -> usize {
         SparseSecondaryMap::len(self)
@@ -496,7 +498,7 @@ impl<K: Key, V> Len for SparseSecondaryMap<K, V> {
 }
 
 #[cfg(feature = "std")]
-impl<'a, K: Key + 'a, V: 'a> Values<'a> for SparseSecondaryMap<K, V> {
+impl<'a, K: Key + 'a, V: 'a, S: BuildHasher + 'a> Values<'a> for SparseSecondaryMap<K, V, S> {
     type Values = slotmap::sparse_secondary::Values<'a, K, V>;
 
     #[inline(always)]
@@ -506,7 +508,7 @@ impl<'a, K: Key + 'a, V: 'a> Values<'a> for SparseSecondaryMap<K, V> {
 }
 
 #[cfg(feature = "std")]
-impl<K: Key, V> IntoValues for SparseSecondaryMap<K, V> {
+impl<K: Key, V, S: BuildHasher> IntoValues for SparseSecondaryMap<K, V, S> {
     type IntoValues = ValuesFromKeyValuePairs<slotmap::sparse_secondary::IntoIter<K, V>>;
 
     #[inline(always)]
@@ -516,7 +518,7 @@ impl<K: Key, V> IntoValues for SparseSecondaryMap<K, V> {
 }
 
 #[cfg(feature = "std")]
-impl<'a, K: Key + 'a, V: 'a> Iter<'a, K> for SparseSecondaryMap<K, V> {
+impl<'a, K: Key + 'a, V: 'a, S: BuildHasher + 'a> Iter<'a, K> for SparseSecondaryMap<K, V, S> {
     type Iter = slotmap::sparse_secondary::Iter<'a, K, V>;
 
     #[inline(always)]
@@ -526,7 +528,7 @@ impl<'a, K: Key + 'a, V: 'a> Iter<'a, K> for SparseSecondaryMap<K, V> {
 }
 
 #[cfg(feature = "std")]
-impl<K: Key, V> IntoIter<K> for SparseSecondaryMap<K, V> {
+impl<K: Key, V, S: BuildHasher> IntoIter<K> for SparseSecondaryMap<K, V, S> {
     type IntoIter = slotmap::sparse_secondary::IntoIter<K, V>;
 
     #[inline(always)]

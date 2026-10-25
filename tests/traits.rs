@@ -1133,6 +1133,14 @@ mod slotmap_tests {
         check_with_hasher::<_, SparseSecondaryMap<DefaultKey, i32>>(
             std::collections::hash_map::RandomState::new(),
         );
+        check_insert_map_with_keys(
+            SparseSecondaryMap::<DefaultKey, i32, _>::with_hasher(std::hash::BuildHasherDefault::<
+                std::hash::DefaultHasher,
+            >::default()),
+            k0,
+            k1,
+            k2,
+        );
         check_insert_map_with_keys(SparseSecondaryMap::<DefaultKey, i32>::new(), k0, k1, k2);
 
         let mut x: SparseSecondaryMap<DefaultKey, i32> = SparseSecondaryMap::new();
@@ -1452,6 +1460,12 @@ mod indexmap_tests {
         check_indexmap_entry_variants();
         check_with_capacity::<IndexMap<usize, i32>>();
         check_with_hasher::<_, IndexMap<usize, i32>>(RandomState::new());
+        check_keyed(
+            IndexMap::<usize, i32, _>::with_hasher(std::hash::BuildHasherDefault::<
+                std::hash::DefaultHasher,
+            >::default()),
+            Some(20),
+        );
         check_assign(
             IndexMap::from([(1, 1i32)]),
             IndexMap::from([(2, 2i32), (3, 3i32)]),
@@ -1465,6 +1479,12 @@ mod indexmap_tests {
         check_with_one::<usize, (), IndexSet<usize>>(7, ());
         check_with_capacity::<IndexSet<usize>>();
         check_with_hasher::<_, IndexSet<usize>>(RandomState::new());
+        check_keyed(
+            IndexSet::<usize, _>::with_hasher(std::hash::BuildHasherDefault::<
+                std::hash::DefaultHasher,
+            >::default()),
+            Some(()),
+        );
         check_assign(IndexSet::from([1]), IndexSet::from([2, 3]));
     }
 }
@@ -1561,6 +1581,10 @@ mod bidimap_tests {
         check_bidirectional_map(BiHashMap::<String, i32>::new());
         check_into_iter::<usize, i32, BiHashMap<usize, i32>>(BiHashMap::new());
         check_with_capacity::<BiHashMap<usize, i32>>();
+        check_bidirectional_map(BiHashMap::<String, i32, _, _>::with_hashers(
+            std::hash::BuildHasherDefault::<std::hash::DefaultHasher>::default(),
+            std::hash::BuildHasherDefault::<std::hash::DefaultHasher>::default(),
+        ));
 
         let mut a = BiHashMap::new();
         a.insert("a".to_string(), 1i32);

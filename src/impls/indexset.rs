@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use core::borrow::Borrow;
-use core::hash::Hash;
+use core::hash::{BuildHasher, Hash};
 
 use indexmap::IndexSet;
 
@@ -13,18 +13,18 @@ use crate::ops::{
     Clear, ContainsKey, Get, Insert, Len, Put, Remove, Set, WithCapacity, WithHasher, WithOne,
 };
 
-impl<K> Container for IndexSet<K> {
+impl<K, S> Container for IndexSet<K, S> {
     type Value = ();
 }
 
-impl<K> Keyed for IndexSet<K> {
+impl<K, S> Keyed for IndexSet<K, S> {
     type Key = K;
 }
 
-impl<K> WithCapacity for IndexSet<K> {
+impl<K, S: BuildHasher + Default> WithCapacity for IndexSet<K, S> {
     #[inline(always)]
     fn with_capacity(capacity: usize) -> Self {
-        IndexSet::with_capacity(capacity)
+        IndexSet::with_capacity_and_hasher(capacity, S::default())
     }
 }
 
@@ -35,17 +35,17 @@ impl<K, S> WithHasher<S> for IndexSet<K, S> {
     }
 }
 
-impl<K: Eq + Hash> WithOne<K> for IndexSet<K> {
+impl<K: Eq + Hash, S: BuildHasher + Default> WithOne<K> for IndexSet<K, S> {
     #[inline(always)]
     fn with_one(element: K) -> Self {
-        let mut indexset = IndexSet::new();
+        let mut indexset = IndexSet::with_hasher(S::default());
         IndexSet::insert(&mut indexset, element);
 
         indexset
     }
 }
 
-impl<K: Eq + Hash, Q: Eq + Hash + ?Sized> ContainsKey<Q> for IndexSet<K>
+impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, S: BuildHasher> ContainsKey<Q> for IndexSet<K, S>
 where
     K: Borrow<Q>,
 {
@@ -55,7 +55,7 @@ where
     }
 }
 
-impl<K: Eq + Hash, Q: Eq + Hash + ?Sized> Get<Q> for IndexSet<K>
+impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, S: BuildHasher> Get<Q> for IndexSet<K, S>
 where
     K: Borrow<Q>,
 {
@@ -65,7 +65,7 @@ where
     }
 }
 
-impl<K: Eq + Hash> Set<K> for IndexSet<K> {
+impl<K: Eq + Hash, S: BuildHasher> Set<K> for IndexSet<K, S> {
     type Output = bool;
 
     #[inline(always)]
@@ -74,7 +74,7 @@ impl<K: Eq + Hash> Set<K> for IndexSet<K> {
     }
 }
 
-impl<K: Eq + Hash> Insert<K> for IndexSet<K> {
+impl<K: Eq + Hash, S: BuildHasher> Insert<K> for IndexSet<K, S> {
     type Output = bool;
 
     #[inline(always)]
@@ -83,7 +83,7 @@ impl<K: Eq + Hash> Insert<K> for IndexSet<K> {
     }
 }
 
-impl<K: Eq + Hash, Q: Eq + Hash + ?Sized> Remove<Q> for IndexSet<K>
+impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, S: BuildHasher> Remove<Q> for IndexSet<K, S>
 where
     K: Borrow<Q>,
 {
@@ -95,7 +95,7 @@ where
     }
 }
 
-impl<V: Eq + Hash> Put<V> for IndexSet<V> {
+impl<V: Eq + Hash, S: BuildHasher> Put<V> for IndexSet<V, S> {
     #[inline(always)]
     fn put(&mut self, value: V) -> Option<V> {
         IndexSet::insert(self, value);
@@ -104,21 +104,21 @@ impl<V: Eq + Hash> Put<V> for IndexSet<V> {
     }
 }
 
-impl<K: Eq + Hash> Clear for IndexSet<K> {
+impl<K: Eq + Hash, S: BuildHasher> Clear for IndexSet<K, S> {
     #[inline(always)]
     fn clear(&mut self) {
         IndexSet::clear(self);
     }
 }
 
-impl<K> Len for IndexSet<K> {
+impl<K, S> Len for IndexSet<K, S> {
     #[inline(always)]
     fn len(&self) -> usize {
         IndexSet::len(self)
     }
 }
 
-impl<'a, K: 'a> Values<'a> for IndexSet<K> {
+impl<'a, K: 'a, S: 'a> Values<'a> for IndexSet<K, S> {
     type Values = ValuesFromKeyValuePairs<MapIter<'a, K>>;
 
     #[inline(always)]
@@ -127,7 +127,7 @@ impl<'a, K: 'a> Values<'a> for IndexSet<K> {
     }
 }
 
-impl<K> IntoValues for IndexSet<K> {
+impl<K, S> IntoValues for IndexSet<K, S> {
     type IntoValues = ValuesFromKeyValuePairs<MapIntoIter<K>>;
 
     #[inline(always)]
@@ -147,7 +147,7 @@ impl<'a, K> Iterator for MapIter<'a, K> {
     }
 }
 
-impl<'a, K: 'a> Iter<'a, &'a K> for IndexSet<K> {
+impl<'a, K: 'a, S: 'a> Iter<'a, &'a K> for IndexSet<K, S> {
     type Iter = MapIter<'a, K>;
 
     #[inline(always)]
@@ -167,7 +167,7 @@ impl<K> Iterator for MapIntoIter<K> {
     }
 }
 
-impl<K> IntoIter<K> for IndexSet<K> {
+impl<K, S> IntoIter<K> for IndexSet<K, S> {
     type IntoIter = MapIntoIter<K>;
 
     #[inline(always)]

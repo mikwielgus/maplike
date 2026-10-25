@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use core::borrow::Borrow;
-use core::hash::Hash;
+use core::hash::{BuildHasher, Hash};
 
 use indexmap::IndexMap;
 use indexmap::map::{
@@ -18,18 +18,18 @@ use crate::ops::{
     Clear, ContainsKey, Get, Insert, Len, Modify, Remove, Set, WithCapacity, WithHasher,
 };
 
-impl<K, V> Container for IndexMap<K, V> {
+impl<K, V, S> Container for IndexMap<K, V, S> {
     type Value = V;
 }
 
-impl<K, V> Keyed for IndexMap<K, V> {
+impl<K, V, S> Keyed for IndexMap<K, V, S> {
     type Key = K;
 }
 
-impl<K, V> WithCapacity for IndexMap<K, V> {
+impl<K, V, S: BuildHasher + Default> WithCapacity for IndexMap<K, V, S> {
     #[inline(always)]
     fn with_capacity(capacity: usize) -> Self {
-        IndexMap::with_capacity(capacity)
+        IndexMap::with_capacity_and_hasher(capacity, S::default())
     }
 }
 
@@ -40,7 +40,7 @@ impl<K, V, S> WithHasher<S> for IndexMap<K, V, S> {
     }
 }
 
-impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V> ContainsKey<Q> for IndexMap<K, V>
+impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V, S: BuildHasher> ContainsKey<Q> for IndexMap<K, V, S>
 where
     K: Borrow<Q>,
 {
@@ -50,7 +50,7 @@ where
     }
 }
 
-impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V> Get<Q> for IndexMap<K, V>
+impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V, S: BuildHasher> Get<Q> for IndexMap<K, V, S>
 where
     K: Borrow<Q>,
 {
@@ -60,7 +60,7 @@ where
     }
 }
 
-impl<K: Eq + Hash, V> Set<K> for IndexMap<K, V> {
+impl<K: Eq + Hash, V, S: BuildHasher> Set<K> for IndexMap<K, V, S> {
     type Output = Option<V>;
 
     #[inline(always)]
@@ -69,7 +69,7 @@ impl<K: Eq + Hash, V> Set<K> for IndexMap<K, V> {
     }
 }
 
-impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V> Modify<Q> for IndexMap<K, V>
+impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V, S: BuildHasher> Modify<Q> for IndexMap<K, V, S>
 where
     K: Borrow<Q>,
 {
@@ -82,7 +82,7 @@ where
     }
 }
 
-impl<K: Eq + Hash, V> Insert<K> for IndexMap<K, V> {
+impl<K: Eq + Hash, V, S: BuildHasher> Insert<K> for IndexMap<K, V, S> {
     type Output = Option<V>;
 
     #[inline(always)]
@@ -91,7 +91,7 @@ impl<K: Eq + Hash, V> Insert<K> for IndexMap<K, V> {
     }
 }
 
-impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V> Remove<Q> for IndexMap<K, V>
+impl<K: Eq + Hash, Q: Eq + Hash + ?Sized, V, S: BuildHasher> Remove<Q> for IndexMap<K, V, S>
 where
     K: Borrow<Q>,
 {
@@ -103,21 +103,21 @@ where
     }
 }
 
-impl<K: Eq + Hash, V> Clear for IndexMap<K, V> {
+impl<K: Eq + Hash, V, S: BuildHasher> Clear for IndexMap<K, V, S> {
     #[inline(always)]
     fn clear(&mut self) {
         IndexMap::clear(self);
     }
 }
 
-impl<K, V> Len for IndexMap<K, V> {
+impl<K, V, S> Len for IndexMap<K, V, S> {
     #[inline(always)]
     fn len(&self) -> usize {
         IndexMap::len(self)
     }
 }
 
-impl<K: Eq + Hash, V> Entry<K> for IndexMap<K, V> {
+impl<K: Eq + Hash, V, S: BuildHasher> Entry<K> for IndexMap<K, V, S> {
     type Entry<'a>
         = IndexMapEntry<'a, K, V>
     where
@@ -242,7 +242,7 @@ impl<'a, K: Eq + Hash, V> VacantEntry<'a, K, V> for IndexMapVacantEntry<'a, K, V
     }
 }
 
-impl<'a, K: 'a, V: 'a> Values<'a> for IndexMap<K, V> {
+impl<'a, K: 'a, V: 'a, S: 'a> Values<'a> for IndexMap<K, V, S> {
     type Values = indexmap::map::Values<'a, K, V>;
 
     #[inline(always)]
@@ -251,7 +251,7 @@ impl<'a, K: 'a, V: 'a> Values<'a> for IndexMap<K, V> {
     }
 }
 
-impl<K, V> IntoValues for IndexMap<K, V> {
+impl<K, V, S> IntoValues for IndexMap<K, V, S> {
     type IntoValues = indexmap::map::IntoValues<K, V>;
 
     #[inline(always)]
@@ -260,7 +260,7 @@ impl<K, V> IntoValues for IndexMap<K, V> {
     }
 }
 
-impl<'a, K: 'a, V: 'a> Iter<'a, &'a K> for IndexMap<K, V> {
+impl<'a, K: 'a, V: 'a, S: 'a> Iter<'a, &'a K> for IndexMap<K, V, S> {
     type Iter = indexmap::map::Iter<'a, K, V>;
 
     #[inline(always)]
@@ -269,7 +269,7 @@ impl<'a, K: 'a, V: 'a> Iter<'a, &'a K> for IndexMap<K, V> {
     }
 }
 
-impl<K, V> IntoIter<K> for IndexMap<K, V> {
+impl<K, V, S> IntoIter<K> for IndexMap<K, V, S> {
     type IntoIter = indexmap::map::IntoIter<K, V>;
 
     #[inline(always)]
