@@ -8,11 +8,9 @@ use core::hash::{BuildHasher, Hash};
 use indexmap::IndexSet;
 
 use crate::abc::{Container, Keyed};
+use crate::ctors::{WithCapacity, WithCapacityAndHasher, WithHasher, WithOne};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{
-    Clear, ContainsKey, Get, Insert, Len, Put, Remove, Set, WithCapacity, WithCapacityAndHasher,
-    WithHasher, WithOne,
-};
+use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Put, Remove, Set};
 
 impl<K, S> Container for IndexSet<K, S> {
     type Value = ();

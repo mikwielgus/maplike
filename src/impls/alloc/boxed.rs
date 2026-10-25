@@ -5,8 +5,9 @@
 use alloc_::boxed::Box;
 
 use crate::abc::{Container, Keyed};
+use crate::ctors::WithOne;
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{ContainsKey, Get, Len, Modify, Put, Set, WithOne};
+use crate::ops::{ContainsKey, Get, Len, Modify, Put, Set};
 
 impl<V> Container for Box<V> {
     type Value = V;

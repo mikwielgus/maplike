@@ -7,8 +7,9 @@ use core::borrow::Borrow;
 use vecmap::VecSet;
 
 use crate::abc::{Container, Keyed};
+use crate::ctors::{WithCapacity, WithOne};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Put, Remove, Set, WithCapacity, WithOne};
+use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Put, Remove, Set};
 
 impl<K> Container for VecSet<K> {
     type Value = ();

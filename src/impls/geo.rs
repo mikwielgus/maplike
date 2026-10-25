@@ -8,8 +8,9 @@ use geo_types::{
 };
 
 use crate::abc::{Container, Keyed};
+use crate::ctors::WithOne;
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, WithOne};
+use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set};
 
 macro_rules! impl_traits_for_geo_noncollection {
     ($($ty:ident),* $(,)?) => {

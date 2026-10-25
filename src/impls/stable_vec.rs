@@ -5,10 +5,9 @@
 use stable_vec::StableVecFacade;
 
 use crate::abc::{Container, Keyed};
+use crate::ctors::{WithCapacity, WithOne};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{
-    Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove, Set, WithCapacity, WithOne,
-};
+use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove, Set};
 
 impl<V, C: stable_vec::core::Core<V>> Container for StableVecFacade<V, C> {
     type Value = V;

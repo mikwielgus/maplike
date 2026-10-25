@@ -5,8 +5,9 @@
 use alloc_::rc::{Rc, Weak};
 
 use crate::abc::{Container, Keyed};
+use crate::ctors::WithOne;
 use crate::iter::{Iter, Values};
-use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Put, Remove, Set, WithOne};
+use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Put, Remove, Set};
 
 impl<V> Container for Rc<V> {
     type Value = V;

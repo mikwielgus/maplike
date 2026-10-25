@@ -3,8 +3,9 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use crate::abc::{Container, Keyed};
+use crate::ctors::WithOne;
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{ContainsKey, Get, Len, Modify, Put, Set, WithOne};
+use crate::ops::{ContainsKey, Get, Len, Modify, Put, Set};
 
 macro_rules! impl_traits_for_scalar {
     ($($t:ty),*) => {

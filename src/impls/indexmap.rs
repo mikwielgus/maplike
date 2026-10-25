@@ -12,12 +12,10 @@ use indexmap::map::{
 };
 
 use crate::abc::{Container, Keyed};
+use crate::ctors::{WithCapacity, WithCapacityAndHasher, WithHasher};
 use crate::entry::{CombinedEntry, Entry, OccupiedEntry, VacantEntry};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{
-    Clear, ContainsKey, Get, Insert, Len, Modify, Remove, Set, WithCapacity, WithCapacityAndHasher,
-    WithHasher,
-};
+use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Modify, Remove, Set};
 
 impl<K, V, S> Container for IndexMap<K, V, S> {
     type Value = V;

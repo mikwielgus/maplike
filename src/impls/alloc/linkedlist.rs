@@ -5,8 +5,9 @@
 use alloc_::collections::LinkedList;
 
 use crate::abc::{Container, Keyed};
+use crate::ctors::WithOne;
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Set, WithOne};
+use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Set};
 
 impl<V> Container for LinkedList<V> {
     type Value = V;

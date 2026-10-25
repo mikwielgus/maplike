@@ -3,8 +3,9 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use crate::abc::{Container, Keyed};
+use crate::ctors::WithOne;
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Put, Remove, Set, WithOne};
+use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Put, Remove, Set};
 
 impl<V> Container for Option<V> {
     type Value = V;

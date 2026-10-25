@@ -11,12 +11,12 @@
 use std::fmt::Debug;
 
 use maplike::abc::Keyed;
+use maplike::ctors::{WithCapacity, WithCapacityAndHasher, WithHasher, WithOne};
 use maplike::entry::{CombinedEntry, Entry, OccupiedEntry, VacantEntry};
 use maplike::iter::IntoIter;
 use maplike::ops::{
     Assign, Clear, ContainsKey, Get, GetByLeft, GetByRight, Insert, Len, Modify, Pop, Push, Put,
-    Remove, RemoveByLeft, RemoveByRight, Resize, Set, ShiftRemove, SwapRemove, WithCapacity,
-    WithCapacityAndHasher, WithHasher, WithOne,
+    Remove, RemoveByLeft, RemoveByRight, Resize, Set, ShiftRemove, SwapRemove,
 };
 
 trait FromUsize {

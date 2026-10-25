@@ -5,8 +5,9 @@
 //! `One`, a collection that holds always exactly one element.
 
 use crate::abc::{Container, Keyed};
+use crate::ctors::WithOne;
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{ContainsKey, Get, Len, Modify, Put, Set, WithOne};
+use crate::ops::{ContainsKey, Get, Len, Modify, Put, Set};
 
 /// A collection that holds exactly one element.
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]

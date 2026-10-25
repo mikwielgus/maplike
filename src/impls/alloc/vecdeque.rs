@@ -5,11 +5,9 @@
 use alloc_::collections::VecDeque;
 
 use crate::abc::{Container, Keyed};
+use crate::ctors::{WithCapacity, WithOne};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{
-    Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, ShiftRemove, WithCapacity,
-    WithOne,
-};
+use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, ShiftRemove};
 
 impl<V> Container for VecDeque<V> {
     type Value = V;

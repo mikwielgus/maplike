@@ -10,11 +10,9 @@ use slotmap::{DenseSlotMap, Key, SecondaryMap, SlotMap};
 use slotmap::SparseSecondaryMap;
 
 use crate::abc::{Container, Keyed};
+use crate::ctors::{WithCapacity, WithCapacityAndHasher, WithHasher, WithOne};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{
-    Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove, Set, WithCapacity,
-    WithCapacityAndHasher, WithHasher, WithOne,
-};
+use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove, Set};
 
 impl<K: Key, V> Container for SlotMap<K, V> {
     type Value = V;

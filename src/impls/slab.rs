@@ -5,10 +5,9 @@
 use slab::Slab;
 
 use crate::abc::{Container, Keyed};
+use crate::ctors::{WithCapacity, WithOne};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{
-    Clear, ContainsKey, Get, Len, Modify, Push, Put, Remove, Set, WithCapacity, WithOne,
-};
+use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Push, Put, Remove, Set};
 
 impl<V> Container for Slab<V> {
     type Value = V;

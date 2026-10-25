@@ -5,8 +5,9 @@
 use rstar::{RTree, RTreeObject, RTreeParams};
 
 use crate::abc::{Container, Keyed};
+use crate::ctors::WithOne;
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Put, Remove, Set, WithOne};
+use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Put, Remove, Set};
 
 impl<K: RTreeObject, Params: RTreeParams> Container for RTree<K, Params> {
     type Value = ();

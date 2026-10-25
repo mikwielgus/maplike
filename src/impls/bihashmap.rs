@@ -9,10 +9,10 @@ use bidimap::{BiHashMap, Overwritten};
 use std_::hash::Hash;
 
 use crate::abc::{Container, Keyed};
+use crate::ctors::WithCapacity;
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
 use crate::ops::{
     Clear, ContainsKey, Get, GetByLeft, GetByRight, Insert, Len, RemoveByLeft, RemoveByRight, Set,
-    WithCapacity,
 };
 
 impl<L, R, LS, RS> Container for BiHashMap<L, R, LS, RS> {
