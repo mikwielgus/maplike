@@ -13,7 +13,9 @@ use std_::collections::hash_map::{
 use crate::abc::{Container, Keyed};
 use crate::entry::{CombinedEntry, Entry, OccupiedEntry, VacantEntry};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Modify, Remove, Set, WithCapacity};
+use crate::ops::{
+    Clear, ContainsKey, Get, Insert, Len, Modify, Remove, Set, WithCapacity, WithHasher,
+};
 
 impl<K, V, S> Container for HashMap<K, V, S> {
     type Value = V;
@@ -27,6 +29,13 @@ impl<K, V, S: BuildHasher + Default> WithCapacity for HashMap<K, V, S> {
     #[inline(always)]
     fn with_capacity(capacity: usize) -> Self {
         HashMap::with_capacity_and_hasher(capacity, S::default())
+    }
+}
+
+impl<K, V, S> WithHasher<S> for HashMap<K, V, S> {
+    #[inline(always)]
+    fn with_hasher(hasher: S) -> Self {
+        HashMap::with_hasher(hasher)
     }
 }
 

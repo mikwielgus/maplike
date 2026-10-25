@@ -8,7 +8,9 @@ use hashbrown::{Equivalent, HashSet};
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Put, Remove, Set, WithCapacity, WithOne};
+use crate::ops::{
+    Clear, ContainsKey, Get, Insert, Len, Put, Remove, Set, WithCapacity, WithHasher, WithOne,
+};
 
 impl<K, S> Container for HashSet<K, S> {
     type Value = ();
@@ -22,6 +24,13 @@ impl<K, S: BuildHasher + Default> WithCapacity for HashSet<K, S> {
     #[inline(always)]
     fn with_capacity(capacity: usize) -> Self {
         HashSet::with_capacity_and_hasher(capacity, S::default())
+    }
+}
+
+impl<K, S> WithHasher<S> for HashSet<K, S> {
+    #[inline(always)]
+    fn with_hasher(hasher: S) -> Self {
+        HashSet::with_hasher(hasher)
     }
 }
 

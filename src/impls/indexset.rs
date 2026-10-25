@@ -9,7 +9,9 @@ use indexmap::IndexSet;
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Put, Remove, Set, WithCapacity, WithOne};
+use crate::ops::{
+    Clear, ContainsKey, Get, Insert, Len, Put, Remove, Set, WithCapacity, WithHasher, WithOne,
+};
 
 impl<K> Container for IndexSet<K> {
     type Value = ();
@@ -23,6 +25,13 @@ impl<K> WithCapacity for IndexSet<K> {
     #[inline(always)]
     fn with_capacity(capacity: usize) -> Self {
         IndexSet::with_capacity(capacity)
+    }
+}
+
+impl<K, S> WithHasher<S> for IndexSet<K, S> {
+    #[inline(always)]
+    fn with_hasher(hasher: S) -> Self {
+        IndexSet::with_hasher(hasher)
     }
 }
 

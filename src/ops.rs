@@ -14,6 +14,12 @@ pub trait WithCapacity {
     fn with_capacity(capacity: usize) -> Self;
 }
 
+/// Construct a hashing container with the given hasher to hash keys.
+pub trait WithHasher<S> {
+    /// Construct a hashing container with the given hasher to hash keys.
+    fn with_hasher(hasher: S) -> Self;
+}
+
 /// Construct a container with exactly one element.
 pub trait WithOne<E> {
     /// Construct a container containing only the given element.

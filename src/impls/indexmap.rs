@@ -14,7 +14,9 @@ use indexmap::map::{
 use crate::abc::{Container, Keyed};
 use crate::entry::{CombinedEntry, Entry, OccupiedEntry, VacantEntry};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Modify, Remove, Set, WithCapacity};
+use crate::ops::{
+    Clear, ContainsKey, Get, Insert, Len, Modify, Remove, Set, WithCapacity, WithHasher,
+};
 
 impl<K, V> Container for IndexMap<K, V> {
     type Value = V;
@@ -28,6 +30,13 @@ impl<K, V> WithCapacity for IndexMap<K, V> {
     #[inline(always)]
     fn with_capacity(capacity: usize) -> Self {
         IndexMap::with_capacity(capacity)
+    }
+}
+
+impl<K, V, S> WithHasher<S> for IndexMap<K, V, S> {
+    #[inline(always)]
+    fn with_hasher(hasher: S) -> Self {
+        IndexMap::with_hasher(hasher)
     }
 }
 

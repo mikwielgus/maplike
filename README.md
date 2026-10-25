@@ -186,6 +186,7 @@ assert_eq!(vec, [4, 5, 6]);
 This crate provides traits for common operations over map-like, set-like,
 array-like, and vec-like data structures:
 [`.with_capacity()`](https://docs.rs/maplike/latest/maplike/ops/trait.WithCapacity.html#tymethod.with_capacity),
+[`.with_hasher()`](https://docs.rs/maplike/latest/maplike/ops/trait.WithHasher.html#tymethod.with_hasher),
 [`.with_one()`](https://docs.rs/maplike/latest/maplike/ops/trait.WithOne.html#tymethod.with_one),
 [`.assign()`](https://docs.rs/maplike/latest/maplike/ops/trait.Assign.html#tymethod.assign),
 [`.contains_key()`](https://docs.rs/maplike/latest/maplike/ops/trait.ContainsKey.html#tymethod.contains_key),
