@@ -15,7 +15,8 @@ use crate::abc::{Container, Keyed};
 use crate::entry::{CombinedEntry, Entry, OccupiedEntry, VacantEntry};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
 use crate::ops::{
-    Clear, ContainsKey, Get, Insert, Len, Modify, Remove, Set, WithCapacity, WithHasher,
+    Clear, ContainsKey, Get, Insert, Len, Modify, Remove, Set, WithCapacity, WithCapacityAndHasher,
+    WithHasher,
 };
 
 impl<K, V, S> Container for IndexMap<K, V, S> {
@@ -37,6 +38,13 @@ impl<K, V, S> WithHasher<S> for IndexMap<K, V, S> {
     #[inline(always)]
     fn with_hasher(hasher: S) -> Self {
         IndexMap::with_hasher(hasher)
+    }
+}
+
+impl<K, V, S> WithCapacityAndHasher<S> for IndexMap<K, V, S> {
+    #[inline(always)]
+    fn with_capacity_and_hasher(capacity: usize, hasher: S) -> Self {
+        IndexMap::with_capacity_and_hasher(capacity, hasher)
     }
 }
 

@@ -12,8 +12,8 @@ use slotmap::SparseSecondaryMap;
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
 use crate::ops::{
-    Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove, Set, WithCapacity, WithHasher,
-    WithOne,
+    Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove, Set, WithCapacity,
+    WithCapacityAndHasher, WithHasher, WithOne,
 };
 
 impl<K: Key, V> Container for SlotMap<K, V> {
@@ -421,6 +421,14 @@ impl<K: Key, V, S: BuildHasher> WithHasher<S> for SparseSecondaryMap<K, V, S> {
     #[inline(always)]
     fn with_hasher(hasher: S) -> Self {
         SparseSecondaryMap::with_hasher(hasher)
+    }
+}
+
+#[cfg(feature = "std")]
+impl<K: Key, V, S: BuildHasher> WithCapacityAndHasher<S> for SparseSecondaryMap<K, V, S> {
+    #[inline(always)]
+    fn with_capacity_and_hasher(capacity: usize, hasher: S) -> Self {
+        SparseSecondaryMap::with_capacity_and_hasher(capacity, hasher)
     }
 }
 

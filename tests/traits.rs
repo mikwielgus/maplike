@@ -16,7 +16,7 @@ use maplike::iter::IntoIter;
 use maplike::ops::{
     Assign, Clear, ContainsKey, Get, GetByLeft, GetByRight, Insert, Len, Modify, Pop, Push, Put,
     Remove, RemoveByLeft, RemoveByRight, Resize, Set, ShiftRemove, SwapRemove, WithCapacity,
-    WithHasher, WithOne,
+    WithCapacityAndHasher, WithHasher, WithOne,
 };
 
 trait FromUsize {
@@ -395,6 +395,13 @@ where
     assert_eq!(Len::len(&C::with_hasher(hasher)), 0);
 }
 
+fn check_with_capacity_and_hasher<S, C>(hasher: S)
+where
+    C: WithCapacityAndHasher<S> + Len,
+{
+    assert_eq!(Len::len(&C::with_capacity_and_hasher(8, hasher)), 0);
+}
+
 fn check_pushed_insert_remove<K, V, C>(mut c: C)
 where
     K: Clone,
@@ -771,6 +778,7 @@ mod std_tests {
         check_hashmap_entry_variants();
         check_with_capacity::<HashMap<usize, i32>>();
         check_with_hasher::<_, HashMap<usize, i32>>(RandomState::new());
+        check_with_capacity_and_hasher::<_, HashMap<usize, i32>>(RandomState::new());
         check_assign(
             HashMap::from([(1, 1i32)]),
             HashMap::from([(2, 2i32), (3, 3i32)]),
@@ -784,6 +792,7 @@ mod std_tests {
         check_with_one::<usize, (), HashSet<usize>>(7, ());
         check_with_capacity::<HashSet<usize>>();
         check_with_hasher::<_, HashSet<usize>>(RandomState::new());
+        check_with_capacity_and_hasher::<_, HashSet<usize>>(RandomState::new());
         check_assign(HashSet::from([1]), HashSet::from([2, 3]));
     }
 
@@ -1133,6 +1142,9 @@ mod slotmap_tests {
         check_with_hasher::<_, SparseSecondaryMap<DefaultKey, i32>>(
             std::collections::hash_map::RandomState::new(),
         );
+        check_with_capacity_and_hasher::<_, SparseSecondaryMap<DefaultKey, i32>>(
+            std::collections::hash_map::RandomState::new(),
+        );
         check_insert_map_with_keys(
             SparseSecondaryMap::<DefaultKey, i32, _>::with_hasher(std::hash::BuildHasherDefault::<
                 std::hash::DefaultHasher,
@@ -1389,6 +1401,7 @@ mod hashbrown_tests {
         check_hashmap_entry_variants();
         check_with_capacity::<HashMap<usize, i32>>();
         check_with_hasher::<_, HashMap<usize, i32>>(DefaultHashBuilder::default());
+        check_with_capacity_and_hasher::<_, HashMap<usize, i32>>(DefaultHashBuilder::default());
         check_assign(
             HashMap::from([(1, 1i32)]),
             HashMap::from([(2, 2i32), (3, 3i32)]),
@@ -1402,6 +1415,7 @@ mod hashbrown_tests {
         check_with_one::<usize, (), HashSet<usize>>(7, ());
         check_with_capacity::<HashSet<usize>>();
         check_with_hasher::<_, HashSet<usize>>(DefaultHashBuilder::default());
+        check_with_capacity_and_hasher::<_, HashSet<usize>>(DefaultHashBuilder::default());
         check_assign(HashSet::from([1]), HashSet::from([2, 3]));
     }
 }
@@ -1460,6 +1474,7 @@ mod indexmap_tests {
         check_indexmap_entry_variants();
         check_with_capacity::<IndexMap<usize, i32>>();
         check_with_hasher::<_, IndexMap<usize, i32>>(RandomState::new());
+        check_with_capacity_and_hasher::<_, IndexMap<usize, i32>>(RandomState::new());
         check_keyed(
             IndexMap::<usize, i32, _>::with_hasher(std::hash::BuildHasherDefault::<
                 std::hash::DefaultHasher,
@@ -1479,6 +1494,7 @@ mod indexmap_tests {
         check_with_one::<usize, (), IndexSet<usize>>(7, ());
         check_with_capacity::<IndexSet<usize>>();
         check_with_hasher::<_, IndexSet<usize>>(RandomState::new());
+        check_with_capacity_and_hasher::<_, IndexSet<usize>>(RandomState::new());
         check_keyed(
             IndexSet::<usize, _>::with_hasher(std::hash::BuildHasherDefault::<
                 std::hash::DefaultHasher,

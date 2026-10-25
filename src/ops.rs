@@ -20,6 +20,14 @@ pub trait WithHasher<S> {
     fn with_hasher(hasher: S) -> Self;
 }
 
+/// Construct a hashing container with at least the specified capacity and with
+/// given hasher to hash keys.
+pub trait WithCapacityAndHasher<S> {
+    /// Construct a hashing container with at least the specified capacity and with
+    /// given hasher to hash keys.
+    fn with_capacity_and_hasher(capacity: usize, hasher: S) -> Self;
+}
+
 /// Construct a container with exactly one element.
 pub trait WithOne<E> {
     /// Construct a container containing only the given element.
