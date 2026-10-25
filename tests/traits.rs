@@ -15,7 +15,8 @@ use maplike::entry::{CombinedEntry, Entry, OccupiedEntry, VacantEntry};
 use maplike::iter::IntoIter;
 use maplike::ops::{
     Assign, Clear, ContainsKey, Get, GetByLeft, GetByRight, Insert, Len, Modify, Pop, Push, Put,
-    Remove, RemoveByLeft, RemoveByRight, Resize, Set, ShiftRemove, SwapRemove, WithOne,
+    Remove, RemoveByLeft, RemoveByRight, Resize, Set, ShiftRemove, SwapRemove, WithCapacity,
+    WithOne,
 };
 
 trait FromUsize {
@@ -378,6 +379,13 @@ where
         .map(|(_, value)| value)
         .collect();
     assert_eq!(values, [expected]);
+}
+
+fn check_with_capacity<C>()
+where
+    C: WithCapacity + Len,
+{
+    assert_eq!(Len::len(&C::with_capacity(8)), 0);
 }
 
 fn check_pushed_insert_remove<K, V, C>(mut c: C)
@@ -754,6 +762,7 @@ mod std_tests {
         check_borrow_str(HashMap::<String, i32>::new());
         check_entry::<usize, i32, HashMap<usize, i32>>(HashMap::new());
         check_hashmap_entry_variants();
+        check_with_capacity::<HashMap<usize, i32>>();
         check_assign(
             HashMap::from([(1, 1i32)]),
             HashMap::from([(2, 2i32), (3, 3i32)]),
@@ -765,6 +774,7 @@ mod std_tests {
         check_keyed(HashSet::<usize>::new(), Some(()));
         check_into_iter::<usize, (), HashSet<usize>>(HashSet::new());
         check_with_one::<usize, (), HashSet<usize>>(7, ());
+        check_with_capacity::<HashSet<usize>>();
         check_assign(HashSet::from([1]), HashSet::from([2, 3]));
     }
 
@@ -895,6 +905,7 @@ mod alloc_tests {
     fn test_traits_on_vec() {
         check_push_put::<usize, i32, Vec<i32>>(Vec::new());
         check_with_one::<i32, i32, Vec<i32>>(30, 30);
+        check_with_capacity::<Vec<i32>>();
         check_vec::<i32, Vec<i32>>(Vec::new());
         check_swap_remove::<i32, Vec<i32>>(Vec::new());
         check_shift_remove::<i32, Vec<i32>>(Vec::new());
@@ -915,6 +926,7 @@ mod alloc_tests {
 
         check_push_put::<usize, i32, VecDeque<i32>>(VecDeque::new());
         check_with_one::<i32, i32, VecDeque<i32>>(30, 30);
+        check_with_capacity::<VecDeque<i32>>();
         check_vec::<i32, VecDeque<i32>>(VecDeque::new());
         check_shift_remove::<i32, VecDeque<i32>>(VecDeque::new());
         check_resize::<i32, VecDeque<i32>>(VecDeque::new());
@@ -1028,6 +1040,7 @@ mod stable_vec_tests {
         check_into_iter::<usize, i32, StableVec<i32>>(StableVec::new());
         check_push_put::<usize, i32, StableVec<i32>>(StableVec::new());
         check_with_one::<i32, i32, StableVec<i32>>(30, 30);
+        check_with_capacity::<StableVec<i32>>();
         check_pushed_insert_remove::<usize, i32, StableVec<i32>>(StableVec::new());
 
         let mut a = StableVec::new();
@@ -1048,6 +1061,7 @@ mod slab_tests {
     fn test_traits_on_slab() {
         check_push_put::<usize, i32, Slab<i32>>(Slab::new());
         check_with_one::<i32, i32, Slab<i32>>(30, 30);
+        check_with_capacity::<Slab<i32>>();
         check_push_remove_into_iter::<usize, i32, Slab<i32>>(Slab::new());
         check_assign_no_partial_eq(Slab::<i32>::new(), Slab::new());
     }
@@ -1062,6 +1076,7 @@ mod slotmap_tests {
     fn test_traits_on_slotmap() {
         check_push_put::<DefaultKey, i32, SlotMap<DefaultKey, i32>>(SlotMap::new());
         check_with_one::<i32, i32, SlotMap<DefaultKey, i32>>(30, 30);
+        check_with_capacity::<SlotMap<DefaultKey, i32>>();
         check_push_remove_into_iter::<DefaultKey, i32, SlotMap<DefaultKey, i32>>(SlotMap::new());
         check_assign_no_partial_eq(SlotMap::<DefaultKey, i32>::new(), SlotMap::new());
     }
@@ -1070,6 +1085,7 @@ mod slotmap_tests {
     fn test_traits_on_dense_slotmap() {
         check_push_put::<DefaultKey, i32, DenseSlotMap<DefaultKey, i32>>(DenseSlotMap::new());
         check_with_one::<i32, i32, DenseSlotMap<DefaultKey, i32>>(30, 30);
+        check_with_capacity::<DenseSlotMap<DefaultKey, i32>>();
         check_push_remove_into_iter::<DefaultKey, i32, DenseSlotMap<DefaultKey, i32>>(
             DenseSlotMap::new(),
         );
@@ -1083,6 +1099,7 @@ mod slotmap_tests {
         let k1 = keys.insert(());
         let k2 = keys.insert(());
 
+        check_with_capacity::<SecondaryMap<DefaultKey, i32>>();
         check_insert_map_with_keys(SecondaryMap::<DefaultKey, i32>::new(), k0, k1, k2);
 
         let mut x: SecondaryMap<DefaultKey, i32> = SecondaryMap::new();
@@ -1103,6 +1120,7 @@ mod slotmap_tests {
         let k1 = keys.insert(());
         let k2 = keys.insert(());
 
+        check_with_capacity::<SparseSecondaryMap<DefaultKey, i32>>();
         check_insert_map_with_keys(SparseSecondaryMap::<DefaultKey, i32>::new(), k0, k1, k2);
 
         let mut x: SparseSecondaryMap<DefaultKey, i32> = SparseSecondaryMap::new();
@@ -1123,6 +1141,7 @@ mod thunderdome_tests {
     fn test_traits_on_arena() {
         check_push_put::<thunderdome::Index, i32, Arena<i32>>(Arena::new());
         check_with_one::<i32, i32, Arena<i32>>(30, 30);
+        check_with_capacity::<Arena<i32>>();
         check_pushed_insert_remove::<thunderdome::Index, i32, Arena<i32>>(Arena::new());
         check_push_remove_into_iter::<thunderdome::Index, i32, Arena<i32>>(Arena::new());
         check_assign_no_partial_eq(Arena::<i32>::new(), Arena::new());
@@ -1189,6 +1208,7 @@ mod smallvec_tests {
     fn test_traits_on_smallvec() {
         check_push_put::<usize, i32, SmallVec<[i32; 8]>>(SmallVec::new());
         check_with_one::<i32, i32, SmallVec<[i32; 8]>>(30, 30);
+        check_with_capacity::<SmallVec<[i32; 8]>>();
         check_vec::<i32, SmallVec<[i32; 8]>>(SmallVec::new());
         check_shift_remove::<i32, SmallVec<[i32; 8]>>(SmallVec::new());
         check_resize::<i32, SmallVec<[i32; 8]>>(SmallVec::new());
@@ -1217,6 +1237,7 @@ mod thin_vec_tests {
     fn test_traits_on_thin_vec() {
         check_push_put::<usize, i32, ThinVec<i32>>(ThinVec::new());
         check_with_one::<i32, i32, ThinVec<i32>>(30, 30);
+        check_with_capacity::<ThinVec<i32>>();
         check_vec::<i32, ThinVec<i32>>(ThinVec::new());
         check_swap_remove::<i32, ThinVec<i32>>(ThinVec::new());
         check_shift_remove::<i32, ThinVec<i32>>(ThinVec::new());
@@ -1259,6 +1280,7 @@ mod tinyvec_tests {
     fn test_traits_on_tinyvec() {
         check_push_put::<usize, i32, TinyVec<[i32; 8]>>(TinyVec::new());
         check_with_one::<i32, i32, TinyVec<[i32; 8]>>(30, 30);
+        check_with_capacity::<TinyVec<[i32; 8]>>();
         check_vec::<i32, TinyVec<[i32; 8]>>(TinyVec::new());
         check_shift_remove::<i32, TinyVec<[i32; 8]>>(TinyVec::new());
         check_resize::<i32, TinyVec<[i32; 8]>>(TinyVec::new());
@@ -1344,6 +1366,7 @@ mod hashbrown_tests {
         check_borrow_str(HashMap::<String, i32>::new());
         check_entry::<usize, i32, HashMap<usize, i32>>(HashMap::new());
         check_hashmap_entry_variants();
+        check_with_capacity::<HashMap<usize, i32>>();
         check_assign(
             HashMap::from([(1, 1i32)]),
             HashMap::from([(2, 2i32), (3, 3i32)]),
@@ -1355,6 +1378,7 @@ mod hashbrown_tests {
         check_keyed(HashSet::<usize>::new(), Some(()));
         check_into_iter::<usize, (), HashSet<usize>>(HashSet::new());
         check_with_one::<usize, (), HashSet<usize>>(7, ());
+        check_with_capacity::<HashSet<usize>>();
         check_assign(HashSet::from([1]), HashSet::from([2, 3]));
     }
 }
@@ -1410,6 +1434,7 @@ mod indexmap_tests {
         check_borrow_str(IndexMap::<String, i32>::new());
         check_entry::<usize, i32, IndexMap<usize, i32>>(IndexMap::new());
         check_indexmap_entry_variants();
+        check_with_capacity::<IndexMap<usize, i32>>();
         check_assign(
             IndexMap::from([(1, 1i32)]),
             IndexMap::from([(2, 2i32), (3, 3i32)]),
@@ -1421,6 +1446,7 @@ mod indexmap_tests {
         check_keyed(IndexSet::<usize>::new(), Some(()));
         check_into_iter::<usize, (), IndexSet<usize>>(IndexSet::new());
         check_with_one::<usize, (), IndexSet<usize>>(7, ());
+        check_with_capacity::<IndexSet<usize>>();
         check_assign(IndexSet::from([1]), IndexSet::from([2, 3]));
     }
 }
@@ -1436,6 +1462,7 @@ mod vecmap_tests {
         check_modify::<usize, i32, VecMap<usize, i32>>(VecMap::new());
         check_into_iter::<usize, i32, VecMap<usize, i32>>(VecMap::new());
         check_borrow_str(VecMap::<String, i32>::new());
+        check_with_capacity::<VecMap<usize, i32>>();
         check_assign(
             VecMap::from([(1, 1i32)]),
             VecMap::from([(2, 2i32), (3, 3i32)]),
@@ -1447,6 +1474,7 @@ mod vecmap_tests {
         check_keyed(VecSet::<usize>::new(), Some(()));
         check_into_iter::<usize, (), VecSet<usize>>(VecSet::new());
         check_with_one::<usize, (), VecSet<usize>>(7, ());
+        check_with_capacity::<VecSet<usize>>();
         check_assign(VecSet::from([1]), VecSet::from([2, 3]));
     }
 }
@@ -1514,6 +1542,7 @@ mod bidimap_tests {
     fn test_traits_on_bihashmap() {
         check_bidirectional_map(BiHashMap::<String, i32>::new());
         check_into_iter::<usize, i32, BiHashMap<usize, i32>>(BiHashMap::new());
+        check_with_capacity::<BiHashMap<usize, i32>>();
 
         let mut a = BiHashMap::new();
         a.insert("a".to_string(), 1i32);

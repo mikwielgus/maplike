@@ -12,7 +12,7 @@ use hashbrown::{Equivalent, HashMap};
 use crate::abc::{Container, Keyed};
 use crate::entry::{CombinedEntry, Entry, OccupiedEntry, VacantEntry};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Modify, Remove, Set};
+use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Modify, Remove, Set, WithCapacity};
 
 impl<K, V, S> Container for HashMap<K, V, S> {
     type Value = V;
@@ -20,6 +20,13 @@ impl<K, V, S> Container for HashMap<K, V, S> {
 
 impl<K, V, S> Keyed for HashMap<K, V, S> {
     type Key = K;
+}
+
+impl<K, V, S: BuildHasher + Default> WithCapacity for HashMap<K, V, S> {
+    #[inline(always)]
+    fn with_capacity(capacity: usize) -> Self {
+        HashMap::with_capacity_and_hasher(capacity, S::default())
+    }
 }
 
 impl<K: Eq + Hash, Q: Hash + Equivalent<K> + ?Sized, V, S: BuildHasher> ContainsKey<Q>

@@ -11,6 +11,7 @@ use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
 use crate::ops::{
     Clear, ContainsKey, Get, GetByLeft, GetByRight, Insert, Len, RemoveByLeft, RemoveByRight, Set,
+    WithCapacity,
 };
 
 impl<L, R> Container for BiHashMap<L, R> {
@@ -19,6 +20,13 @@ impl<L, R> Container for BiHashMap<L, R> {
 
 impl<L, R> Keyed for BiHashMap<L, R> {
     type Key = L;
+}
+
+impl<L, R> WithCapacity for BiHashMap<L, R> {
+    #[inline(always)]
+    fn with_capacity(capacity: usize) -> Self {
+        BiHashMap::with_capacity(capacity)
+    }
 }
 
 impl<L: Eq + Hash, R: Eq + Hash, Q: Eq + Hash + ?Sized> ContainsKey<Q> for BiHashMap<L, R>

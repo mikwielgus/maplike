@@ -6,7 +6,9 @@ use thunderdome::{Arena, Index};
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove, Set, WithOne};
+use crate::ops::{
+    Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove, Set, WithCapacity, WithOne,
+};
 
 impl<V> Container for Arena<V> {
     type Value = V;
@@ -14,6 +16,13 @@ impl<V> Container for Arena<V> {
 
 impl<V> Keyed for Arena<V> {
     type Key = Index;
+}
+
+impl<V> WithCapacity for Arena<V> {
+    #[inline(always)]
+    fn with_capacity(capacity: usize) -> Self {
+        Arena::with_capacity(capacity)
+    }
 }
 
 impl<V> WithOne<V> for Arena<V> {

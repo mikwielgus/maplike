@@ -8,7 +8,7 @@ use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
 use crate::ops::{
     Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, ShiftRemove, SwapRemove,
-    WithOne,
+    WithCapacity, WithOne,
 };
 
 impl<V> Container for ThinVec<V> {
@@ -17,6 +17,13 @@ impl<V> Container for ThinVec<V> {
 
 impl<V> Keyed for ThinVec<V> {
     type Key = usize;
+}
+
+impl<V> WithCapacity for ThinVec<V> {
+    #[inline(always)]
+    fn with_capacity(capacity: usize) -> Self {
+        ThinVec::with_capacity(capacity)
+    }
 }
 
 impl<V> WithOne<V> for ThinVec<V> {

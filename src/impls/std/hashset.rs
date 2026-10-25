@@ -9,7 +9,7 @@ use std_::collections::HashSet;
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Put, Remove, Set, WithOne};
+use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Put, Remove, Set, WithCapacity, WithOne};
 
 impl<K, S> Container for HashSet<K, S> {
     type Value = ();
@@ -17,6 +17,13 @@ impl<K, S> Container for HashSet<K, S> {
 
 impl<K, S> Keyed for HashSet<K, S> {
     type Key = K;
+}
+
+impl<K, S: BuildHasher + Default> WithCapacity for HashSet<K, S> {
+    #[inline(always)]
+    fn with_capacity(capacity: usize) -> Self {
+        HashSet::with_capacity_and_hasher(capacity, S::default())
+    }
 }
 
 impl<K: Eq + Hash, S: BuildHasher + Default> WithOne<K> for HashSet<K, S> {

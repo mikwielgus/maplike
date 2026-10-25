@@ -8,7 +8,7 @@ use vecmap::VecSet;
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Put, Remove, Set, WithOne};
+use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Put, Remove, Set, WithCapacity, WithOne};
 
 impl<K> Container for VecSet<K> {
     type Value = ();
@@ -16,6 +16,13 @@ impl<K> Container for VecSet<K> {
 
 impl<K> Keyed for VecSet<K> {
     type Key = K;
+}
+
+impl<K> WithCapacity for VecSet<K> {
+    #[inline(always)]
+    fn with_capacity(capacity: usize) -> Self {
+        VecSet::with_capacity(capacity)
+    }
 }
 
 impl<K: Eq> WithOne<K> for VecSet<K> {

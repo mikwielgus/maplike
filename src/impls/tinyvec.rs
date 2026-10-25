@@ -7,7 +7,8 @@ use tinyvec::{Array, ArrayVec, TinyVec};
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
 use crate::ops::{
-    Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, ShiftRemove, WithOne,
+    Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, ShiftRemove, WithCapacity,
+    WithOne,
 };
 
 impl<A: Array> Container for ArrayVec<A> {
@@ -167,6 +168,13 @@ impl<A: Array> Container for TinyVec<A> {
 
 impl<A: Array> Keyed for TinyVec<A> {
     type Key = usize;
+}
+
+impl<A: Array> WithCapacity for TinyVec<A> {
+    #[inline(always)]
+    fn with_capacity(capacity: usize) -> Self {
+        TinyVec::with_capacity(capacity)
+    }
 }
 
 impl<A: Array> WithOne<A::Item> for TinyVec<A> {

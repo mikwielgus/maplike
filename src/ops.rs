@@ -8,6 +8,12 @@ use core::borrow::Borrow;
 
 use crate::abc::{Container, Keyed};
 
+/// Construct a container with at least the specified capacity.
+pub trait WithCapacity {
+    /// Construct a container with at least the specified capacity.
+    fn with_capacity(capacity: usize) -> Self;
+}
+
 /// Construct a container with exactly one element.
 pub trait WithOne<E> {
     /// Construct a container containing only the given element.

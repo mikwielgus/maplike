@@ -9,7 +9,9 @@ use slotmap::SparseSecondaryMap;
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove, Set, WithOne};
+use crate::ops::{
+    Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove, Set, WithCapacity, WithOne,
+};
 
 impl<K: Key, V> Container for SlotMap<K, V> {
     type Value = V;
@@ -17,6 +19,13 @@ impl<K: Key, V> Container for SlotMap<K, V> {
 
 impl<K: Key, V> Keyed for SlotMap<K, V> {
     type Key = K;
+}
+
+impl<K: Key, V> WithCapacity for SlotMap<K, V> {
+    #[inline(always)]
+    fn with_capacity(capacity: usize) -> Self {
+        SlotMap::with_capacity_and_key(capacity)
+    }
 }
 
 impl<K: Key, V> WithOne<V> for SlotMap<K, V> {
@@ -145,6 +154,13 @@ impl<K: Key, V> Keyed for DenseSlotMap<K, V> {
     type Key = K;
 }
 
+impl<K: Key, V> WithCapacity for DenseSlotMap<K, V> {
+    #[inline(always)]
+    fn with_capacity(capacity: usize) -> Self {
+        DenseSlotMap::with_capacity_and_key(capacity)
+    }
+}
+
 impl<K: Key, V> WithOne<V> for DenseSlotMap<K, V> {
     #[inline(always)]
     fn with_one(element: V) -> Self {
@@ -271,6 +287,13 @@ impl<K: Key, V> Keyed for SecondaryMap<K, V> {
     type Key = K;
 }
 
+impl<K: Key, V> WithCapacity for SecondaryMap<K, V> {
+    #[inline(always)]
+    fn with_capacity(capacity: usize) -> Self {
+        SecondaryMap::with_capacity(capacity)
+    }
+}
+
 impl<K: Key, V> ContainsKey<K> for SecondaryMap<K, V> {
     #[inline(always)]
     fn contains_key(&self, key: &K) -> bool {
@@ -380,6 +403,14 @@ impl<K: Key, V> Container for SparseSecondaryMap<K, V> {
 #[cfg(feature = "std")]
 impl<K: Key, V> Keyed for SparseSecondaryMap<K, V> {
     type Key = K;
+}
+
+#[cfg(feature = "std")]
+impl<K: Key, V> WithCapacity for SparseSecondaryMap<K, V> {
+    #[inline(always)]
+    fn with_capacity(capacity: usize) -> Self {
+        SparseSecondaryMap::with_capacity(capacity)
+    }
 }
 
 #[cfg(feature = "std")]

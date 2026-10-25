@@ -8,7 +8,7 @@ use vecmap::VecMap;
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Modify, Remove, Set};
+use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Modify, Remove, Set, WithCapacity};
 
 impl<K, V> Container for VecMap<K, V> {
     type Value = V;
@@ -16,6 +16,13 @@ impl<K, V> Container for VecMap<K, V> {
 
 impl<K, V> Keyed for VecMap<K, V> {
     type Key = K;
+}
+
+impl<K, V> WithCapacity for VecMap<K, V> {
+    #[inline(always)]
+    fn with_capacity(capacity: usize) -> Self {
+        VecMap::with_capacity(capacity)
+    }
 }
 
 impl<K: Eq, Q: Eq + ?Sized, V> ContainsKey<Q> for VecMap<K, V>

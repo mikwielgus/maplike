@@ -6,7 +6,9 @@ use slab::Slab;
 
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Push, Put, Remove, Set, WithOne};
+use crate::ops::{
+    Clear, ContainsKey, Get, Len, Modify, Push, Put, Remove, Set, WithCapacity, WithOne,
+};
 
 impl<V> Container for Slab<V> {
     type Value = V;
@@ -14,6 +16,13 @@ impl<V> Container for Slab<V> {
 
 impl<V> Keyed for Slab<V> {
     type Key = usize;
+}
+
+impl<V> WithCapacity for Slab<V> {
+    #[inline(always)]
+    fn with_capacity(capacity: usize) -> Self {
+        Slab::with_capacity(capacity)
+    }
 }
 
 impl<V> WithOne<V> for Slab<V> {

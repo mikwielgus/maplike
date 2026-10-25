@@ -7,7 +7,8 @@ use alloc_::collections::VecDeque;
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
 use crate::ops::{
-    Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, ShiftRemove, WithOne,
+    Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, ShiftRemove, WithCapacity,
+    WithOne,
 };
 
 impl<V> Container for VecDeque<V> {
@@ -16,6 +17,13 @@ impl<V> Container for VecDeque<V> {
 
 impl<V> Keyed for VecDeque<V> {
     type Key = usize;
+}
+
+impl<V> WithCapacity for VecDeque<V> {
+    #[inline(always)]
+    fn with_capacity(capacity: usize) -> Self {
+        VecDeque::with_capacity(capacity)
+    }
 }
 
 impl<V> WithOne<V> for VecDeque<V> {
