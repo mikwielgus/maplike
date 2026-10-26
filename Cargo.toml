@@ -100,7 +100,7 @@ document-features = { version = "0.2", optional = true }
 geo-types = { version = "0.7", optional = true, default-features = false }
 hashbrown = { version = "0.17", optional = true, default-features = false, features = ["default-hasher", "equivalent", "inline-more"] }
 indexmap = { version = "2.14", optional = true }
-vecmap = { package = "vecmap-rs", version = "0.2", optional = true, default-features = false }
+vecmap = { package = "vecmap-rs", version = "0.3", optional = true, default-features = false }
 rstar = { version = "0.13", optional = true }
 slab = { version = "0.4", optional = true, default-features = false }
 slotmap = { version = "1.1", optional = true, default-features = false }
@@ -114,7 +114,7 @@ serde = { version = "1.0", optional = true, default-features = false, features =
 [dev-dependencies]
 hashbrown = { version = "0.17", default-features = false, features = ["default-hasher", "equivalent", "inline-more"] }
 indexmap = "2.14"
-vecmap = { package = "vecmap-rs", version = "0.2", default-features = false }
+vecmap = { package = "vecmap-rs", version = "0.3", default-features = false }
 slab = { version = "0.4", default-features = false }
 slotmap = { version = "1", default-features = false }
 stable-vec = "0.4"
