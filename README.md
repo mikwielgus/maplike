@@ -46,7 +46,7 @@ implementing many-to-many bidirectional map using two antiparallel internal
 containers chosen by the user;
 - [`rstared`](https://github.com/mikwielgus/rstared), a simple Rust decorator to
 add a passively listening R-tree (`rstar::RTree`) to many standard library and
-third-party collection types.
+third-party collection types;
 - [`dcel`](https://github.com/mikwielgus/dcel), a crate that implements the
 half-edge data structure (aka. doubly connected edge list, DCEL) generically
 over its underlying containers.
@@ -391,3 +391,9 @@ Because of that, we do not implement
 for `Slab`, `SlotMap`, or `DenseSlotMap`, unlike other traits (and therefore
 they are also not
 [`Maplike`](https://docs.rs/maplike/latest/maplike/abc/trait.Maplike.html)).
+
+## Feature flags
+
+The feature flags are [documented at
+docs.rs](https://docs.rs/maplike/latest/maplike/#feature-flags).
+
