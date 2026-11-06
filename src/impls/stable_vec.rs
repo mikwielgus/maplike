@@ -7,7 +7,9 @@ use stable_vec::StableVecFacade;
 use crate::abc::{Container, Keyed};
 use crate::ctors::{WithCapacity, WithOne};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove, Set};
+use crate::ops::{
+    CheckedInsert, Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove, Set,
+};
 
 impl<V, C: stable_vec::core::Core<V>> Container for StableVecFacade<V, C> {
     type Value = V;
@@ -74,6 +76,17 @@ impl<V, C: stable_vec::core::Core<V>> Insert<usize> for StableVecFacade<V, C> {
     fn insert(&mut self, index: usize, value: V) -> Option<V> {
         self.reserve_for(index);
         StableVecFacade::insert(self, index, value)
+    }
+}
+
+impl<V, C: stable_vec::core::Core<V>> CheckedInsert<usize> for StableVecFacade<V, C> {
+    type Output = Option<V>;
+
+    #[inline(always)]
+    fn checked_insert(&mut self, index: usize, value: V) -> Option<Self::Output> {
+        self.reserve_for(index);
+
+        Some(StableVecFacade::insert(self, index, value))
     }
 }
 

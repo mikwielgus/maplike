@@ -12,7 +12,9 @@ use slotmap::SparseSecondaryMap;
 use crate::abc::{Container, Keyed};
 use crate::ctors::{WithCapacity, WithCapacityAndHasher, WithHasher, WithOne};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove, Set};
+use crate::ops::{
+    CheckedInsert, Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove, Set,
+};
 
 impl<K: Key, V> Container for SlotMap<K, V> {
     type Value = V;
@@ -337,6 +339,15 @@ impl<K: Key, V> Insert<K> for SecondaryMap<K, V> {
     }
 }
 
+impl<K: Key, V> CheckedInsert<K> for SecondaryMap<K, V> {
+    type Output = Option<V>;
+
+    #[inline(always)]
+    fn checked_insert(&mut self, key: K, value: V) -> Option<Self::Output> {
+        Some(SecondaryMap::insert(self, key, value))
+    }
+}
+
 impl<K: Key, V> Remove<K> for SecondaryMap<K, V> {
     type Output = Option<V>;
 
@@ -474,6 +485,16 @@ impl<K: Key, V, S: BuildHasher> Insert<K> for SparseSecondaryMap<K, V, S> {
     #[inline(always)]
     fn insert(&mut self, key: K, value: V) -> Option<V> {
         SparseSecondaryMap::insert(self, key, value)
+    }
+}
+
+#[cfg(feature = "std")]
+impl<K: Key, V, S: BuildHasher> CheckedInsert<K> for SparseSecondaryMap<K, V, S> {
+    type Output = Option<V>;
+
+    #[inline(always)]
+    fn checked_insert(&mut self, key: K, value: V) -> Option<Self::Output> {
+        Some(SparseSecondaryMap::insert(self, key, value))
     }
 }
 

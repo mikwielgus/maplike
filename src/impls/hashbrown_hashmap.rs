@@ -13,7 +13,7 @@ use crate::abc::{Container, Keyed};
 use crate::ctors::{WithCapacity, WithCapacityAndHasher, WithHasher};
 use crate::entry::{CombinedEntry, Entry, OccupiedEntry, VacantEntry};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Modify, Remove, Set};
+use crate::ops::{CheckedInsert, Clear, ContainsKey, Get, Insert, Len, Modify, Remove, Set};
 
 impl<K, V, S> Container for HashMap<K, V, S> {
     type Value = V;
@@ -89,6 +89,15 @@ impl<K: Eq + Hash, V, S: BuildHasher> Insert<K> for HashMap<K, V, S> {
     #[inline(always)]
     fn insert(&mut self, key: K, value: V) -> Option<V> {
         HashMap::insert(self, key, value)
+    }
+}
+
+impl<K: Eq + Hash, V, S: BuildHasher> CheckedInsert<K> for HashMap<K, V, S> {
+    type Output = Option<V>;
+
+    #[inline(always)]
+    fn checked_insert(&mut self, key: K, value: V) -> Option<Self::Output> {
+        Some(HashMap::insert(self, key, value))
     }
 }
 

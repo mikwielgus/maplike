@@ -9,7 +9,8 @@ use bidimap::{BiBTreeMap, Overwritten};
 use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
 use crate::ops::{
-    Clear, ContainsKey, Get, GetByLeft, GetByRight, Insert, Len, RemoveByLeft, RemoveByRight, Set,
+    CheckedInsert, Clear, ContainsKey, Get, GetByLeft, GetByRight, Insert, Len, RemoveByLeft,
+    RemoveByRight, Set,
 };
 
 impl<L, R> Container for BiBTreeMap<L, R> {
@@ -75,6 +76,15 @@ impl<L: Ord, R: Ord> Insert<L> for BiBTreeMap<L, R> {
     #[inline(always)]
     fn insert(&mut self, key: L, value: R) -> Overwritten<L, R> {
         BiBTreeMap::insert(self, key, value)
+    }
+}
+
+impl<L: Ord, R: Ord> CheckedInsert<L> for BiBTreeMap<L, R> {
+    type Output = Overwritten<L, R>;
+
+    #[inline(always)]
+    fn checked_insert(&mut self, key: L, value: R) -> Option<Self::Output> {
+        Some(BiBTreeMap::insert(self, key, value))
     }
 }
 

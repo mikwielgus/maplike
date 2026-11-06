@@ -9,7 +9,7 @@ use vecmap::VecSet;
 use crate::abc::{Container, Keyed};
 use crate::ctors::{WithCapacity, WithOne};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Put, Remove, Set};
+use crate::ops::{CheckedInsert, Clear, ContainsKey, Get, Insert, Len, Put, Remove, Set};
 
 impl<K> Container for VecSet<K> {
     type Value = ();
@@ -71,6 +71,15 @@ impl<K: Eq> Insert<K> for VecSet<K> {
     #[inline(always)]
     fn insert(&mut self, key: K, _value: ()) -> bool {
         VecSet::insert(self, key)
+    }
+}
+
+impl<K: Eq> CheckedInsert<K> for VecSet<K> {
+    type Output = bool;
+
+    #[inline(always)]
+    fn checked_insert(&mut self, key: K, _value: ()) -> Option<Self::Output> {
+        Some(VecSet::insert(self, key))
     }
 }
 

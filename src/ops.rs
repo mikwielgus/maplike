@@ -285,8 +285,6 @@ pub trait Modify<K: ?Sized>: Keyed {
 
 /// Insert a new key-value pair into the container at an arbitrary key.
 ///
-/// The key can but does not have to already exist in the container.
-///
 /// # Examples
 ///
 /// ```
@@ -308,9 +306,43 @@ pub trait Insert<K>: Keyed {
     type Output;
 
     /// Insert a new key-value pair into the container at an arbitrary key.
-    ///
-    /// The key can but does not have to already exist in the container.
     fn insert(&mut self, key: K, value: Self::Value) -> Self::Output;
+}
+
+/// Insert a new key-value pair into the container at an arbitrary key, without
+/// ever panicking.
+///
+/// For Rust's standard library maps and sets this is the same as a plain
+/// insert, but for `Vec`s and some heapless data structures insertion can
+/// actually fail due to running out of space.
+///
+/// # Examples
+///
+/// ```
+/// use maplike::ops::{CheckedInsert, Get};
+/// use std::collections::{BTreeMap, HashMap};
+///
+/// // Works for `HashMap`.
+/// let mut hashmap = HashMap::new();
+/// assert_eq!(hashmap.checked_insert(1, 2.0), Some(None));
+/// assert_eq!(hashmap.get(&1), Some(&2.0));
+///
+/// // Works for `BTreeMap`.
+/// let mut btreemap = BTreeMap::new();
+/// assert_eq!(btreemap.checked_insert(1, 2.0), Some(None));
+/// assert_eq!(btreemap.get(&1), Some(&2.0));
+/// ```
+pub trait CheckedInsert<K>: Keyed {
+    /// Return type of [`checked_insert`](CheckedInsert::checked_insert).
+    type Output;
+
+    /// Insert a new key-value pair into the container at an arbitrary key,
+    /// without ever panicking.
+    ///
+    /// For Rust's standard library maps and sets this is the same as a plain
+    /// insert, but for `Vec`s and some heapless data structures insertion can
+    /// actually fail due to running out of space.
+    fn checked_insert(&mut self, key: K, value: Self::Value) -> Option<Self::Output>;
 }
 
 /// Remove an element under a key from the collection, returning the value

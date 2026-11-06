@@ -13,7 +13,7 @@ use alloc_::collections::btree_map::{
 use crate::abc::{Container, Keyed};
 use crate::entry::{CombinedEntry, Entry, OccupiedEntry, VacantEntry};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Modify, Remove, Set};
+use crate::ops::{CheckedInsert, Clear, ContainsKey, Get, Insert, Len, Modify, Remove, Set};
 
 impl<K, V> Container for BTreeMap<K, V> {
     type Value = V;
@@ -71,6 +71,15 @@ impl<K: Ord, V> Insert<K> for BTreeMap<K, V> {
     #[inline(always)]
     fn insert(&mut self, key: K, value: V) -> Option<V> {
         BTreeMap::insert(self, key, value)
+    }
+}
+
+impl<K: Ord, V> CheckedInsert<K> for BTreeMap<K, V> {
+    type Output = Option<V>;
+
+    #[inline(always)]
+    fn checked_insert(&mut self, key: K, value: V) -> Option<Self::Output> {
+        Some(BTreeMap::insert(self, key, value))
     }
 }
 

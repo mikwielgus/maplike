@@ -7,7 +7,9 @@ use thunderdome::{Arena, Index};
 use crate::abc::{Container, Keyed};
 use crate::ctors::{WithCapacity, WithOne};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove, Set};
+use crate::ops::{
+    CheckedInsert, Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove, Set,
+};
 
 impl<V> Container for Arena<V> {
     type Value = V;
@@ -73,6 +75,15 @@ impl<V> Insert<Index> for Arena<V> {
     #[inline(always)]
     fn insert(&mut self, key: Index, value: V) -> Option<V> {
         Arena::insert_at(self, key, value)
+    }
+}
+
+impl<V> CheckedInsert<Index> for Arena<V> {
+    type Output = Option<V>;
+
+    #[inline(always)]
+    fn checked_insert(&mut self, key: Index, value: V) -> Option<Self::Output> {
+        Some(Arena::insert_at(self, key, value))
     }
 }
 

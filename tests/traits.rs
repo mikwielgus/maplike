@@ -15,8 +15,8 @@ use maplike::ctors::{WithCapacity, WithCapacityAndHasher, WithHasher, WithOne};
 use maplike::entry::{CombinedEntry, Entry, OccupiedEntry, VacantEntry};
 use maplike::iter::IntoIter;
 use maplike::ops::{
-    Assign, Clear, ContainsKey, Get, GetByLeft, GetByRight, Insert, Len, Modify, Pop, Push, Put,
-    Remove, RemoveByLeft, RemoveByRight, Resize, Set, ShiftRemove, SwapRemove,
+    Assign, CheckedInsert, Clear, ContainsKey, Get, GetByLeft, GetByRight, Insert, Len, Modify,
+    Pop, Push, Put, Remove, RemoveByLeft, RemoveByRight, Resize, Set, ShiftRemove, SwapRemove,
 };
 
 trait FromUsize {
@@ -184,6 +184,41 @@ where
         );
     }
     assert_eq!(c.get(&k), None);
+}
+
+fn check_checked_insert_map_at_key<K, V, C>(mut c: C, k: K)
+where
+    K: Clone + PartialEq + Debug,
+    V: FromUsize + Clone + PartialEq + Debug,
+    C: Keyed<Key = K, Value = V> + CheckedInsert<K, Output = Option<V>> + Get<K>,
+{
+    assert_eq!(c.checked_insert(k.clone(), V::from_usize(10)), Some(None));
+    assert_eq!(c.get(&k), Some(&V::from_usize(10)));
+    assert_eq!(
+        c.checked_insert(k.clone(), V::from_usize(20)),
+        Some(Some(V::from_usize(10)))
+    );
+    assert_eq!(c.get(&k), Some(&V::from_usize(20)));
+}
+
+fn check_checked_insert_map<K, V, C>(c: C)
+where
+    K: FromUsize + Clone + PartialEq + Debug,
+    V: FromUsize + Clone + PartialEq + Debug,
+    C: Keyed<Key = K, Value = V> + CheckedInsert<K, Output = Option<V>> + Get<K>,
+{
+    check_checked_insert_map_at_key(c, K::from_usize(1));
+}
+
+fn check_checked_insert_set<K, C>(mut c: C)
+where
+    K: FromUsize + Clone + PartialEq + Debug,
+    C: Keyed<Key = K, Value = ()> + CheckedInsert<K, Output = bool> + ContainsKey<K>,
+{
+    let k = K::from_usize(1);
+    assert_eq!(c.checked_insert(k.clone(), ()), Some(true));
+    assert!(c.contains_key(&k));
+    assert_eq!(c.checked_insert(k.clone(), ()), Some(false));
 }
 
 fn check_modify<K, V, C>(mut c: C)
@@ -770,6 +805,7 @@ mod std_tests {
 
     #[test]
     fn test_traits_on_hashmap() {
+        check_checked_insert_map(HashMap::<usize, i32>::new());
         check_keyed(HashMap::<usize, i32>::new(), Some(20));
         check_modify::<usize, i32, HashMap<usize, i32>>(HashMap::new());
         check_into_iter::<usize, i32, HashMap<usize, i32>>(HashMap::new());
@@ -787,6 +823,7 @@ mod std_tests {
 
     #[test]
     fn test_traits_on_hashset() {
+        check_checked_insert_set(HashSet::<usize>::new());
         check_keyed(HashSet::<usize>::new(), Some(()));
         check_into_iter::<usize, (), HashSet<usize>>(HashSet::new());
         check_with_one::<usize, (), HashSet<usize>>(7, ());
@@ -899,6 +936,7 @@ mod alloc_tests {
 
     #[test]
     fn test_traits_on_btreemap() {
+        check_checked_insert_map(BTreeMap::<usize, i32>::new());
         check_keyed(BTreeMap::<usize, i32>::new(), Some(20));
         check_modify::<usize, i32, BTreeMap<usize, i32>>(BTreeMap::new());
         check_into_iter::<usize, i32, BTreeMap<usize, i32>>(BTreeMap::new());
@@ -913,6 +951,7 @@ mod alloc_tests {
 
     #[test]
     fn test_traits_on_btreeset() {
+        check_checked_insert_set(BTreeSet::<usize>::new());
         check_keyed(BTreeSet::<usize>::new(), Some(()));
         check_into_iter::<usize, (), BTreeSet<usize>>(BTreeSet::new());
         check_with_one::<usize, (), BTreeSet<usize>>(7, ());
@@ -1053,6 +1092,9 @@ mod stable_vec_tests {
 
     #[test]
     fn test_traits_on_stable_vec() {
+        let mut v = StableVec::<i32>::new();
+        assert_eq!(v.checked_insert(2, 20), Some(None));
+        assert_eq!(v.get(2), Some(&20));
         check_keyed(StableVec::<i32>::new(), Some(20));
         check_modify::<usize, i32, StableVec<i32>>(StableVec::new());
         check_into_iter::<usize, i32, StableVec<i32>>(StableVec::new());
@@ -1117,6 +1159,7 @@ mod slotmap_tests {
         let k1 = keys.insert(());
         let k2 = keys.insert(());
 
+        check_checked_insert_map_at_key(SecondaryMap::<DefaultKey, i32>::new(), k0);
         check_with_capacity::<SecondaryMap<DefaultKey, i32>>();
         check_insert_map_with_keys(SecondaryMap::<DefaultKey, i32>::new(), k0, k1, k2);
 
@@ -1145,6 +1188,12 @@ mod slotmap_tests {
         check_with_capacity_and_hasher::<_, SparseSecondaryMap<DefaultKey, i32>>(
             std::collections::hash_map::RandomState::new(),
         );
+        check_checked_insert_map_at_key(
+            SparseSecondaryMap::<DefaultKey, i32, _>::with_hasher(std::hash::BuildHasherDefault::<
+                std::hash::DefaultHasher,
+            >::default()),
+            k0,
+        );
         check_insert_map_with_keys(
             SparseSecondaryMap::<DefaultKey, i32, _>::with_hasher(std::hash::BuildHasherDefault::<
                 std::hash::DefaultHasher,
@@ -1153,6 +1202,7 @@ mod slotmap_tests {
             k1,
             k2,
         );
+        check_checked_insert_map_at_key(SparseSecondaryMap::<DefaultKey, i32>::new(), k0);
         check_insert_map_with_keys(SparseSecondaryMap::<DefaultKey, i32>::new(), k0, k1, k2);
 
         let mut x: SparseSecondaryMap<DefaultKey, i32> = SparseSecondaryMap::new();
@@ -1171,6 +1221,10 @@ mod thunderdome_tests {
 
     #[test]
     fn test_traits_on_arena() {
+        let mut arena = Arena::<i32>::new();
+        let index = arena.insert(0);
+        assert_eq!(arena.checked_insert(index, 10), Some(Some(0)));
+        assert_eq!(arena.get(index), Some(&10));
         check_push_put::<thunderdome::Index, i32, Arena<i32>>(Arena::new());
         check_with_one::<i32, i32, Arena<i32>>(30, 30);
         check_with_capacity::<Arena<i32>>();
@@ -1333,6 +1387,8 @@ mod rstar_tests {
 
     #[test]
     fn test_traits_on_rtree() {
+        let mut t = RTree::<(i32, i32)>::new();
+        assert_eq!(t.checked_insert((1, 2), ()), Some(()));
         check_keyed(RTree::<(i32, i32)>::new(), Some(()));
         check_into_iter::<(i32, i32), (), RTree<(i32, i32)>>(RTree::new());
         check_with_one::<(i32, i32), (), RTree<(i32, i32)>>((3, 4), ());
@@ -1393,6 +1449,7 @@ mod hashbrown_tests {
 
     #[test]
     fn test_traits_on_hashbrown_hashmap() {
+        check_checked_insert_map(HashMap::<usize, i32>::new());
         check_keyed(HashMap::<usize, i32>::new(), Some(20));
         check_modify::<usize, i32, HashMap<usize, i32>>(HashMap::new());
         check_into_iter::<usize, i32, HashMap<usize, i32>>(HashMap::new());
@@ -1410,6 +1467,7 @@ mod hashbrown_tests {
 
     #[test]
     fn test_traits_on_hashbrown_hashset() {
+        check_checked_insert_set(HashSet::<usize>::new());
         check_keyed(HashSet::<usize>::new(), Some(()));
         check_into_iter::<usize, (), HashSet<usize>>(HashSet::new());
         check_with_one::<usize, (), HashSet<usize>>(7, ());
@@ -1466,6 +1524,7 @@ mod indexmap_tests {
 
     #[test]
     fn test_traits_on_indexmap() {
+        check_checked_insert_map(IndexMap::<usize, i32>::new());
         check_keyed(IndexMap::<usize, i32>::new(), Some(20));
         check_modify::<usize, i32, IndexMap<usize, i32>>(IndexMap::new());
         check_into_iter::<usize, i32, IndexMap<usize, i32>>(IndexMap::new());
@@ -1489,6 +1548,7 @@ mod indexmap_tests {
 
     #[test]
     fn test_traits_on_indexset() {
+        check_checked_insert_set(IndexSet::<usize>::new());
         check_keyed(IndexSet::<usize>::new(), Some(()));
         check_into_iter::<usize, (), IndexSet<usize>>(IndexSet::new());
         check_with_one::<usize, (), IndexSet<usize>>(7, ());
@@ -1512,6 +1572,7 @@ mod vecmap_tests {
 
     #[test]
     fn test_traits_on_vecmap() {
+        check_checked_insert_map(VecMap::<usize, i32>::new());
         check_keyed(VecMap::<usize, i32>::new(), Some(20));
         check_modify::<usize, i32, VecMap<usize, i32>>(VecMap::new());
         check_into_iter::<usize, i32, VecMap<usize, i32>>(VecMap::new());
@@ -1525,6 +1586,7 @@ mod vecmap_tests {
 
     #[test]
     fn test_traits_on_vecset() {
+        check_checked_insert_set(VecSet::<usize>::new());
         check_keyed(VecSet::<usize>::new(), Some(()));
         check_into_iter::<usize, (), VecSet<usize>>(VecSet::new());
         check_with_one::<usize, (), VecSet<usize>>(7, ());
@@ -1548,6 +1610,7 @@ mod bidimap_tests {
             + GetByRight<String>
             + Set<String, Output = Overwritten<String, i32>>
             + Insert<String, Output = Overwritten<String, i32>>
+            + CheckedInsert<String, Output = Overwritten<String, i32>>
             + RemoveByLeft<str>
             + RemoveByRight<String>
             + Clear
@@ -1557,6 +1620,13 @@ mod bidimap_tests {
         assert_eq!(c.insert("a".to_string(), 1), Overwritten::Neither);
         assert_eq!(c.insert("b".to_string(), 2), Overwritten::Neither);
         assert_eq!(Len::len(&c), 2);
+
+        assert_eq!(
+            c.checked_insert("c".to_string(), 3),
+            Some(Overwritten::Neither)
+        );
+        assert_eq!(Len::len(&c), 3);
+        assert_eq!(c.get_by_left("c"), Some(&3));
 
         assert_eq!(c.get(&"a".to_string()), Some(&1));
         assert_eq!(c.get_by_left("a"), Some(&1));
@@ -1570,13 +1640,15 @@ mod bidimap_tests {
         assert_eq!(c.get_by_right(&11), Some(&"a".to_string()));
 
         assert_eq!(c.remove_by_left("a"), Some(11));
-        assert_eq!(Len::len(&c), 1);
+        assert_eq!(Len::len(&c), 2);
         assert_eq!(c.get_by_left("a"), None);
 
         assert_eq!(c.remove_by_right(&2), Some("b".to_string()));
-        assert_eq!(Len::len(&c), 0);
+        assert_eq!(Len::len(&c), 1);
+        assert_eq!(c.get_by_left("c"), Some(&3));
         c.clear();
         assert_eq!(c.get_by_left("b"), None);
+        assert_eq!(c.get_by_left("c"), None);
     }
 
     #[test]

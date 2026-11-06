@@ -12,7 +12,8 @@ use crate::abc::{Container, Keyed};
 use crate::ctors::WithCapacity;
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
 use crate::ops::{
-    Clear, ContainsKey, Get, GetByLeft, GetByRight, Insert, Len, RemoveByLeft, RemoveByRight, Set,
+    CheckedInsert, Clear, ContainsKey, Get, GetByLeft, GetByRight, Insert, Len, RemoveByLeft,
+    RemoveByRight, Set,
 };
 
 impl<L, R, LS, RS> Container for BiHashMap<L, R, LS, RS> {
@@ -95,6 +96,17 @@ impl<L: Eq + Hash, R: Eq + Hash, LS: BuildHasher, RS: BuildHasher> Insert<L>
     #[inline(always)]
     fn insert(&mut self, key: L, value: R) -> Overwritten<L, R> {
         BiHashMap::insert(self, key, value)
+    }
+}
+
+impl<L: Eq + Hash, R: Eq + Hash, LS: BuildHasher, RS: BuildHasher> CheckedInsert<L>
+    for BiHashMap<L, R, LS, RS>
+{
+    type Output = Overwritten<L, R>;
+
+    #[inline(always)]
+    fn checked_insert(&mut self, key: L, value: R) -> Option<Self::Output> {
+        Some(BiHashMap::insert(self, key, value))
     }
 }
 

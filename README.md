@@ -199,6 +199,7 @@ array-like, and vec-like data structures:
 [`.set()`](https://docs.rs/maplike/latest/maplike/ops/trait.Set.html#tymethod.set),
 [`.modify()`](https://docs.rs/maplike/latest/maplike/ops/trait.Modify.html#tymethod.modify),
 [`.insert()`](https://docs.rs/maplike/latest/maplike/ops/trait.Insert.html#tymethod.insert),
+[`.checked_insert()`](https://docs.rs/maplike/latest/maplike/ops/trait.CheckedInsert.html#tymethod.checked_insert),
 [`.remove()`](https://docs.rs/maplike/latest/maplike/ops/trait.Remove.html#tymethod.remove),
 [`.swap_remove()`](https://docs.rs/maplike/latest/maplike/ops/trait.SwapRemove.html#tymethod.swap_remove),
 [`.shift_remove()`](https://docs.rs/maplike/latest/maplike/ops/trait.ShiftRemove.html#tymethod.shift_remove),
@@ -316,12 +317,12 @@ trait implementations for data structures from certain external crates:
 - [`rstar::RTree`](https://docs.rs/rstar/0.13.0/rstar/index.html), gated by the
   `rstar` feature flag;
 - [`slab::Slab`](https://docs.rs/slab/latest/slab/), gated by the `slab`
-  feature flag (`Insert` is not implemented; see
+  feature flag (`Insert` and `CheckedInsert` are not implemented; see
   [Technical sidenotes](#technical-sidenotes));
 - [`slotmap::SlotMap`](https://docs.rs/slotmap/latest/slotmap/struct.SlotMap.html),
   [`slotmap::DenseSlotMap`](https://docs.rs/slotmap/latest/slotmap/struct.DenseSlotMap.html),
   and [`slotmap::SecondaryMap`](https://docs.rs/slotmap/latest/slotmap/struct.SecondaryMap.html),
-  gated by the `slotmap` feature flag (`Insert` is not implemented for
+  gated by the `slotmap` feature flag (`Insert` and `CheckedInsert` are not implemented for
   `SlotMap` or `DenseSlotMap`; see [Technical sidenotes](#technical-sidenotes)),
   and also
   [`slotmap::SparseSecondaryMap`](https://docs.rs/slotmap/latest/slotmap/struct.SparseSecondaryMap.html),
@@ -392,6 +393,7 @@ arbitrary key.
 
 Because of that, we do not implement
 [`Insert`](https://docs.rs/maplike/latest/maplike/ops/trait.Insert.html)
+or [`CheckedInsert`](https://docs.rs/maplike/latest/maplike/ops/trait.CheckedInsert.html)
 for `Slab`, `SlotMap`, or `DenseSlotMap`, unlike other traits (and therefore
 they are also not
 [`Maplike`](https://docs.rs/maplike/latest/maplike/abc/trait.Maplike.html)).
