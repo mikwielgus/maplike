@@ -268,6 +268,10 @@ implementations:
   gated by the `std` feature (enabled by default);
 - [`Option`](https://doc.rust-lang.org/std/option/enum.Option.html), not feature-gated;
 
+Naturally, since `HashMap` and `HashSet` are supported, so are aliases
+[`rustc_hash::FxHashMap`](https://docs.rs/rustc-hash/2.1.3/rustc_hash/type.FxHashMap.html) and
+[`rustc_hash::FxHashSet`](https://docs.rs/rustc-hash/2.1.3/rustc_hash/type.FxHashSet.html).
+
 ### Primitives
 
 All Rust's scalar types (`i8`, `i16`, `i32`, `i64`, `i128`, `isize`, `u8`,
