@@ -293,12 +293,12 @@ pub trait Modify<K: ?Sized>: Keyed {
 ///
 /// // Works for `HashMap`.
 /// let mut hashmap = HashMap::new();
-/// hashmap.insert(1, 2.0);
+/// Insert::insert(&mut hashmap, 1, 2.0);
 /// assert_eq!(hashmap.get(&1), Some(&2.0));
 ///
 /// // Works for `BTreeMap`.
 /// let mut btreemap = BTreeMap::new();
-/// btreemap.insert(1, 2.0);
+/// Insert::insert(&mut btreemap, 1, 2.0);
 /// assert_eq!(btreemap.get(&1), Some(&2.0));
 /// ```
 pub trait Insert<K>: Keyed {
@@ -333,7 +333,7 @@ pub trait Insert<K>: Keyed {
 /// assert_eq!(btreemap.get(&1), Some(&2.0));
 /// ```
 pub trait CheckedInsert<K>: Keyed {
-    /// Return type of [`checked_insert`](CheckedInsert::checked_insert).
+    /// Inner return type of [`checked_insert`](CheckedInsert::checked_insert).
     type Output;
 
     /// Insert a new key-value pair into the container at an arbitrary key,
@@ -620,6 +620,33 @@ pub trait Push<K>: Keyed {
     /// Insert a value into the collection without specifying a key, returning
     /// the key that was automatically generated.
     fn push(&mut self, value: Self::Value) -> K;
+}
+
+/// Insert a value into the collection without specifying a key, returning
+/// the key that was automatically generated. Never panics.
+///
+/// # Examples
+///
+/// ```
+/// use maplike::ops::{CheckedPush, Get};
+/// use std::collections::VecDeque;
+///
+/// // Works for `Vec`.
+/// let mut vec = Vec::new();
+/// assert_eq!(vec.checked_push(1.0), Some(0));
+/// assert_eq!(vec.checked_push(2.0), Some(1));
+/// assert_eq!(vec.get(&1), Some(&2.0));
+///
+/// // Works for `VecDeque`.
+/// let mut deque = VecDeque::new();
+/// assert_eq!(deque.checked_push(1.0), Some(0));
+/// assert_eq!(deque.checked_push(2.0), Some(1));
+/// assert_eq!(Get::get(&deque, &1), Some(&2.0));
+/// ```
+pub trait CheckedPush<K>: Keyed {
+    /// Insert a value into the collection without specifying a key, returning
+    /// the key that was automatically generated. Never panics.
+    fn checked_push(&mut self, value: Self::Value) -> Option<K>;
 }
 
 /// Remove the last element of the collection, returning it.

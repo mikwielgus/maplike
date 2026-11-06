@@ -8,7 +8,8 @@ use crate::abc::{Container, Keyed};
 use crate::ctors::{WithCapacity, WithOne};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
 use crate::ops::{
-    CheckedInsert, Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove, Set,
+    CheckedInsert, CheckedPush, Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove,
+    Set,
 };
 
 impl<V, C: stable_vec::core::Core<V>> Container for StableVecFacade<V, C> {
@@ -104,6 +105,13 @@ impl<V, C: stable_vec::core::Core<V>> Push<usize> for StableVecFacade<V, C> {
     #[inline(always)]
     fn push(&mut self, value: V) -> usize {
         StableVecFacade::push(self, value)
+    }
+}
+
+impl<V, C: stable_vec::core::Core<V>> CheckedPush<usize> for StableVecFacade<V, C> {
+    #[inline(always)]
+    fn checked_push(&mut self, value: V) -> Option<usize> {
+        Some(Push::push(self, value))
     }
 }
 

@@ -15,8 +15,9 @@ use maplike::ctors::{WithCapacity, WithCapacityAndHasher, WithHasher, WithOne};
 use maplike::entry::{CombinedEntry, Entry, OccupiedEntry, VacantEntry};
 use maplike::iter::IntoIter;
 use maplike::ops::{
-    Assign, CheckedInsert, Clear, ContainsKey, Get, GetByLeft, GetByRight, Insert, Len, Modify,
-    Pop, Push, Put, Remove, RemoveByLeft, RemoveByRight, Resize, Set, ShiftRemove, SwapRemove,
+    Assign, CheckedInsert, CheckedPush, Clear, ContainsKey, Get, GetByLeft, GetByRight, Insert,
+    Len, Modify, Pop, Push, Put, Remove, RemoveByLeft, RemoveByRight, Resize, Set, ShiftRemove,
+    SwapRemove,
 };
 
 trait FromUsize {
@@ -472,6 +473,60 @@ where
 
     c.clear();
     assert_eq!(Len::len(&c), 0);
+}
+
+fn check_checked_push_veclike<K, V, C>(mut c: C)
+where
+    K: Clone + PartialEq + Debug,
+    V: FromUsize + Clone + PartialEq + Debug,
+    C: Keyed<Key = K, Value = V> + Push<K> + CheckedPush<K> + Get<K> + Len,
+{
+    assert_eq!(Len::len(&c), 0);
+
+    let k0 = c
+        .checked_push(V::from_usize(10))
+        .expect("expected checked_push to succeed");
+    let k1 = c
+        .checked_push(V::from_usize(20))
+        .expect("expected checked_push to succeed");
+    assert_eq!(c.get(&k0), Some(&V::from_usize(10)));
+    assert_eq!(c.get(&k1), Some(&V::from_usize(20)));
+    assert_eq!(Len::len(&c), 2);
+}
+
+fn check_checked_push_arrayvec_cap<T, const CAP: usize>()
+where
+    T: FromUsize + Clone + PartialEq + Debug,
+{
+    use arrayvec::ArrayVec;
+
+    let mut c = ArrayVec::<T, CAP>::new();
+    for i in 0..CAP {
+        assert_eq!(c.checked_push(T::from_usize(i)), Some(i));
+    }
+    assert_eq!(c.checked_push(T::from_usize(999)), None);
+    assert_eq!(Len::len(&c), CAP);
+}
+
+fn check_checked_push_tinyvec_arrayvec_cap() {
+    use tinyvec::ArrayVec;
+
+    let mut c = ArrayVec::<[i32; 4]>::from_array_empty([0; 4]);
+    for i in 0..4 {
+        assert_eq!(c.checked_push(i as i32), Some(i));
+    }
+    assert_eq!(c.checked_push(999), None);
+    assert_eq!(Len::len(&c), 4);
+}
+
+fn check_checked_push_arraystring_until_full<const CAP: usize>() {
+    use arrayvec::ArrayString;
+
+    let mut s = ArrayString::<CAP>::new();
+
+    while s.checked_push('a').is_some() {}
+
+    assert_eq!(s.checked_push('a'), None);
 }
 
 fn check_swap_remove<V, C>(mut c: C)
@@ -960,6 +1015,7 @@ mod alloc_tests {
 
     #[test]
     fn test_traits_on_vec() {
+        check_checked_push_veclike::<usize, i32, Vec<i32>>(Vec::new());
         check_push_put::<usize, i32, Vec<i32>>(Vec::new());
         check_with_one::<i32, i32, Vec<i32>>(30, 30);
         check_with_capacity::<Vec<i32>>();
@@ -981,6 +1037,7 @@ mod alloc_tests {
     fn test_traits_on_vecdeque() {
         use std::collections::VecDeque;
 
+        check_checked_push_veclike::<usize, i32, VecDeque<i32>>(VecDeque::new());
         check_push_put::<usize, i32, VecDeque<i32>>(VecDeque::new());
         check_with_one::<i32, i32, VecDeque<i32>>(30, 30);
         check_with_capacity::<VecDeque<i32>>();
@@ -1001,6 +1058,7 @@ mod alloc_tests {
     fn test_traits_on_linkedlist() {
         use std::collections::LinkedList;
 
+        check_checked_push_veclike::<usize, i32, LinkedList<i32>>(LinkedList::new());
         check_push_put::<usize, i32, LinkedList<i32>>(LinkedList::new());
         check_with_one::<i32, i32, LinkedList<i32>>(30, 30);
         check_vec::<i32, LinkedList<i32>>(LinkedList::new());
@@ -1095,6 +1153,7 @@ mod stable_vec_tests {
         let mut v = StableVec::<i32>::new();
         assert_eq!(v.checked_insert(2, 20), Some(None));
         assert_eq!(v.get(2), Some(&20));
+        check_checked_push_veclike::<usize, i32, StableVec<i32>>(StableVec::new());
         check_keyed(StableVec::<i32>::new(), Some(20));
         check_modify::<usize, i32, StableVec<i32>>(StableVec::new());
         check_into_iter::<usize, i32, StableVec<i32>>(StableVec::new());
@@ -1119,6 +1178,7 @@ mod slab_tests {
 
     #[test]
     fn test_traits_on_slab() {
+        check_checked_push_veclike::<usize, i32, Slab<i32>>(Slab::new());
         check_push_put::<usize, i32, Slab<i32>>(Slab::new());
         check_with_one::<i32, i32, Slab<i32>>(30, 30);
         check_with_capacity::<Slab<i32>>();
@@ -1134,6 +1194,7 @@ mod slotmap_tests {
 
     #[test]
     fn test_traits_on_slotmap() {
+        check_checked_push_veclike::<DefaultKey, i32, SlotMap<DefaultKey, i32>>(SlotMap::new());
         check_push_put::<DefaultKey, i32, SlotMap<DefaultKey, i32>>(SlotMap::new());
         check_with_one::<i32, i32, SlotMap<DefaultKey, i32>>(30, 30);
         check_with_capacity::<SlotMap<DefaultKey, i32>>();
@@ -1143,6 +1204,9 @@ mod slotmap_tests {
 
     #[test]
     fn test_traits_on_dense_slotmap() {
+        check_checked_push_veclike::<DefaultKey, i32, DenseSlotMap<DefaultKey, i32>>(
+            DenseSlotMap::new(),
+        );
         check_push_put::<DefaultKey, i32, DenseSlotMap<DefaultKey, i32>>(DenseSlotMap::new());
         check_with_one::<i32, i32, DenseSlotMap<DefaultKey, i32>>(30, 30);
         check_with_capacity::<DenseSlotMap<DefaultKey, i32>>();
@@ -1225,6 +1289,7 @@ mod thunderdome_tests {
         let index = arena.insert(0);
         assert_eq!(arena.checked_insert(index, 10), Some(Some(0)));
         assert_eq!(arena.get(index), Some(&10));
+        check_checked_push_veclike::<thunderdome::Index, i32, Arena<i32>>(Arena::new());
         check_push_put::<thunderdome::Index, i32, Arena<i32>>(Arena::new());
         check_with_one::<i32, i32, Arena<i32>>(30, 30);
         check_with_capacity::<Arena<i32>>();
@@ -1241,6 +1306,8 @@ mod arrayvec_tests {
 
     #[test]
     fn test_traits_on_arrayvec() {
+        check_checked_push_veclike::<usize, i32, ArrayVec<i32, 8>>(ArrayVec::new());
+        check_checked_push_arrayvec_cap::<i32, 4>();
         check_push_put::<usize, i32, ArrayVec<i32, 8>>(ArrayVec::new());
         check_with_one::<i32, i32, ArrayVec<i32, 8>>(30, 30);
         check_vec::<i32, ArrayVec<i32, 8>>(ArrayVec::new());
@@ -1262,6 +1329,8 @@ mod arrayvec_tests {
 
     #[test]
     fn test_traits_on_arraystring() {
+        check_checked_push_arraystring_until_full::<8>();
+
         let mut s: ArrayString<8> = ArrayString::new();
         assert_eq!(Push::push(&mut s, 'a'), 0);
         assert_eq!(Push::push(&mut s, 'b'), 1);
@@ -1292,6 +1361,7 @@ mod smallvec_tests {
 
     #[test]
     fn test_traits_on_smallvec() {
+        check_checked_push_veclike::<usize, i32, SmallVec<[i32; 8]>>(SmallVec::new());
         check_push_put::<usize, i32, SmallVec<[i32; 8]>>(SmallVec::new());
         check_with_one::<i32, i32, SmallVec<[i32; 8]>>(30, 30);
         check_with_capacity::<SmallVec<[i32; 8]>>();
@@ -1321,6 +1391,7 @@ mod thin_vec_tests {
 
     #[test]
     fn test_traits_on_thin_vec() {
+        check_checked_push_veclike::<usize, i32, ThinVec<i32>>(ThinVec::new());
         check_push_put::<usize, i32, ThinVec<i32>>(ThinVec::new());
         check_with_one::<i32, i32, ThinVec<i32>>(30, 30);
         check_with_capacity::<ThinVec<i32>>();
@@ -1351,6 +1422,8 @@ mod tinyvec_tests {
 
     #[test]
     fn test_traits_on_arrayvec() {
+        check_checked_push_veclike::<usize, i32, ArrayVec<[i32; 8]>>(ArrayVec::new());
+        check_checked_push_tinyvec_arrayvec_cap();
         check_push_put::<usize, i32, ArrayVec<[i32; 8]>>(ArrayVec::new());
         check_with_one::<i32, i32, ArrayVec<[i32; 8]>>(30, 30);
         check_vec::<i32, ArrayVec<[i32; 8]>>(ArrayVec::new());
@@ -1364,6 +1437,7 @@ mod tinyvec_tests {
 
     #[test]
     fn test_traits_on_tinyvec() {
+        check_checked_push_veclike::<usize, i32, TinyVec<[i32; 8]>>(TinyVec::new());
         check_push_put::<usize, i32, TinyVec<[i32; 8]>>(TinyVec::new());
         check_with_one::<i32, i32, TinyVec<[i32; 8]>>(30, 30);
         check_with_capacity::<TinyVec<[i32; 8]>>();
@@ -1805,6 +1879,7 @@ mod geo_tests {
             coord! { x: 30, y: 0 },
             coord! { x: 30, y: 0 },
         );
+        check_checked_push_veclike::<usize, Coord<i32>, LineString<i32>>(LineString::new(vec![]));
         check_vec::<Coord<i32>, LineString<i32>>(LineString::new(vec![]));
         check_resize::<Coord<i32>, LineString<i32>>(LineString::new(vec![]));
         check_assign(
@@ -1816,6 +1891,7 @@ mod geo_tests {
             Point::new(30, 0),
             Point::new(30, 0),
         );
+        check_checked_push_veclike::<usize, Point<i32>, MultiPoint<i32>>(MultiPoint::new(vec![]));
         check_vec::<Point<i32>, MultiPoint<i32>>(MultiPoint::new(vec![]));
         check_assign(
             MultiPoint::new(vec![Point::new(1, 0)]),
@@ -1824,6 +1900,9 @@ mod geo_tests {
 
         let ls = |x: i32| line_string![(x: x, y: 0), (x: x + 1, y: 0)];
         check_with_one::<LineString<i32>, LineString<i32>, MultiLineString<i32>>(ls(30), ls(30));
+        check_checked_push_veclike::<usize, LineString<i32>, MultiLineString<i32>>(
+            MultiLineString::new(vec![]),
+        );
         check_vec::<LineString<i32>, MultiLineString<i32>>(MultiLineString::new(vec![]));
 
         let poly = |x: i32| {
@@ -1838,11 +1917,17 @@ mod geo_tests {
             )
         };
         check_with_one::<Polygon<i32>, Polygon<i32>, MultiPolygon<i32>>(poly(30), poly(30));
+        check_checked_push_veclike::<usize, Polygon<i32>, MultiPolygon<i32>>(MultiPolygon::new(
+            vec![],
+        ));
         check_vec::<Polygon<i32>, MultiPolygon<i32>>(MultiPolygon::new(vec![]));
 
         check_with_one::<Geometry<i32>, Geometry<i32>, GeometryCollection<i32>>(
             Geometry::Point(Point::new(30, 0)),
             Geometry::Point(Point::new(30, 0)),
+        );
+        check_checked_push_veclike::<usize, Geometry<i32>, GeometryCollection<i32>>(
+            GeometryCollection::new_from(vec![]),
         );
         check_vec::<Geometry<i32>, GeometryCollection<i32>>(GeometryCollection::new_from(vec![]));
     }

@@ -13,7 +13,8 @@ use crate::abc::{Container, Keyed};
 use crate::ctors::{WithCapacity, WithCapacityAndHasher, WithHasher, WithOne};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
 use crate::ops::{
-    CheckedInsert, Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove, Set,
+    CheckedInsert, CheckedPush, Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove,
+    Set,
 };
 
 impl<K: Key, V> Container for SlotMap<K, V> {
@@ -87,6 +88,13 @@ impl<K: Key, V> Push<K> for SlotMap<K, V> {
     #[inline(always)]
     fn push(&mut self, value: V) -> K {
         SlotMap::insert(self, value)
+    }
+}
+
+impl<K: Key, V> CheckedPush<K> for SlotMap<K, V> {
+    #[inline(always)]
+    fn checked_push(&mut self, value: V) -> Option<K> {
+        Some(Push::push(self, value))
     }
 }
 
@@ -220,6 +228,13 @@ impl<K: Key, V> Push<K> for DenseSlotMap<K, V> {
     #[inline(always)]
     fn push(&mut self, value: V) -> K {
         DenseSlotMap::insert(self, value)
+    }
+}
+
+impl<K: Key, V> CheckedPush<K> for DenseSlotMap<K, V> {
+    #[inline(always)]
+    fn checked_push(&mut self, value: V) -> Option<K> {
+        Some(Push::push(self, value))
     }
 }
 

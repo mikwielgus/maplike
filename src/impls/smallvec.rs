@@ -7,7 +7,9 @@ use smallvec::{Array, SmallVec};
 use crate::abc::{Container, Keyed};
 use crate::ctors::{WithCapacity, WithOne};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, ShiftRemove};
+use crate::ops::{
+    CheckedPush, Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, ShiftRemove,
+};
 
 impl<A: Array> Container for SmallVec<A> {
     type Value = A::Item;
@@ -73,6 +75,13 @@ impl<A: Array> Push<usize> for SmallVec<A> {
         SmallVec::push(self, value);
 
         self.len() - 1
+    }
+}
+
+impl<A: Array> CheckedPush<usize> for SmallVec<A> {
+    #[inline(always)]
+    fn checked_push(&mut self, value: A::Item) -> Option<usize> {
+        Some(Push::push(self, value))
     }
 }
 

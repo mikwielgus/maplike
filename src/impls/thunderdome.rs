@@ -8,7 +8,8 @@ use crate::abc::{Container, Keyed};
 use crate::ctors::{WithCapacity, WithOne};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
 use crate::ops::{
-    CheckedInsert, Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove, Set,
+    CheckedInsert, CheckedPush, Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove,
+    Set,
 };
 
 impl<V> Container for Arena<V> {
@@ -100,6 +101,13 @@ impl<V> Push<Index> for Arena<V> {
     #[inline(always)]
     fn push(&mut self, value: V) -> Index {
         Arena::insert(self, value)
+    }
+}
+
+impl<V> CheckedPush<Index> for Arena<V> {
+    #[inline(always)]
+    fn checked_push(&mut self, value: V) -> Option<Index> {
+        Some(Push::push(self, value))
     }
 }
 

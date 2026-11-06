@@ -8,7 +8,8 @@ use crate::abc::{Container, Keyed};
 use crate::ctors::{WithCapacity, WithOne};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
 use crate::ops::{
-    Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, ShiftRemove, SwapRemove,
+    CheckedPush, Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, ShiftRemove,
+    SwapRemove,
 };
 
 impl<V> Container for Vec<V> {
@@ -75,6 +76,13 @@ impl<V> Push<usize> for Vec<V> {
         Vec::push(self, value);
 
         self.len() - 1
+    }
+}
+
+impl<V> CheckedPush<usize> for Vec<V> {
+    #[inline(always)]
+    fn checked_push(&mut self, value: V) -> Option<usize> {
+        Some(Push::push(self, value))
     }
 }
 

@@ -204,6 +204,7 @@ array-like, and vec-like data structures:
 [`.swap_remove()`](https://docs.rs/maplike/latest/maplike/ops/trait.SwapRemove.html#tymethod.swap_remove),
 [`.shift_remove()`](https://docs.rs/maplike/latest/maplike/ops/trait.ShiftRemove.html#tymethod.shift_remove),
 [`.push()`](https://docs.rs/maplike/latest/maplike/ops/trait.Push.html#tymethod.push),
+[`.checked_push()`](https://docs.rs/maplike/latest/maplike/ops/trait.CheckedPush.html#tymethod.checked_push),
 [`.pop()`](https://docs.rs/maplike/latest/maplike/ops/trait.Pop.html#tymethod.pop),
 [`.put()`](https://docs.rs/maplike/latest/maplike/ops/trait.Put.html#tymethod.put),
 [`.clear()`](https://docs.rs/maplike/latest/maplike/ops/trait.Clear.html#tymethod.clear),

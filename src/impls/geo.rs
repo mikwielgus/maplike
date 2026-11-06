@@ -10,7 +10,7 @@ use geo_types::{
 use crate::abc::{Container, Keyed};
 use crate::ctors::WithOne;
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set};
+use crate::ops::{CheckedPush, Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set};
 
 macro_rules! impl_traits_for_geo_noncollection {
     ($($ty:ident),* $(,)?) => {
@@ -180,6 +180,13 @@ macro_rules! impl_traits_for_geo_veclike {
                 alloc_::vec::Vec::push(&mut self.0, value);
 
                 alloc_::vec::Vec::len(&self.0) - 1
+            }
+        }
+
+        impl<T: CoordNum> CheckedPush<usize> for $wrapper<T> {
+            #[inline(always)]
+            fn checked_push(&mut self, value: $value) -> Option<usize> {
+                Some(Push::push(self, value))
             }
         }
 

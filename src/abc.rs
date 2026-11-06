@@ -9,7 +9,7 @@
 
 use core::ops::Index;
 
-use crate::ops::{Clear, Get, Insert, Len, Pop, Push, Remove, Set};
+use crate::ops::{CheckedPush, Clear, Get, Insert, Len, Pop, Push, Remove, Set};
 
 /// Base trait for collections, without any operations defined yet.
 ///
@@ -173,5 +173,9 @@ impl<K, T: Index<K> + Get<K> + Set<K> + Len> Arraylike<K> for T {}
 /// scale_all(&mut deque, 10.0);
 /// assert_eq!(deque.into_iter().collect::<Vec<_>>(), vec![70.0, 80.0, 90.0]);
 /// ```
-pub trait Veclike<K>: Index<K> + Get<K> + Set<K> + Push<K> + Pop + Clear + Len {}
-impl<K, T: Arraylike<K> + Push<K> + Pop + Clear> Veclike<K> for T {}
+pub trait Veclike<K>:
+    Index<K> + Get<K> + Set<K> + Push<K> + CheckedPush<K> + Pop + Clear + Len
+{
+}
+
+impl<K, T: Arraylike<K> + Push<K> + CheckedPush<K> + Pop + Clear> Veclike<K> for T {}

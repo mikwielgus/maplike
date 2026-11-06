@@ -7,7 +7,9 @@ use arrayvec::ArrayVec;
 use crate::abc::{Container, Keyed};
 use crate::ctors::WithOne;
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Set, ShiftRemove};
+use crate::ops::{
+    CheckedPush, Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Set, ShiftRemove,
+};
 
 impl<T, const CAP: usize> Container for ArrayVec<T, CAP> {
     type Value = T;
@@ -66,6 +68,18 @@ impl<T, const CAP: usize> Push<usize> for ArrayVec<T, CAP> {
         ArrayVec::push(self, value);
 
         self.len() - 1
+    }
+}
+
+impl<T, const CAP: usize> CheckedPush<usize> for ArrayVec<T, CAP> {
+    #[inline(always)]
+    fn checked_push(&mut self, value: T) -> Option<usize> {
+        let index = self.len();
+        if ArrayVec::try_push(self, value).is_ok() {
+            Some(index)
+        } else {
+            None
+        }
     }
 }
 

@@ -7,7 +7,7 @@ use slab::Slab;
 use crate::abc::{Container, Keyed};
 use crate::ctors::{WithCapacity, WithOne};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Push, Put, Remove, Set};
+use crate::ops::{CheckedPush, Clear, ContainsKey, Get, Len, Modify, Push, Put, Remove, Set};
 
 impl<V> Container for Slab<V> {
     type Value = V;
@@ -80,6 +80,13 @@ impl<V> Push<usize> for Slab<V> {
     #[inline(always)]
     fn push(&mut self, value: V) -> usize {
         Slab::insert(self, value)
+    }
+}
+
+impl<V> CheckedPush<usize> for Slab<V> {
+    #[inline(always)]
+    fn checked_push(&mut self, value: V) -> Option<usize> {
+        Some(Push::push(self, value))
     }
 }
 

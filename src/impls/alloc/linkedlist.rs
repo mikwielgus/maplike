@@ -7,7 +7,7 @@ use alloc_::collections::LinkedList;
 use crate::abc::{Container, Keyed};
 use crate::ctors::WithOne;
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Set};
+use crate::ops::{CheckedPush, Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Set};
 
 impl<V> Container for LinkedList<V> {
     type Value = V;
@@ -66,6 +66,13 @@ impl<V> Push<usize> for LinkedList<V> {
         LinkedList::push_back(self, value);
 
         self.len() - 1
+    }
+}
+
+impl<V> CheckedPush<usize> for LinkedList<V> {
+    #[inline(always)]
+    fn checked_push(&mut self, value: V) -> Option<usize> {
+        Some(Push::push(self, value))
     }
 }
 
