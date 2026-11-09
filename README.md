@@ -338,9 +338,11 @@ trait implementations for data structures from certain external crates:
   [`Veclike`](https://docs.rs/maplike/latest/maplike/ops/trait.Veclike.html), because
   `arrayvec` types do not implement
   [`Index`](https://doc.rust-lang.org/std/ops/trait.Index.html));
-- [`heapless::Vec`](https://docs.rs/heapless/latest/heapless/struct.Vec.html)
-  and [`heapless::LinearMap`](https://docs.rs/heapless/latest/heapless/struct.LinearMap.html),
-  gated by the `heapless` feature flag;
+- [`heapless::Deque`](https://docs.rs/heapless/latest/heapless/struct.Deque.html),
+  [`heapless::LinearMap`](https://docs.rs/heapless/latest/heapless/struct.LinearMap.html),
+  and [`heapless::Vec`](https://docs.rs/heapless/latest/heapless/struct.Vec.html),
+  gated by the `heapless` feature flag (some traits are not implemented due to
+  limitations of finite-size types and to avoid panics);
 - `smallvec::SmallVec`, gated by the `smallvec` feature flag;
 - [`thin_vec::ThinVec`](https://docs.rs/thin-vec/latest/thin_vec/struct.ThinVec.html),
   gated by the `thin-vec` feature flag;

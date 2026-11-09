@@ -27,7 +27,7 @@ impl<T, const N: usize> WithOne<T> for Vec<T, N> {
         // pathological case where `heapless::Vec`'s compile-time is zero.
         if Vec::push(&mut heapless_vec, element).is_err() {
             // Panic, not `.expect()`, because the latter would require `T: Debug`.
-            panic!("heapless::Vec's compile-time capacity is 0, which is invalid")
+            panic!("compile-time capacity was set to 0, which is invalid")
         }
 
         heapless_vec

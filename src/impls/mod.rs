@@ -61,7 +61,7 @@ mod arraystring;
 mod smallvec;
 
 #[cfg(feature = "thin-vec")]
-mod thin_vec;
+mod thinvec;
 
 #[cfg(feature = "tinyvec")]
 mod tinyvec;

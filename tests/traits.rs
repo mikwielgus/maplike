@@ -537,13 +537,11 @@ where
 }
 
 #[cfg(feature = "heapless")]
-fn check_checked_push_heapless_vec_cap<T, const CAP: usize>()
+fn check_checked_push_heapless_cap<T, C, const CAP: usize>(mut c: C)
 where
     T: FromUsize + Clone + PartialEq + Debug,
+    C: Keyed<Key = usize, Value = T> + CheckedPush<usize> + Len,
 {
-    use heapless::Vec;
-
-    let mut c = Vec::<T, CAP>::new();
     for i in 0..CAP {
         assert_eq!(c.checked_push(T::from_usize(i)), Some(i));
     }
@@ -600,6 +598,21 @@ fn check_checked_push_arraystring_until_full<const CAP: usize>() {
     assert_eq!(s.checked_push('a'), None);
 }
 
+fn check_swap_remove_after_three_elements<V, C>(mut c: C)
+where
+    V: FromUsize + Clone + PartialEq + Debug,
+    C: Keyed<Key = usize, Value = V> + Get<usize> + SwapRemove<usize, Output = V> + Len,
+{
+    assert_eq!(c.swap_remove(&1), V::from_usize(20));
+    assert_eq!(Len::len(&c), 2);
+    assert_eq!(c.get(&0), Some(&V::from_usize(10)));
+    assert_eq!(c.get(&1), Some(&V::from_usize(30)));
+
+    assert_eq!(c.swap_remove(&1), V::from_usize(30));
+    assert_eq!(Len::len(&c), 1);
+    assert_eq!(c.get(&0), Some(&V::from_usize(10)));
+}
+
 fn check_swap_remove<V, C>(mut c: C)
 where
     V: FromUsize + Clone + PartialEq + Debug,
@@ -613,14 +626,24 @@ where
     c.push(V::from_usize(20));
     c.push(V::from_usize(30));
 
-    assert_eq!(c.swap_remove(&1), V::from_usize(20));
-    assert_eq!(Len::len(&c), 2);
-    assert_eq!(c.get(&0), Some(&V::from_usize(10)));
-    assert_eq!(c.get(&1), Some(&V::from_usize(30)));
+    check_swap_remove_after_three_elements(c);
+}
 
-    assert_eq!(c.swap_remove(&1), V::from_usize(30));
-    assert_eq!(Len::len(&c), 1);
-    assert_eq!(c.get(&0), Some(&V::from_usize(10)));
+fn check_swap_remove_checked_push<V, C>(mut c: C)
+where
+    V: FromUsize + Clone + PartialEq + Debug,
+    C: Keyed<Key = usize, Value = V>
+        + CheckedPush<usize>
+        + Get<usize>
+        + SwapRemove<usize, Output = V>
+        + Len,
+{
+    for i in [10, 20, 30] {
+        c.checked_push(V::from_usize(i))
+            .expect("expected checked_push to succeed");
+    }
+
+    check_swap_remove_after_three_elements(c);
 }
 
 fn check_shift_remove_after_five_elements<V, C>(mut c: C)
@@ -1453,12 +1476,12 @@ mod arrayvec_tests {
 #[cfg(feature = "heapless")]
 mod heapless_tests {
     use super::*;
-    use heapless::{LinearMap, Vec};
+    use heapless::{Deque, LinearMap, Vec};
 
     #[test]
     fn test_traits_on_heapless_vec() {
         check_checked_push_veclike_checked_push_only::<usize, i32, Vec<i32, 8>>(Vec::new());
-        check_checked_push_heapless_vec_cap::<i32, 4>();
+        check_checked_push_heapless_cap::<i32, _, 4>(Vec::<i32, 4>::new());
         check_with_one::<i32, i32, Vec<i32, 8>>(30, 30);
         check_shift_remove_checked_push::<i32, Vec<i32, 8>>(Vec::new());
         check_assign(
@@ -1469,6 +1492,27 @@ mod heapless_tests {
             },
             {
                 let mut b = Vec::<i32, 8>::new();
+                assert!(CheckedPush::checked_push(&mut b, 2).is_some());
+                assert!(CheckedPush::checked_push(&mut b, 3).is_some());
+                b
+            },
+        );
+    }
+
+    #[test]
+    fn test_traits_on_heapless_deque() {
+        check_checked_push_veclike_checked_push_only::<usize, i32, Deque<i32, 8>>(Deque::new());
+        check_checked_push_heapless_cap::<i32, _, 4>(Deque::<i32, 4>::new());
+        check_with_one::<i32, i32, Deque<i32, 8>>(30, 30);
+        check_swap_remove_checked_push::<i32, Deque<i32, 8>>(Deque::new());
+        check_assign(
+            {
+                let mut a = Deque::<i32, 8>::new();
+                assert!(CheckedPush::checked_push(&mut a, 1).is_some());
+                a
+            },
+            {
+                let mut b = Deque::<i32, 8>::new();
                 assert!(CheckedPush::checked_push(&mut b, 2).is_some());
                 assert!(CheckedPush::checked_push(&mut b, 3).is_some());
                 b
