@@ -224,13 +224,22 @@ where
 
 fn check_modify<K, V, C>(mut c: C)
 where
-    K: FromUsize + Clone,
+    K: FromUsize + Clone + PartialEq + Debug,
     V: FromUsize + Clone + PartialEq + Debug,
     C: Keyed<Key = K, Value = V> + Insert<K> + Get<K> + Modify<K> + Clear,
 {
     let k = K::from_usize(1);
 
     c.insert(k.clone(), V::from_usize(10));
+    check_modify_at_key(c, k);
+}
+
+fn check_modify_at_key<K, V, C>(mut c: C, k: K)
+where
+    K: Clone + PartialEq + Debug,
+    V: FromUsize + Clone + PartialEq + Debug,
+    C: Keyed<Key = K, Value = V> + Get<K> + Modify<K> + Clear,
+{
     c.modify(&k, |v| *v = V::from_usize(99));
     assert_eq!(c.get(&k), Some(&V::from_usize(99)));
 
@@ -248,6 +257,15 @@ where
     c.insert(K::from_usize(2), V::from_usize(20));
     c.insert(K::from_usize(3), V::from_usize(30));
 
+    check_into_iter_three_pairs(c);
+}
+
+fn check_into_iter_three_pairs<K, V, C>(c: C)
+where
+    K: FromUsize + Clone + PartialEq + Debug,
+    V: FromUsize + Clone + PartialEq + Debug,
+    C: Keyed<Key = K, Value = V> + IntoIter<K>,
+{
     let items: Vec<(K, V)> = IntoIter::into_iter(c).collect();
 
     assert_eq!(items.len(), 3);
@@ -530,6 +548,32 @@ where
         assert_eq!(c.checked_push(T::from_usize(i)), Some(i));
     }
     assert_eq!(c.checked_push(T::from_usize(999)), None);
+    assert_eq!(Len::len(&c), CAP);
+}
+
+#[cfg(feature = "heapless")]
+fn check_checked_insert_heapless_linear_map_cap<K, V, const CAP: usize>()
+where
+    K: FromUsize + Eq + Clone + PartialEq + Debug,
+    V: FromUsize + Clone + PartialEq + Debug,
+{
+    use heapless::LinearMap;
+
+    let mut c = LinearMap::<K, V, CAP>::new();
+    for i in 0..CAP {
+        assert_eq!(
+            c.checked_insert(K::from_usize(i), V::from_usize(i)),
+            Some(None)
+        );
+    }
+    assert_eq!(
+        c.checked_insert(K::from_usize(999), V::from_usize(999)),
+        None
+    );
+    assert_eq!(
+        c.checked_insert(K::from_usize(0), V::from_usize(1000)),
+        Some(Some(V::from_usize(0)))
+    );
     assert_eq!(Len::len(&c), CAP);
 }
 
@@ -1409,7 +1453,7 @@ mod arrayvec_tests {
 #[cfg(feature = "heapless")]
 mod heapless_tests {
     use super::*;
-    use heapless::Vec;
+    use heapless::{LinearMap, Vec};
 
     #[test]
     fn test_traits_on_heapless_vec() {
@@ -1427,6 +1471,37 @@ mod heapless_tests {
                 let mut b = Vec::<i32, 8>::new();
                 assert!(CheckedPush::checked_push(&mut b, 2).is_some());
                 assert!(CheckedPush::checked_push(&mut b, 3).is_some());
+                b
+            },
+        );
+    }
+
+    #[test]
+    fn test_traits_on_heapless_linear_map() {
+        check_checked_insert_map(LinearMap::<usize, i32, 8>::new());
+        check_checked_insert_heapless_linear_map_cap::<usize, i32, 4>();
+        {
+            let mut c = LinearMap::<usize, i32, 8>::new();
+            assert_eq!(c.checked_insert(1, 10).expect("checked_insert"), None);
+            check_modify_at_key(c, 1);
+        }
+        {
+            let mut c = LinearMap::<usize, i32, 8>::new();
+            assert!(c.checked_insert(1, 10).is_some());
+            assert!(c.checked_insert(2, 20).is_some());
+            assert!(c.checked_insert(3, 30).is_some());
+            check_into_iter_three_pairs(c);
+        }
+        check_assign(
+            {
+                let mut a = LinearMap::<usize, i32, 8>::new();
+                assert!(a.checked_insert(1, 1).is_some());
+                a
+            },
+            {
+                let mut b = LinearMap::<usize, i32, 8>::new();
+                assert!(b.checked_insert(2, 2).is_some());
+                assert!(b.checked_insert(3, 3).is_some());
                 b
             },
         );
