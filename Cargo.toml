@@ -101,7 +101,7 @@ geo-types = { version = "0.7", optional = true, default-features = false }
 hashbrown = { version = "0.17", optional = true, default-features = false, features = ["default-hasher", "equivalent", "inline-more"] }
 indexmap = { version = "2.14", optional = true }
 vecmap = { package = "vecmap-rs", version = "0.3", optional = true, default-features = false }
-rstar = { version = "0.13", optional = true }
+rstar = { version = "0.14", optional = true }
 slab = { version = "0.4", optional = true, default-features = false }
 slotmap = { version = "1.1", optional = true, default-features = false }
 smallvec = { version = "1.16", optional = true }
@@ -119,7 +119,7 @@ slab = { version = "0.4", default-features = false }
 slotmap = { version = "1", default-features = false }
 stable-vec = "0.4"
 thunderdome = "0.6"
-rstar = "0.13"
+rstar = "0.14"
 smallvec = "1"
 arrayvec = "0.7"
 thin-vec = { version = "0.2", default-features = false }
