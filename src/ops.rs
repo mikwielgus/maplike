@@ -405,8 +405,9 @@ pub trait Remove<K: ?Sized>: Keyed {
     fn remove(&mut self, key: &K) -> Self::Output;
 }
 
-/// Remove an element under a key by swapping it with the last element,
-/// returning the removed value.
+/// Remove an element under a key by swapping it with the last element.
+///
+/// The value of the removed element is returned.
 ///
 /// Unlike [`Remove::remove()`], this may invalidate other keys: the last
 /// element is moved into the vacated slot (unless the removed key was already
@@ -440,16 +441,18 @@ pub trait SwapRemove<K: ?Sized>: Keyed {
     /// Return type of [`swap_remove`](SwapRemove::swap_remove).
     type Output;
 
-    /// Remove an element under a key by swapping it with the last element,
-    /// returning the removed value.
+    /// Remove an element under a key by swapping it with the last element.
+    ///
+    /// The value of the removed element is returned.
     ///
     /// Unlike [`Remove`], this may invalidate other keys: the last element is
     /// moved into the vacated slot (unless the removed key was already last).
     fn swap_remove(&mut self, key: &K) -> Self::Output;
 }
 
-/// Remove an element under a key by shifting later elements down, returning the
-/// removed value.
+/// Remove an element under a key and shift later elements to its place.
+///
+/// The value of the removed element is returned.
 ///
 /// Unlike [`Remove`], this may invalidate other keys: every element after the
 /// removed key is moved one slot toward the front.
@@ -490,8 +493,9 @@ pub trait ShiftRemove<K: ?Sized>: Keyed {
     /// Return type of [`shift_remove`](ShiftRemove::shift_remove).
     type Output;
 
-    /// Remove an element under a key by shifting later elements down, returning the
-    /// removed value.
+    /// Remove an element under a key and shift later elements to its place.
+    ///
+    /// The value of the removed element is returned.
     ///
     /// Unlike [`Remove`], this may invalidate other keys: every element after the
     /// removed key is moved one slot toward the front.

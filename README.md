@@ -103,13 +103,13 @@ An abstract container trait can bundle together several traits for container
 methods together in one short bound. For example, an abstract collection trait
 [`Veclike`](https://docs.rs/maplike/latest/maplike/abc/trait.Veclike.html) joins
 together
-([`Get`](https://docs.rs/maplike/latest/maplike/ops/trait.Get.html),
+[`Get`](https://docs.rs/maplike/latest/maplike/ops/trait.Get.html),
 [`Set`](https://docs.rs/maplike/latest/maplike/ops/trait.Set.html),
 [`Push`](https://docs.rs/maplike/latest/maplike/ops/trait.Push.html),
 [`Pop`](https://docs.rs/maplike/latest/maplike/ops/trait.Pop.html),
 [`Clear`](https://docs.rs/maplike/latest/maplike/ops/trait.Clear.html),
 [`Len`](https://docs.rs/maplike/latest/maplike/ops/trait.Len.html), and
-[`Index`](https://doc.rust-lang.org/std/ops/trait.Index.html)), thus allowing
+[`Index`](https://doc.rust-lang.org/std/ops/trait.Index.html), thus allowing
 for code that is generic over
 [`Vec`](https://doc.rust-lang.org/std/vec/struct.Vec.html),
 [`VecDeque`](https://doc.rust-lang.org/alloc/collections/vec_deque/struct.VecDeque.html),
@@ -264,7 +264,7 @@ implementations:
 - [`Rc`](https://doc.rust-lang.org/std/rc/struct.Rc.html) and its weak pointer,
   [`std::rc::Weak`](https://doc.rust-lang.org/std/rc/struct.Weak.html), both
   gated by the `alloc` feature (enabled by default);
-- [`Arc`](https://doc.rust-lang.org/std/sync/struct.Arc.html),
+- [`Arc`](https://doc.rust-lang.org/std/sync/struct.Arc.html)
   and its weak pointer,
   [`std::sync::Weak`](https://doc.rust-lang.org/std/sync/struct.Weak.html), both
   gated by the `std` feature (enabled by default);
