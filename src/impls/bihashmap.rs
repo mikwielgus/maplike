@@ -84,6 +84,7 @@ impl<L: Eq + Hash, R: Eq + Hash, LS: BuildHasher, RS: BuildHasher> Set<L>
 
     #[inline(always)]
     fn set(&mut self, key: L, value: R) -> Overwritten<L, R> {
+        assert!(self.contains_key(&key));
         BiHashMap::insert(self, key, value)
     }
 }

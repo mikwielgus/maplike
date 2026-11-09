@@ -61,6 +61,7 @@ impl<K: Key, V> Set<K> for SlotMap<K, V> {
 
     #[inline(always)]
     fn set(&mut self, key: K, value: V) -> Option<V> {
+        assert!(self.contains_key(key));
         Some(core::mem::replace(&mut self[key], value))
     }
 }
@@ -201,6 +202,7 @@ impl<K: Key, V> Set<K> for DenseSlotMap<K, V> {
 
     #[inline(always)]
     fn set(&mut self, key: K, value: V) -> Option<V> {
+        assert!(self.contains_key(key));
         Some(core::mem::replace(&mut self[key], value))
     }
 }
@@ -331,6 +333,7 @@ impl<K: Key, V> Set<K> for SecondaryMap<K, V> {
 
     #[inline(always)]
     fn set(&mut self, key: K, value: V) -> Option<V> {
+        assert!(self.contains_key(key));
         SecondaryMap::insert(self, key, value)
     }
 }
@@ -478,6 +481,7 @@ impl<K: Key, V, S: BuildHasher> Set<K> for SparseSecondaryMap<K, V, S> {
 
     #[inline(always)]
     fn set(&mut self, key: K, value: V) -> Option<V> {
+        assert!(self.contains_key(key));
         SparseSecondaryMap::insert(self, key, value)
     }
 }

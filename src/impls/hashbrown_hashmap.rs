@@ -67,6 +67,7 @@ impl<K: Eq + Hash, V, S: BuildHasher> Set<K> for HashMap<K, V, S> {
 
     #[inline(always)]
     fn set(&mut self, key: K, value: V) -> Option<V> {
+        assert!(self.contains_key(&key));
         HashMap::insert(self, key, value)
     }
 }

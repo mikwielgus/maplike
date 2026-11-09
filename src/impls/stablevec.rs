@@ -56,6 +56,7 @@ impl<V, C: stable_vec::core::Core<V>> Set<usize> for StableVecFacade<V, C> {
 
     #[inline(always)]
     fn set(&mut self, index: usize, value: V) -> Option<V> {
+        assert!(index < self.len());
         StableVecFacade::insert(self, index, value)
     }
 }

@@ -46,7 +46,7 @@ mod slab;
 mod slotmap;
 
 #[cfg(feature = "stable-vec")]
-mod stable_vec;
+mod stablevec;
 
 #[cfg(feature = "thunderdome")]
 mod thunderdome;

@@ -66,6 +66,7 @@ impl<L: Ord, R: Ord> Set<L> for BiBTreeMap<L, R> {
 
     #[inline(always)]
     fn set(&mut self, key: L, value: R) -> Overwritten<L, R> {
+        assert!(self.contains_left(&key));
         BiBTreeMap::insert(self, key, value)
     }
 }

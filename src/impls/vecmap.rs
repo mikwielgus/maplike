@@ -51,6 +51,7 @@ impl<K: Eq, V> Set<K> for VecMap<K, V> {
 
     #[inline(always)]
     fn set(&mut self, key: K, value: V) -> Option<V> {
+        assert!(self.contains_key(&key));
         VecMap::insert(self, key, value)
     }
 }

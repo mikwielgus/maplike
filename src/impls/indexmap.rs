@@ -71,6 +71,7 @@ impl<K: Eq + Hash, V, S: BuildHasher> Set<K> for IndexMap<K, V, S> {
 
     #[inline(always)]
     fn set(&mut self, key: K, value: V) -> Option<V> {
+        assert!(self.contains_key(&key));
         IndexMap::insert(self, key, value)
     }
 }

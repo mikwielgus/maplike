@@ -42,6 +42,7 @@ impl<V> Set<usize> for Option<V> {
     #[inline(always)]
     fn set(&mut self, index: usize, value: V) -> Option<V> {
         assert_eq!(index, 0);
+        assert!(self.is_some());
         self.replace(value)
     }
 }

@@ -48,6 +48,7 @@ impl<K: Ord, V> Set<K> for BTreeMap<K, V> {
 
     #[inline(always)]
     fn set(&mut self, key: K, value: V) -> Option<V> {
+        assert!(self.contains_key(&key));
         BTreeMap::insert(self, key, value)
     }
 }

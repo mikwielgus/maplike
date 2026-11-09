@@ -56,6 +56,7 @@ impl<V> Set<Index> for Arena<V> {
 
     #[inline(always)]
     fn set(&mut self, key: Index, value: V) -> Option<V> {
+        assert!(self.contains(key));
         Arena::insert_at(self, key, value)
     }
 }
