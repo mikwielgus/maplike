@@ -68,3 +68,6 @@ mod tinyvec;
 
 #[cfg(feature = "geo")]
 mod geo;
+
+#[cfg(feature = "heapless")]
+mod heapless;

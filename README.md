@@ -323,9 +323,7 @@ trait implementations for data structures from certain external crates:
 - [`slotmap::SlotMap`](https://docs.rs/slotmap/latest/slotmap/struct.SlotMap.html),
   [`slotmap::DenseSlotMap`](https://docs.rs/slotmap/latest/slotmap/struct.DenseSlotMap.html),
   and [`slotmap::SecondaryMap`](https://docs.rs/slotmap/latest/slotmap/struct.SecondaryMap.html),
-  gated by the `slotmap` feature flag (`Insert` and `CheckedInsert` are not implemented for
-  `SlotMap` or `DenseSlotMap`; see [Technical sidenotes](#technical-sidenotes)),
-  and also
+  gated by the `slotmap` feature flag, and also
   [`slotmap::SparseSecondaryMap`](https://docs.rs/slotmap/latest/slotmap/struct.SparseSecondaryMap.html),
   which is additionally gated by the `std` feature flag;
   [`slotmap::HopSlotMap`](https://docs.rs/slotmap/latest/slotmap/struct.HopSlotMap.html)
@@ -340,6 +338,8 @@ trait implementations for data structures from certain external crates:
   [`Veclike`](https://docs.rs/maplike/latest/maplike/ops/trait.Veclike.html), because
   `arrayvec` types do not implement
   [`Index`](https://doc.rust-lang.org/std/ops/trait.Index.html));
+- [`heapless::Vec`](https://docs.rs/heapless/latest/heapless/struct.Vec.html),
+  gated by the `heapless` feature flag;
 - `smallvec::SmallVec`, gated by the `smallvec` feature flag;
 - [`thin_vec::ThinVec`](https://docs.rs/thin-vec/latest/thin_vec/struct.ThinVec.html),
   gated by the `thin-vec` feature flag;

@@ -475,11 +475,20 @@ where
     assert_eq!(Len::len(&c), 0);
 }
 
-fn check_checked_push_veclike<K, V, C>(mut c: C)
+fn check_checked_push_veclike<K, V, C>(c: C)
 where
     K: Clone + PartialEq + Debug,
     V: FromUsize + Clone + PartialEq + Debug,
     C: Keyed<Key = K, Value = V> + Push<K> + CheckedPush<K> + Get<K> + Len,
+{
+    check_checked_push_veclike_checked_push_only(c);
+}
+
+fn check_checked_push_veclike_checked_push_only<K, V, C>(mut c: C)
+where
+    K: Clone + PartialEq + Debug,
+    V: FromUsize + Clone + PartialEq + Debug,
+    C: Keyed<Key = K, Value = V> + CheckedPush<K> + Get<K> + Len,
 {
     assert_eq!(Len::len(&c), 0);
 
@@ -502,6 +511,21 @@ where
     use arrayvec::ArrayVec;
 
     let mut c = ArrayVec::<T, CAP>::new();
+    for i in 0..CAP {
+        assert_eq!(c.checked_push(T::from_usize(i)), Some(i));
+    }
+    assert_eq!(c.checked_push(T::from_usize(999)), None);
+    assert_eq!(Len::len(&c), CAP);
+}
+
+#[cfg(feature = "heapless")]
+fn check_checked_push_heapless_vec_cap<T, const CAP: usize>()
+where
+    T: FromUsize + Clone + PartialEq + Debug,
+{
+    use heapless::Vec;
+
+    let mut c = Vec::<T, CAP>::new();
     for i in 0..CAP {
         assert_eq!(c.checked_push(T::from_usize(i)), Some(i));
     }
@@ -555,6 +579,27 @@ where
     assert_eq!(c.get(&0), Some(&V::from_usize(10)));
 }
 
+fn check_shift_remove_after_five_elements<V, C>(mut c: C)
+where
+    V: FromUsize + Clone + PartialEq + Debug,
+    C: Keyed<Key = usize, Value = V> + Get<usize> + ShiftRemove<usize, Output = V> + Len,
+{
+    assert_eq!(c.shift_remove(&1), V::from_usize(20));
+    assert_eq!(Len::len(&c), 4);
+
+    assert_eq!(c.get(&0), Some(&V::from_usize(10)));
+    assert_eq!(c.get(&1), Some(&V::from_usize(30)));
+    assert_eq!(c.get(&2), Some(&V::from_usize(40)));
+    assert_eq!(c.get(&3), Some(&V::from_usize(50)));
+
+    assert_eq!(c.shift_remove(&1), V::from_usize(30));
+    assert_eq!(Len::len(&c), 3);
+
+    assert_eq!(c.get(&0), Some(&V::from_usize(10)));
+    assert_eq!(c.get(&1), Some(&V::from_usize(40)));
+    assert_eq!(c.get(&2), Some(&V::from_usize(50)));
+}
+
 fn check_shift_remove<V, C>(mut c: C)
 where
     V: FromUsize + Clone + PartialEq + Debug,
@@ -570,20 +615,24 @@ where
     c.push(V::from_usize(40));
     c.push(V::from_usize(50));
 
-    assert_eq!(c.shift_remove(&1), V::from_usize(20));
-    assert_eq!(Len::len(&c), 4);
+    check_shift_remove_after_five_elements(c);
+}
 
-    assert_eq!(c.get(&0), Some(&V::from_usize(10)));
-    assert_eq!(c.get(&1), Some(&V::from_usize(30)));
-    assert_eq!(c.get(&2), Some(&V::from_usize(40)));
-    assert_eq!(c.get(&3), Some(&V::from_usize(50)));
+fn check_shift_remove_checked_push<V, C>(mut c: C)
+where
+    V: FromUsize + Clone + PartialEq + Debug,
+    C: Keyed<Key = usize, Value = V>
+        + CheckedPush<usize>
+        + Get<usize>
+        + ShiftRemove<usize, Output = V>
+        + Len,
+{
+    for i in [10, 20, 30, 40, 50] {
+        c.checked_push(V::from_usize(i))
+            .expect("expected checked_push to succeed");
+    }
 
-    assert_eq!(c.shift_remove(&1), V::from_usize(30));
-    assert_eq!(Len::len(&c), 3);
-
-    assert_eq!(c.get(&0), Some(&V::from_usize(10)));
-    assert_eq!(c.get(&1), Some(&V::from_usize(40)));
-    assert_eq!(c.get(&2), Some(&V::from_usize(50)));
+    check_shift_remove_after_five_elements(c);
 }
 
 fn check_resize<V, C>(mut c: C)
@@ -1354,6 +1403,33 @@ mod arrayvec_tests {
         let a = ArrayString::<8>::from("hi").unwrap();
         let b = ArrayString::<8>::from("bye").unwrap();
         check_assign(a, b);
+    }
+}
+
+#[cfg(feature = "heapless")]
+mod heapless_tests {
+    use super::*;
+    use heapless::Vec;
+
+    #[test]
+    fn test_traits_on_heapless_vec() {
+        check_checked_push_veclike_checked_push_only::<usize, i32, Vec<i32, 8>>(Vec::new());
+        check_checked_push_heapless_vec_cap::<i32, 4>();
+        check_with_one::<i32, i32, Vec<i32, 8>>(30, 30);
+        check_shift_remove_checked_push::<i32, Vec<i32, 8>>(Vec::new());
+        check_assign(
+            {
+                let mut a = Vec::<i32, 8>::new();
+                assert!(CheckedPush::checked_push(&mut a, 1).is_some());
+                a
+            },
+            {
+                let mut b = Vec::<i32, 8>::new();
+                assert!(CheckedPush::checked_push(&mut b, 2).is_some());
+                assert!(CheckedPush::checked_push(&mut b, 3).is_some());
+                b
+            },
+        );
     }
 }
 
