@@ -494,6 +494,7 @@ where
     assert_eq!(Len::len(&c), 2);
 }
 
+#[cfg(feature = "arrayvec")]
 fn check_checked_push_arrayvec_cap<T, const CAP: usize>()
 where
     T: FromUsize + Clone + PartialEq + Debug,
@@ -508,6 +509,7 @@ where
     assert_eq!(Len::len(&c), CAP);
 }
 
+#[cfg(feature = "tinyvec")]
 fn check_checked_push_tinyvec_arrayvec_cap() {
     use tinyvec::ArrayVec;
 
@@ -519,6 +521,7 @@ fn check_checked_push_tinyvec_arrayvec_cap() {
     assert_eq!(Len::len(&c), 4);
 }
 
+#[cfg(feature = "arrayvec")]
 fn check_checked_push_arraystring_until_full<const CAP: usize>() {
     use arrayvec::ArrayString;
 
