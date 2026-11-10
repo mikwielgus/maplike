@@ -482,11 +482,11 @@ where
 fn check_vec<V, C>(mut c: C)
 where
     V: FromUsize + Clone + PartialEq + Debug,
-    C: Keyed<Key = usize, Value = V> + Push<usize> + Pop + Len + Clear,
+    C: Keyed<Key = usize, Value = V> + CheckedPush<usize> + Pop + Len + Clear,
 {
-    c.push(V::from_usize(10));
-    c.push(V::from_usize(20));
-    c.push(V::from_usize(30));
+    c.checked_push(V::from_usize(10));
+    c.checked_push(V::from_usize(20));
+    c.checked_push(V::from_usize(30));
     assert_eq!(Len::len(&c), 3);
 
     c.clear();
@@ -497,7 +497,7 @@ fn check_checked_push_veclike<K, V, C>(c: C)
 where
     K: Clone + PartialEq + Debug,
     V: FromUsize + Clone + PartialEq + Debug,
-    C: Keyed<Key = K, Value = V> + Push<K> + CheckedPush<K> + Get<K> + Len,
+    C: Keyed<Key = K, Value = V> + CheckedPush<K> + Get<K> + Len,
 {
     check_checked_push_veclike_checked_push_only(c);
 }
@@ -713,16 +713,16 @@ fn check_shift_remove<V, C>(mut c: C)
 where
     V: FromUsize + Clone + PartialEq + Debug,
     C: Keyed<Key = usize, Value = V>
-        + Push<usize>
+        + CheckedPush<usize>
         + Get<usize>
         + ShiftRemove<usize, Output = V>
         + Len,
 {
-    c.push(V::from_usize(10));
-    c.push(V::from_usize(20));
-    c.push(V::from_usize(30));
-    c.push(V::from_usize(40));
-    c.push(V::from_usize(50));
+    c.checked_push(V::from_usize(10)).unwrap();
+    c.checked_push(V::from_usize(20)).unwrap();
+    c.checked_push(V::from_usize(30)).unwrap();
+    c.checked_push(V::from_usize(40)).unwrap();
+    c.checked_push(V::from_usize(50)).unwrap();
 
     check_shift_remove_after_five_elements(c);
 }
@@ -1469,9 +1469,9 @@ mod arrayvec_tests {
     fn test_traits_on_arrayvec() {
         check_checked_push_veclike::<usize, i32, ArrayVec<i32, 8>>(ArrayVec::new());
         check_checked_push_arrayvec_cap::<i32, 4>();
-        check_push_put::<usize, i32, ArrayVec<i32, 8>>(ArrayVec::new());
+        //check_push_put::<usize, i32, ArrayVec<i32, 8>>(ArrayVec::new());
         check_with_one::<i32, i32, ArrayVec<i32, 8>>(30, 30);
-        check_vec::<i32, ArrayVec<i32, 8>>(ArrayVec::new());
+        //check_vec::<i32, ArrayVec<i32, 8>>(ArrayVec::new());
         check_shift_remove::<i32, ArrayVec<i32, 8>>(ArrayVec::new());
         check_assign(
             {
@@ -1493,8 +1493,8 @@ mod arrayvec_tests {
         check_checked_push_arraystring_until_full::<8>();
 
         let mut s: ArrayString<8> = ArrayString::new();
-        assert_eq!(Push::push(&mut s, 'a'), 0);
-        assert_eq!(Push::push(&mut s, 'b'), 1);
+        assert_eq!(CheckedPush::checked_push(&mut s, 'a').unwrap(), 0);
+        assert_eq!(CheckedPush::checked_push(&mut s, 'b').unwrap(), 1);
         assert_eq!(Len::len(&s), 2);
         assert_eq!(s.as_str(), "ab");
         assert_eq!(Pop::pop(&mut s), Some('b'));

@@ -6,7 +6,7 @@ use arrayvec::ArrayString;
 
 use crate::abc::{Container, Keyed};
 use crate::ctors::WithOne;
-use crate::ops::{CheckedPush, Clear, Len, Pop, Push, Put};
+use crate::ops::{CheckedPush, Clear, Len, Pop, Put};
 
 impl<const CAP: usize> Container for ArrayString<CAP> {
     type Value = char;
@@ -26,20 +26,11 @@ impl<const CAP: usize> WithOne<char> for ArrayString<CAP> {
     }
 }
 
-impl<const CAP: usize> Push<usize> for ArrayString<CAP> {
-    #[inline(always)]
-    fn push(&mut self, value: char) -> usize {
-        let index = self.chars().count();
-        ArrayString::push(self, value);
-
-        index
-    }
-}
-
 impl<const CAP: usize> CheckedPush<usize> for ArrayString<CAP> {
     #[inline(always)]
     fn checked_push(&mut self, value: char) -> Option<usize> {
         let index = self.chars().count();
+
         if ArrayString::try_push(self, value).is_ok() {
             Some(index)
         } else {
