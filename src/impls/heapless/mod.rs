@@ -4,5 +4,6 @@
 
 mod deque;
 mod indexmap;
+mod indexset;
 mod linearmap;
 mod vec;

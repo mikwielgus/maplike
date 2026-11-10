@@ -601,6 +601,22 @@ where
     assert_eq!(Len::len(&c), CAP);
 }
 
+#[cfg(feature = "heapless")]
+fn check_checked_insert_heapless_index_set_cap<K, const CAP: usize>()
+where
+    K: FromUsize + Eq + std::hash::Hash + Clone + PartialEq + Debug,
+{
+    use heapless::index_set::FnvIndexSet;
+
+    let mut c = FnvIndexSet::<K, CAP>::new();
+    for i in 0..CAP {
+        assert_eq!(c.checked_insert(K::from_usize(i), ()), Some(true));
+    }
+    assert_eq!(c.checked_insert(K::from_usize(999), ()), None);
+    assert_eq!(c.checked_insert(K::from_usize(0), ()), Some(false));
+    assert_eq!(Len::len(&c), CAP);
+}
+
 #[cfg(feature = "tinyvec")]
 fn check_checked_push_tinyvec_arrayvec_cap() {
     use tinyvec::ArrayVec;
@@ -1503,6 +1519,7 @@ mod arrayvec_tests {
 mod heapless_tests {
     use super::*;
     use heapless::index_map::FnvIndexMap;
+    use heapless::index_set::FnvIndexSet;
     use heapless::{Deque, LinearMap, Vec};
 
     #[test]
@@ -1573,6 +1590,25 @@ mod heapless_tests {
                 let mut b = FnvIndexMap::<usize, i32, 8>::new();
                 assert!(b.checked_insert(2, 2).is_some());
                 assert!(b.checked_insert(3, 3).is_some());
+                b
+            },
+        );
+    }
+
+    #[test]
+    fn test_traits_on_heapless_index_set() {
+        check_checked_insert_set(FnvIndexSet::<usize, 8>::new());
+        check_checked_insert_heapless_index_set_cap::<usize, 4>();
+        check_assign(
+            {
+                let mut a = FnvIndexSet::<usize, 8>::new();
+                assert!(a.checked_insert(1, ()).is_some());
+                a
+            },
+            {
+                let mut b = FnvIndexSet::<usize, 8>::new();
+                assert!(b.checked_insert(2, ()).is_some());
+                assert!(b.checked_insert(3, ()).is_some());
                 b
             },
         );

@@ -340,6 +340,7 @@ trait implementations for data structures from certain external crates:
   [`Index`](https://doc.rust-lang.org/std/ops/trait.Index.html));
 - [`heapless::Deque`](https://docs.rs/heapless/latest/heapless/struct.Deque.html),
   [`heapless::IndexMap`](https://docs.rs/heapless/latest/heapless/struct.IndexMap.html),
+  [`heapless::IndexSet`](https://docs.rs/heapless/latest/heapless/struct.IndexSet.html),
   [`heapless::LinearMap`](https://docs.rs/heapless/latest/heapless/struct.LinearMap.html),
   and [`heapless::Vec`](https://docs.rs/heapless/latest/heapless/struct.Vec.html),
   gated by the `heapless` feature flag (some traits are not implemented due to
