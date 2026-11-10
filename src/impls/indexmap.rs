@@ -115,7 +115,7 @@ where
 
     #[inline(always)]
     fn remove(&mut self, key: &Q) -> Option<V> {
-        IndexMap::shift_remove(self, key)
+        IndexMap::swap_remove(self, key)
     }
 }
 
@@ -225,12 +225,12 @@ impl<'a, K: Eq + Hash, V> OccupiedEntry<'a, K, V> for IndexMapOccupiedEntry<'a, 
 
     #[inline(always)]
     fn remove(self) -> V {
-        IndexMapOccupiedEntry::shift_remove(self)
+        IndexMapOccupiedEntry::swap_remove(self)
     }
 
     #[inline(always)]
     fn remove_entry(self) -> (K, V) {
-        IndexMapOccupiedEntry::shift_remove_entry(self)
+        IndexMapOccupiedEntry::swap_remove_entry(self)
     }
 }
 
