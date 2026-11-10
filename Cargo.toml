@@ -7,7 +7,7 @@ members = [".", "maplike_derive"]
 
 [package]
 name = "maplike"
-version = "0.16.0"
+version = "0.17.0"
 authors = ["Mikolaj Wielgus <wielgusmikolaj@gmail.com>"]
 description = "Rust traits for abstract containers and operations over them. Treats every container as map. You can have the same code work on Vec, VecDeque, HashMap, BTreeMap, Option, Box, Rc, Arc, and more."
 repository = "https://github.com/mikwielgus/maplike"
