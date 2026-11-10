@@ -67,10 +67,7 @@ impl<K: Eq, V, const N: usize> CheckedInsert<K> for LinearMap<K, V, N> {
 
     #[inline(always)]
     fn checked_insert(&mut self, key: K, value: V) -> Option<Self::Output> {
-        match LinearMap::insert(self, key, value) {
-            Ok(output) => Some(output),
-            Err(_) => None,
-        }
+        LinearMap::insert(self, key, value).ok()
     }
 }
 

@@ -575,6 +575,32 @@ where
     assert_eq!(Len::len(&c), CAP);
 }
 
+#[cfg(feature = "heapless")]
+fn check_checked_insert_heapless_indexmap_cap<K, V, const CAP: usize>()
+where
+    K: FromUsize + Eq + std::hash::Hash + Clone + PartialEq + Debug,
+    V: FromUsize + Clone + PartialEq + Debug,
+{
+    use heapless::index_map::FnvIndexMap;
+
+    let mut c = FnvIndexMap::<K, V, CAP>::new();
+    for i in 0..CAP {
+        assert_eq!(
+            c.checked_insert(K::from_usize(i), V::from_usize(i)),
+            Some(None)
+        );
+    }
+    assert_eq!(
+        c.checked_insert(K::from_usize(999), V::from_usize(999)),
+        None
+    );
+    assert_eq!(
+        c.checked_insert(K::from_usize(0), V::from_usize(1000)),
+        Some(Some(V::from_usize(0)))
+    );
+    assert_eq!(Len::len(&c), CAP);
+}
+
 #[cfg(feature = "tinyvec")]
 fn check_checked_push_tinyvec_arrayvec_cap() {
     use tinyvec::ArrayVec;
@@ -1476,6 +1502,7 @@ mod arrayvec_tests {
 #[cfg(feature = "heapless")]
 mod heapless_tests {
     use super::*;
+    use heapless::index_map::FnvIndexMap;
     use heapless::{Deque, LinearMap, Vec};
 
     #[test]
@@ -1515,6 +1542,37 @@ mod heapless_tests {
                 let mut b = Deque::<i32, 8>::new();
                 assert!(CheckedPush::checked_push(&mut b, 2).is_some());
                 assert!(CheckedPush::checked_push(&mut b, 3).is_some());
+                b
+            },
+        );
+    }
+
+    #[test]
+    fn test_traits_on_heapless_indexmap() {
+        check_checked_insert_map(FnvIndexMap::<usize, i32, 8>::new());
+        check_checked_insert_heapless_indexmap_cap::<usize, i32, 4>();
+        {
+            let mut c = FnvIndexMap::<usize, i32, 8>::new();
+            assert_eq!(c.checked_insert(1, 10).expect("checked_insert"), None);
+            check_modify_at_key(c, 1);
+        }
+        {
+            let mut c = FnvIndexMap::<usize, i32, 8>::new();
+            assert!(c.checked_insert(1, 10).is_some());
+            assert!(c.checked_insert(2, 20).is_some());
+            assert!(c.checked_insert(3, 30).is_some());
+            check_into_iter_three_pairs(c);
+        }
+        check_assign(
+            {
+                let mut a = FnvIndexMap::<usize, i32, 8>::new();
+                assert!(a.checked_insert(1, 1).is_some());
+                a
+            },
+            {
+                let mut b = FnvIndexMap::<usize, i32, 8>::new();
+                assert!(b.checked_insert(2, 2).is_some());
+                assert!(b.checked_insert(3, 3).is_some());
                 b
             },
         );

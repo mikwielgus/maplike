@@ -54,7 +54,7 @@ geo = ["dep:geo-types", "alloc"]
 hashbrown = ["dep:hashbrown"]
 
 ## Enables convenience implementations for `heapless::Deque`,
-## `heapless::LinearMap`, and `heapless::Vec`.
+## `heapless::IndexMap`, `heapless::LinearMap`, and `heapless::Vec`.
 heapless = ["dep:heapless"]
 
 ## Enables convenience implementations for `indexmap::IndexMap` and
