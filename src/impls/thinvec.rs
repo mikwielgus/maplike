@@ -8,8 +8,8 @@ use crate::abc::{Container, Keyed};
 use crate::ctors::{WithCapacity, WithOne};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
 use crate::ops::{
-    CheckedPush, Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, ShiftRemove,
-    SwapRemove,
+    CheckedPush, Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, SetOrExpandTo,
+    ShiftRemove, SwapRemove,
 };
 
 impl<V> Container for ThinVec<V> {
@@ -57,6 +57,21 @@ impl<V> Set<usize> for ThinVec<V> {
     #[inline(always)]
     fn set(&mut self, index: usize, value: V) {
         self[index] = value;
+    }
+}
+
+impl<V: Clone> SetOrExpandTo<usize> for ThinVec<V> {
+    type Output = Option<V>;
+
+    #[inline(always)]
+    fn set_or_expand_to(&mut self, index: usize, value: V) -> Option<V> {
+        if index < Len::len(self) {
+            Some(core::mem::replace(&mut self[index], value))
+        } else {
+            Resize::resize(self, index + 1, value);
+
+            None
+        }
     }
 }
 

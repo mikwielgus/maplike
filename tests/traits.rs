@@ -2224,3 +2224,5 @@ mod geo_tests {
         check_vec::<Geometry<i32>, GeometryCollection<i32>>(GeometryCollection::new_from(vec![]));
     }
 }
+
+// TODO: `set_or_extend` tests

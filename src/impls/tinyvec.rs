@@ -8,7 +8,8 @@ use crate::abc::{Container, Keyed};
 use crate::ctors::{WithCapacity, WithOne};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
 use crate::ops::{
-    CheckedPush, Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, ShiftRemove,
+    CheckedPush, Clear, ContainsKey, Get, Len, Modify, Pop, Push, Put, Resize, Set, SetOrExpandTo,
+    ShiftRemove,
 };
 
 impl<A: Array> Container for ArrayVec<A> {
@@ -49,6 +50,24 @@ impl<A: Array> Set<usize> for ArrayVec<A> {
     #[inline(always)]
     fn set(&mut self, index: usize, value: A::Item) {
         self[index] = value;
+    }
+}
+
+impl<A: Array> SetOrExpandTo<usize> for ArrayVec<A>
+where
+    A::Item: Clone,
+{
+    type Output = Option<A::Item>;
+
+    #[inline(always)]
+    fn set_or_expand_to(&mut self, index: usize, value: A::Item) -> Option<A::Item> {
+        if index < Len::len(self) {
+            Some(core::mem::replace(&mut self[index], value))
+        } else {
+            Resize::resize(self, index + 1, value);
+
+            None
+        }
     }
 }
 
@@ -219,6 +238,24 @@ impl<A: Array> Set<usize> for TinyVec<A> {
     #[inline(always)]
     fn set(&mut self, index: usize, value: A::Item) {
         self[index] = value;
+    }
+}
+
+impl<A: Array> SetOrExpandTo<usize> for TinyVec<A>
+where
+    A::Item: Clone,
+{
+    type Output = Option<A::Item>;
+
+    #[inline(always)]
+    fn set_or_expand_to(&mut self, index: usize, value: A::Item) -> Option<A::Item> {
+        if index < Len::len(self) {
+            Some(core::mem::replace(&mut self[index], value))
+        } else {
+            Resize::resize(self, index + 1, value);
+
+            None
+        }
     }
 }
 

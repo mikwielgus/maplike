@@ -255,10 +255,10 @@ pub trait Set<K>: Keyed {
 /// use std::collections::{BTreeMap, HashMap};
 ///
 /// // Works for `Vec`.
-/// /*let mut vec = vec![1.0, 2.0];
+/// let mut vec = vec![1.0, 2.0];
 /// vec.set_or_expand_to(4, 5.0);
 /// assert_eq!(vec.get(&4), Some(&5.0));
-/// assert_eq!(vec.len(), 5);*/ // Extended: there are two additional elements.
+/// assert_eq!(vec.len(), 5); // Vec is extended: there are two additional elements.
 ///
 /// // Works for `HashMap`.
 /// let mut hash_map = HashMap::from([(1, 2.0), (2, 3.0)]);
