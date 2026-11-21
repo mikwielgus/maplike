@@ -183,6 +183,8 @@ assert_eq!(vec, [4, 5, 6]);
 
 ### Constructors
 
+This crate provides traits for constructors common to many collections:
+
 [`.with_capacity()`](https://docs.rs/maplike/latest/maplike/ctors/trait.WithCapacity.html#tymethod.with_capacity),
 [`.with_hasher()`](https://docs.rs/maplike/latest/maplike/ctors/trait.WithHasher.html#tymethod.with_hasher),
 [`.with_capacity_and_hasher()`](https://docs.rs/maplike/latest/maplike/ctors/trait.WithCapacityAndHasher.html#tymethod.with_capacity_and_hasher),
@@ -191,8 +193,9 @@ and
 
 ### Operations
 
-This crate provides traits for common operations over map-like, set-like,
+We provide traits for common operations over map-like, set-like,
 array-like, and vec-like data structures:
+
 [`.assign()`](https://docs.rs/maplike/latest/maplike/ops/trait.Assign.html#tymethod.assign),
 [`.contains_key()`](https://docs.rs/maplike/latest/maplike/ops/trait.ContainsKey.html#tymethod.contains_key),
 [`.get()`](https://docs.rs/maplike/latest/maplike/ops/trait.Get.html#tymethod.get),
