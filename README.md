@@ -67,7 +67,7 @@ First, add `maplike` as a dependency to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-maplike = { version = "0.17.1", features = ["derive"] }
+maplike = { version = "0.17.2", features = ["derive"] }
 ```
 
 The `derive` feature flag is only needed if you want to

@@ -4,7 +4,7 @@
 
 [package]
 name = "maplike_derive"
-version = "0.17.1"
+version = "0.17.2"
 authors = ["Mikolaj Wielgus <wielgusmikolaj@gmail.com>"]
 description = "Derive macros for maplike."
 repository = "https://github.com/mikwielgus/maplike"
