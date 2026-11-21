@@ -9,7 +9,7 @@ use crate::ctors::{WithCapacity, WithOne};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
 use crate::ops::{
     CheckedInsert, CheckedPush, Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove,
-    Set,
+    Set, SetOrExpandTo,
 };
 
 impl<V> Container for Arena<V> {
@@ -58,6 +58,15 @@ impl<V> Set<Index> for Arena<V> {
     fn set(&mut self, key: Index, value: V) -> Option<V> {
         assert!(self.contains(key));
         Arena::insert_at(self, key, value)
+    }
+}
+
+impl<V> SetOrExpandTo<Index> for Arena<V> {
+    type Output = Option<V>;
+
+    #[inline(always)]
+    fn set_or_expand_to(&mut self, key: Index, value: V) -> Option<V> {
+        Insert::insert(self, key, value)
     }
 }
 

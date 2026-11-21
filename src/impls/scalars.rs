@@ -5,7 +5,7 @@
 use crate::abc::{Container, Keyed};
 use crate::ctors::WithOne;
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{ContainsKey, Get, Len, Modify, Put, Set};
+use crate::ops::{ContainsKey, Get, Len, Modify, Put, Set, SetOrExpandTo};
 
 macro_rules! impl_traits_for_scalars {
     ($($t:ty),*) => {
@@ -46,6 +46,15 @@ macro_rules! impl_traits_for_scalars {
                 fn set(&mut self, index: usize, value: Self) -> Option<Self> {
                     assert_eq!(index, 0);
                     Some(core::mem::replace(self, value))
+                }
+            }
+
+            impl SetOrExpandTo<usize> for $t {
+                type Output = Option<Self>;
+
+                #[inline(always)]
+                fn set_or_expand_to(&mut self, index: usize, value: Self) -> Option<Self> {
+                    Set::set(self, index, value)
                 }
             }
 

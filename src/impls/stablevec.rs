@@ -9,7 +9,7 @@ use crate::ctors::{WithCapacity, WithOne};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
 use crate::ops::{
     CheckedInsert, CheckedPush, Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove,
-    Set,
+    Set, SetOrExpandTo,
 };
 
 impl<V, C: stable_vec::core::Core<V>> Container for StableVecFacade<V, C> {
@@ -58,6 +58,15 @@ impl<V, C: stable_vec::core::Core<V>> Set<usize> for StableVecFacade<V, C> {
     fn set(&mut self, index: usize, value: V) -> Option<V> {
         assert!(index < self.len());
         StableVecFacade::insert(self, index, value)
+    }
+}
+
+impl<V, C: stable_vec::core::Core<V>> SetOrExpandTo<usize> for StableVecFacade<V, C> {
+    type Output = Option<V>;
+
+    #[inline(always)]
+    fn set_or_expand_to(&mut self, index: usize, value: V) -> Option<V> {
+        Insert::insert(self, index, value)
     }
 }
 

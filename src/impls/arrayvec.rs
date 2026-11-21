@@ -50,6 +50,9 @@ impl<T, const CAP: usize> Set<usize> for ArrayVec<T, CAP> {
     }
 }
 
+// TODO: `SetOrExpandTo` for `ArrayVec` -- `ArrayVec` lacks `.resize()`, so we
+// should upstream it first.
+
 impl<T, const CAP: usize> Modify<usize> for ArrayVec<T, CAP> {
     #[inline(always)]
     fn modify<F>(&mut self, index: &usize, f: F)

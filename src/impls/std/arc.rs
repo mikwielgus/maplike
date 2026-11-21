@@ -7,7 +7,7 @@ use std_::sync::{Arc, Weak};
 use crate::abc::{Container, Keyed};
 use crate::ctors::WithOne;
 use crate::iter::{Iter, Values};
-use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Put, Remove, Set};
+use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Put, Remove, Set, SetOrExpandTo};
 
 impl<V> Container for Arc<V> {
     type Value = V;
@@ -48,6 +48,15 @@ impl<V> Set<usize> for Arc<V> {
             Arc::get_mut(self).expect("Arc is not uniquely owned"),
             value,
         ))
+    }
+}
+
+impl<V> SetOrExpandTo<usize> for Arc<V> {
+    type Output = Option<V>;
+
+    #[inline(always)]
+    fn set_or_expand_to(&mut self, index: usize, value: V) -> Option<V> {
+        Set::set(self, index, value)
     }
 }
 
