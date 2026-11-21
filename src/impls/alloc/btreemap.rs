@@ -13,7 +13,9 @@ use alloc_::collections::btree_map::{
 use crate::abc::{Container, Keyed};
 use crate::entry::{CombinedEntry, Entry, OccupiedEntry, VacantEntry};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{CheckedInsert, Clear, ContainsKey, Get, Insert, Len, Modify, Remove, Set};
+use crate::ops::{
+    CheckedInsert, Clear, ContainsKey, Get, Insert, Len, Modify, Remove, Set, SetOrExpandTo,
+};
 
 impl<K, V> Container for BTreeMap<K, V> {
     type Value = V;
@@ -49,6 +51,15 @@ impl<K: Ord, V> Set<K> for BTreeMap<K, V> {
     #[inline(always)]
     fn set(&mut self, key: K, value: V) -> Option<V> {
         assert!(self.contains_key(&key));
+        BTreeMap::insert(self, key, value)
+    }
+}
+
+impl<K: Ord, V> SetOrExpandTo<K> for BTreeMap<K, V> {
+    type Output = Option<V>;
+
+    #[inline(always)]
+    fn set_or_expand_to(&mut self, key: K, value: V) -> Option<V> {
         BTreeMap::insert(self, key, value)
     }
 }

@@ -7,7 +7,9 @@ use rstar::{RTree, RTreeObject, RTreeParams};
 use crate::abc::{Container, Keyed};
 use crate::ctors::WithOne;
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{CheckedInsert, Clear, ContainsKey, Get, Insert, Len, Put, Remove, Set};
+use crate::ops::{
+    CheckedInsert, Clear, ContainsKey, Get, Insert, Len, Put, Remove, Set, SetOrExpandTo,
+};
 
 impl<K: RTreeObject, Params: RTreeParams> Container for RTree<K, Params> {
     type Value = ();
@@ -47,6 +49,15 @@ impl<K: RTreeObject + PartialEq, Params: RTreeParams> Set<K> for RTree<K, Params
     #[inline(always)]
     fn set(&mut self, key: K, _value: ()) {
         RTree::remove(self, &key);
+        RTree::insert(self, key);
+    }
+}
+
+impl<K: RTreeObject, Params: RTreeParams> SetOrExpandTo<K> for RTree<K, Params> {
+    type Output = ();
+
+    #[inline(always)]
+    fn set_or_expand_to(&mut self, key: K, _value: ()) {
         RTree::insert(self, key);
     }
 }

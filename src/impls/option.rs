@@ -5,7 +5,7 @@
 use crate::abc::{Container, Keyed};
 use crate::ctors::WithOne;
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{Clear, ContainsKey, Get, Len, Modify, Put, Remove, Set};
+use crate::ops::{Clear, ContainsKey, Get, Insert, Len, Modify, Put, Remove, Set};
 
 impl<V> Container for Option<V> {
     type Value = V;
@@ -55,6 +55,21 @@ impl<V> Modify<usize> for Option<V> {
     {
         assert_eq!(*index, 0);
         f(self.as_mut().expect("no value under key"));
+    }
+}
+
+impl<V> Insert<usize> for Option<V> {
+    type Output = Option<V>;
+
+    #[inline(always)]
+    fn insert(&mut self, key: usize, value: V) -> Self::Output {
+        assert_eq!(key, 0);
+
+        if self.contains_key(&key) {
+            Set::set(self, key, value)
+        } else {
+            Put::put(self, value)
+        }
     }
 }
 

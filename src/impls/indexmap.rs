@@ -15,7 +15,9 @@ use crate::abc::{Container, Keyed};
 use crate::ctors::{WithCapacity, WithCapacityAndHasher, WithHasher};
 use crate::entry::{CombinedEntry, Entry, OccupiedEntry, VacantEntry};
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
-use crate::ops::{CheckedInsert, Clear, ContainsKey, Get, Insert, Len, Modify, Remove, Set};
+use crate::ops::{
+    CheckedInsert, Clear, ContainsKey, Get, Insert, Len, Modify, Remove, Set, SetOrExpandTo,
+};
 
 impl<K, V, S> Container for IndexMap<K, V, S> {
     type Value = V;
@@ -72,6 +74,15 @@ impl<K: Eq + Hash, V, S: BuildHasher> Set<K> for IndexMap<K, V, S> {
     #[inline(always)]
     fn set(&mut self, key: K, value: V) -> Option<V> {
         assert!(self.contains_key(&key));
+        IndexMap::insert(self, key, value)
+    }
+}
+
+impl<K: Eq + Hash, V, S: BuildHasher> SetOrExpandTo<K> for IndexMap<K, V, S> {
+    type Output = Option<V>;
+
+    #[inline(always)]
+    fn set_or_expand_to(&mut self, key: K, value: V) -> Option<V> {
         IndexMap::insert(self, key, value)
     }
 }

@@ -10,7 +10,7 @@ use crate::abc::{Container, Keyed};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
 use crate::ops::{
     CheckedInsert, Clear, ContainsKey, Get, GetByLeft, GetByRight, Insert, Len, RemoveByLeft,
-    RemoveByRight, Set,
+    RemoveByRight, Set, SetOrExpandTo,
 };
 
 impl<L, R> Container for BiBTreeMap<L, R> {
@@ -67,6 +67,15 @@ impl<L: Ord, R: Ord> Set<L> for BiBTreeMap<L, R> {
     #[inline(always)]
     fn set(&mut self, key: L, value: R) -> Overwritten<L, R> {
         assert!(self.contains_left(&key));
+        BiBTreeMap::insert(self, key, value)
+    }
+}
+
+impl<L: Ord, R: Ord> SetOrExpandTo<L> for BiBTreeMap<L, R> {
+    type Output = Overwritten<L, R>;
+
+    #[inline(always)]
+    fn set_or_expand_to(&mut self, key: L, value: R) -> Overwritten<L, R> {
         BiBTreeMap::insert(self, key, value)
     }
 }

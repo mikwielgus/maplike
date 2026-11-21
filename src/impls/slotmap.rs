@@ -14,7 +14,7 @@ use crate::ctors::{WithCapacity, WithCapacityAndHasher, WithHasher, WithOne};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
 use crate::ops::{
     CheckedInsert, CheckedPush, Clear, ContainsKey, Get, Insert, Len, Modify, Push, Put, Remove,
-    Set,
+    Set, SetOrExpandTo,
 };
 
 impl<K: Key, V> Container for SlotMap<K, V> {
@@ -338,6 +338,15 @@ impl<K: Key, V> Set<K> for SecondaryMap<K, V> {
     }
 }
 
+impl<K: Key, V> SetOrExpandTo<K> for SecondaryMap<K, V> {
+    type Output = Option<V>;
+
+    #[inline(always)]
+    fn set_or_expand_to(&mut self, key: K, value: V) -> Option<V> {
+        SecondaryMap::insert(self, key, value)
+    }
+}
+
 impl<K: Key, V> Modify<K> for SecondaryMap<K, V> {
     #[inline(always)]
     fn modify<F>(&mut self, key: &K, f: F)
@@ -482,6 +491,16 @@ impl<K: Key, V, S: BuildHasher> Set<K> for SparseSecondaryMap<K, V, S> {
     #[inline(always)]
     fn set(&mut self, key: K, value: V) -> Option<V> {
         assert!(self.contains_key(key));
+        SparseSecondaryMap::insert(self, key, value)
+    }
+}
+
+#[cfg(feature = "std")]
+impl<K: Key, V, S: BuildHasher> SetOrExpandTo<K> for SparseSecondaryMap<K, V, S> {
+    type Output = Option<V>;
+
+    #[inline(always)]
+    fn set_or_expand_to(&mut self, key: K, value: V) -> Option<V> {
         SparseSecondaryMap::insert(self, key, value)
     }
 }

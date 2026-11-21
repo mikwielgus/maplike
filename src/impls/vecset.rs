@@ -9,7 +9,9 @@ use vecmap::VecSet;
 use crate::abc::{Container, Keyed};
 use crate::ctors::{WithCapacity, WithOne};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{CheckedInsert, Clear, ContainsKey, Get, Insert, Len, Put, Remove, Set};
+use crate::ops::{
+    CheckedInsert, Clear, ContainsKey, Get, Insert, Len, Put, Remove, Set, SetOrExpandTo,
+};
 
 impl<K> Container for VecSet<K> {
     type Value = ();
@@ -61,6 +63,15 @@ impl<K: Eq> Set<K> for VecSet<K> {
 
     #[inline(always)]
     fn set(&mut self, key: K, _value: ()) -> bool {
+        VecSet::insert(self, key)
+    }
+}
+
+impl<K: Eq> SetOrExpandTo<K> for VecSet<K> {
+    type Output = bool;
+
+    #[inline(always)]
+    fn set_or_expand_to(&mut self, key: K, _value: ()) -> bool {
         VecSet::insert(self, key)
     }
 }

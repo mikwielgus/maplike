@@ -200,6 +200,7 @@ array-like, and vec-like data structures:
 [`.contains_key()`](https://docs.rs/maplike/latest/maplike/ops/trait.ContainsKey.html#tymethod.contains_key),
 [`.get()`](https://docs.rs/maplike/latest/maplike/ops/trait.Get.html#tymethod.get),
 [`.set()`](https://docs.rs/maplike/latest/maplike/ops/trait.Set.html#tymethod.set),
+[`.set_or_expand_to()`](https://docs.rs/maplike/latest/maplike/ops/trait.SetOrExpandTo.html#tymethod.set_or_expand_to),
 [`.modify()`](https://docs.rs/maplike/latest/maplike/ops/trait.Modify.html#tymethod.modify),
 [`.insert()`](https://docs.rs/maplike/latest/maplike/ops/trait.Insert.html#tymethod.insert),
 [`.checked_insert()`](https://docs.rs/maplike/latest/maplike/ops/trait.CheckedInsert.html#tymethod.checked_insert),

@@ -242,6 +242,48 @@ pub trait Set<K>: Keyed {
     fn set(&mut self, key: K, value: Self::Value) -> Self::Output;
 }
 
+/// If key is in range, set the value. Otherwise, expand collection by repeating
+/// value until key.
+///
+/// For map-like and set-like data structures, this is the same as just
+/// an insert.
+///
+/// # Examples
+///
+/// ```
+/// use maplike::ops::{Get, SetOrExpandTo};
+/// use std::collections::{BTreeMap, HashMap};
+///
+/// // Works for `Vec`.
+/// /*let mut vec = vec![1.0, 2.0];
+/// vec.set_or_expand_to(4, 5.0);
+/// assert_eq!(vec.get(&4), Some(&5.0));
+/// assert_eq!(vec.len(), 5);*/ // Extended: there are two additional elements.
+///
+/// // Works for `HashMap`.
+/// let mut hash_map = HashMap::from([(1, 2.0), (2, 3.0)]);
+/// hash_map.set_or_expand_to(4, 5.0);
+/// assert_eq!(hash_map.get(&4), Some(&5.0));
+/// assert_eq!(hash_map.len(), 3);
+///
+/// // Works for `BTreeMap`.
+/// let mut btree_map = BTreeMap::from([(1, 2.0), (2, 3.0)]);
+/// btree_map.set_or_expand_to(4, 5.0);
+/// assert_eq!(btree_map.get(&4), Some(&5.0));
+/// assert_eq!(btree_map.len(), 3);
+/// ```
+pub trait SetOrExpandTo<K>: Keyed {
+    /// Return type of [`set_or_expand_to`](SetOrExpandTo::set_or_expand_to).
+    type Output;
+
+    /// If key is in range, set the value. Otherwise, expand collection by repeating
+    /// value until key.
+    ///
+    /// For map-like and set-like data structures, this is the same as just
+    /// an insert.
+    fn set_or_expand_to(&mut self, key: K, value: Self::Value) -> Self::Output;
+}
+
 /// Modify the value under key with a closure.
 ///
 /// This is useful if something always has to be done before or after the
@@ -793,7 +835,7 @@ pub trait Len {
 
 /// Resize the collection to the given length.
 ///
-/// If `new_len` is greater than the current length, the collection is extended
+/// If `new_len` is greater than the current length, the collection is expanded
 /// by cloning `value` until its length equals `new_len`.
 ///
 /// If `new_len` is less than the current length, the collection is truncated.
@@ -816,7 +858,7 @@ pub trait Len {
 pub trait Resize: Keyed {
     /// Resize the collection to the given length.
     ///
-    /// If `new_len` is greater than the current length, the collection is extended
+    /// If `new_len` is greater than the current length, the collection is expanded
     /// by cloning `value` until its length equals `new_len`.
     ///
     /// If `new_len` is less than the current length, the collection is truncated.

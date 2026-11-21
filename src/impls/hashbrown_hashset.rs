@@ -9,7 +9,9 @@ use hashbrown::{Equivalent, HashSet};
 use crate::abc::{Container, Keyed};
 use crate::ctors::{WithCapacity, WithCapacityAndHasher, WithHasher, WithOne};
 use crate::iter::{IntoIter, IntoValues, Iter, Values, ValuesFromKeyValuePairs};
-use crate::ops::{CheckedInsert, Clear, ContainsKey, Get, Insert, Len, Put, Remove, Set};
+use crate::ops::{
+    CheckedInsert, Clear, ContainsKey, Get, Insert, Len, Put, Remove, Set, SetOrExpandTo,
+};
 
 impl<K, S> Container for HashSet<K, S> {
     type Value = ();
@@ -71,6 +73,15 @@ impl<K: Eq + Hash, S: BuildHasher> Set<K> for HashSet<K, S> {
 
     #[inline(always)]
     fn set(&mut self, key: K, _value: ()) -> bool {
+        HashSet::insert(self, key)
+    }
+}
+
+impl<K: Eq + Hash, S: BuildHasher> SetOrExpandTo<K> for HashSet<K, S> {
+    type Output = bool;
+
+    #[inline(always)]
+    fn set_or_expand_to(&mut self, key: K, _value: ()) -> bool {
         HashSet::insert(self, key)
     }
 }
