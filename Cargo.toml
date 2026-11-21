@@ -145,8 +145,8 @@ pre-release-hook = [
   "check-release",
   "-p",
   "{{crate_name}}",
-  "--baseline-version",
-  "{{prev_version}}",
+  #"--baseline-version",
+  #"{{prev_version}}",
 ]
 pre-release-replacements = [
   { file = "README.md", search = 'maplike = \{ version = "[^"]+"([^}]*)\}', replace = '{{crate_name}} = { version = "{{version}}"$1}' },
