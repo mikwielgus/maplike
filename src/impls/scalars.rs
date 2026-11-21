@@ -7,7 +7,7 @@ use crate::ctors::WithOne;
 use crate::iter::{IntoIter, IntoValues, Iter, Values};
 use crate::ops::{ContainsKey, Get, Len, Modify, Put, Set};
 
-macro_rules! impl_traits_for_scalar {
+macro_rules! impl_traits_for_scalars {
     ($($t:ty),*) => {
         $(
             impl Container for $t {
@@ -110,7 +110,7 @@ macro_rules! impl_traits_for_scalar {
     };
 }
 
-impl_traits_for_scalar!(i8, i16, i32, i64, i128, isize);
-impl_traits_for_scalar!(u8, u16, u32, u64, u128, usize);
-impl_traits_for_scalar!(f32, f64);
-impl_traits_for_scalar!(char, bool, ());
+impl_traits_for_scalars!(i8, i16, i32, i64, i128, isize);
+impl_traits_for_scalars!(u8, u16, u32, u64, u128, usize);
+impl_traits_for_scalars!(f32, f64);
+impl_traits_for_scalars!(char, bool, ());
